@@ -1,0 +1,42 @@
+.Full-page{
+    height: 100vh;
+    align-items:stretch;
+    display: flex;
+  }
+  .Column{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-text{
+    font-weight: 400;
+    font-size: 128px;
+    text-align: center;
+    vertical-align: middle;
+    font-family: 'Just Another Hand', cursive;
+  }
+  
+  .form-field{
+    /*display: flex;
+    width: fit-content;*/
+    align-items: center;
+  }
+  
+  .auth-toggle{
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .login-signup-button{
+    width: 100%;
+    background-color: #FFEEEF;
+    color: black;
+    border-radius: 0px;
+  }
+  .login-form{
+    align-items:center;
+    height: 200px;
+    width: 50%;
+  }
