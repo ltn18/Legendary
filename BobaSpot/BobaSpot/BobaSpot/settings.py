@@ -10,9 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import datetime
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import django
+from django.utils.encoding import smart_str
+django.utils.encoding.smart_text = smart_str
 
 load_dotenv()
 
@@ -109,6 +113,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'backend.auth.JWTAuthentication',
+    ]
+}
+
+JWT_AUTH = {
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_SECRET_KEY': os.getenv('JWT_SECRET_KEY'),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=30)
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
