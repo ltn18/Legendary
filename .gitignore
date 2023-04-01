@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 .env
 env/
 .DS_Store
 __pycache__/
-=======
-.env
-env/
-.DS_Store
->>>>>>> main
+target/
+__pycache__/
