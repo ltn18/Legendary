@@ -1,0 +1,263 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Ubuntu", sans-serif;
+    
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  .App {
+    min-height: 100vh;
+    width: 85vw;
+    max-width: 1900px;
+    margin: 0rem auto;
+  }
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    background-color: #f6f6f6;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 90px;
+  }
+  
+  .nav-logout{
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    width: 50px;
+    height: 50px;
+    color: #EEABAB;
+  }
+  
+  .nav-button-icon{
+    font-size: 140%;
+  }
+  
+  .nav-user_profile{
+    position: absolute;
+    right: 75px;
+    top: 25px;
+    width: 50px;
+    height: 50px;
+    color: #EEABAB;
+  }
+  
+  .nav-home_title{
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    font-family: "Just Another Hand", cursive;
+    color: black;
+    font-size: 50px;
+  }
+  
+  .home-banner-container {
+    top: 100px;
+    object-fit: cover;
+  }
+  
+  .home-banner-image{
+    object-fit: cover;
+  }
+  
+  .home-scroll-down{
+    position: fixed;
+    top:92%;
+    left: 50%;
+    color: #f6f6f6;
+    font-size: 300%;
+  }
+  
+  .footer-wrapper {
+    margin: 6rem 0rem;
+    display: flex;
+    margin-top: 10rem;
+  }
+  .footer-logo-container {
+    max-width: 110px;
+  }
+  .footer-icons {
+    margin-top: 2.5rem;
+  }
+  .footer-icons svg {
+    font-size: 1.5rem;
+    margin-right: 1.25rem;
+    color: #EEABAB;
+  }
+  .footer-section-two {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .footer-section-columns {
+    display: flex;
+    flex-direction: column;
+    min-width: 190px;
+  }
+  .footer-section-columns span {
+    margin: 0.25rem 0rem;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+  }
+  .map-search-bar{
+    width: 100%;
+    left: 50%;
+    color:#EEABAB;
+  }
+  .map-enter-button{
+    fill: #FFEEEF;
+  }
+  
+  .map-enter-button span{
+    color: #EEABAB
+  }
+  
+  .ant-btn-primary {
+    background-color: #EEABAB;
+  }
+  
+  .map-container {
+    width: 100%;
+    height: 80vh
+  }* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Ubuntu", sans-serif;
+    
+  }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  .App {
+    min-height: 100vh;
+    width: 85vw;
+    max-width: 1900px;
+    margin: 0rem auto;
+  }
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    background-color: #f6f6f6;
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 90px;
+  }
+  
+  .nav-logout{
+    position: absolute;
+    right: 25px;
+    top: 25px;
+    width: 50px;
+    height: 50px;
+    color: #EEABAB;
+  }
+  
+  .nav-button-icon{
+    font-size: 140%;
+  }
+  
+  .nav-user_profile{
+    position: absolute;
+    right: 75px;
+    top: 25px;
+    width: 50px;
+    height: 50px;
+    color: #EEABAB;
+  }
+  
+  .nav-home_title{
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    font-family: "Just Another Hand", cursive;
+    color: black;
+    font-size: 50px;
+  }
+  
+  .home-banner-container {
+    top: 100px;
+    object-fit: cover;
+  }
+  
+  .home-banner-image{
+    object-fit: cover;
+  }
+  
+  .home-scroll-down{
+    position: fixed;
+    top:92%;
+    left: 50%;
+    color: #f6f6f6;
+    font-size: 300%;
+  }
+  
+  .footer-wrapper {
+    margin: 6rem 0rem;
+    display: flex;
+    margin-top: 10rem;
+  }
+  .footer-logo-container {
+    max-width: 110px;
+  }
+  .footer-icons {
+    margin-top: 2.5rem;
+  }
+  .footer-icons svg {
+    font-size: 1.5rem;
+    margin-right: 1.25rem;
+    color: #EEABAB;
+  }
+  .footer-section-two {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .footer-section-columns {
+    display: flex;
+    flex-direction: column;
+    min-width: 190px;
+  }
+  .footer-section-columns span {
+    margin: 0.25rem 0rem;
+    font-weight: 600;
+    color: #000000;
+    cursor: pointer;
+  }
+  .map-search-bar{
+    width: 100%;
+    left: 50%;
+    color:#EEABAB;
+  }
+  .map-enter-button{
+    fill: #FFEEEF;
+  }
+  
+  .map-enter-button span{
+    color: #EEABAB
+  }
+  
+  .ant-btn-primary {
+    background-color: #EEABAB;
+  }
+  
+  .map-container {
+    width: 100%;
+    height: 80vh
+  }
