@@ -1,39 +1,74 @@
 import React from 'react'
-import { Button, Input } from 'antd';
-import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+import { Button, Input, Select, Form } from 'antd';
 
 const { Search } = Input;
+const { Option } = Select;
 
-const onSearch = (value) => console.log(value);
+
 const Map = () => {
 
-  const { isLoaded } = useLoadScript(
-    {
-      id: 'google-map-script',
-      googleMapsApiKey: "AIzaSyBxZCkiGPOBS0rtuGSoiXLd-7tAKT94kgw",
-      libraries: ['places'],
-    }
-  );
+  // const { isLoaded } = useLoadScript(
+  //   {
+  //     id: 'google-map-script',
+  //     googleMapsApiKey: "AIzaSyBxZCkiGPOBS0rtuGSoiXLd-7tAKT94kgw",
+  //     libraries: ['places'],
+  //   }
+  // );
 
-    if(!isLoaded) return <div>Loading...</div>
+  //   if(!isLoaded) return <div>Loading...</div>
     return <MapSearch />
   }
 
 function MapSearch() {
   const center = {lat: 40, lng: -80}
+  const onFinish = (values) => {
+    console.log(values);
+  };
+  const [form] = Form.useForm();
+  const onReset = () => {
+    form.resetFields();
+  };
 
   return (
     <div>
-        <Search
-        className="map-search-bar"
-        placeholder="Search"
-        onSearch={onSearch}
-        allowClear
-        size="large"
-        enterButton = {<Button className='map-enter-button' type='primary'> Search </Button>}
-        />
+        <Form 
+        form={form}
+        name='control-hooks'
+        onFinish={onFinish}
+        >
+          <Form.Item
+          name="BobaShop.name"
+          label="Shop name"
+          >
+            <Input />
+          </Form.Item>
 
-        <GoogleMap 
+          <Form.Item
+          name="address"
+          label="Address"
+          rules={[
+            {
+              required: true,
+              message: 'Please inpur your preferred store location',
+            }
+          ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+          name="Drink.name"
+          label="Drink name"
+          rules={[
+            {
+              required: true,
+              message: 'Please inpur your preferred drink name!',
+            }
+          ]}
+          >
+            <Input />
+          </Form.Item>
+        {/* <GoogleMap 
         zoom={10} 
         center={center} 
         mapContainerClassName="map-container"
@@ -41,7 +76,17 @@ function MapSearch() {
           <Marker 
           position={center} 
           />
-        </GoogleMap>
+        </GoogleMap> */}
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Submit
+          </Button>
+
+          <Button htmlType="button" onClick={onReset}>
+            Reset
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   )
 }
