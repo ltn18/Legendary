@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Input, Select, Form } from 'antd';
 import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
 /* global google */
 
 const { Search } = Input;
 const { Option } = Select;
+
+const initialFormState = {
+  BobaShop_name: '',
+  address: '',
+  Drink_name: ''
+}
 
 
 const Map = () => {
@@ -22,47 +28,34 @@ const Map = () => {
   }
 
 function MapSearch() {
-  const center = {lat: 40, lng: -80}
+
+  let marker;
   const onFinish = (values) => {
     console.log(values);
+    const address = values.address;
+    console.log("Address:" + address);
+    // const geocoder = new google.maps.Geocoder().geocode({'address': address}).then((response) => {
+    //   if(response.results[0]){
+    //     const latitude=response.results[0].geometry.location.lat();
+    //     const longitude=response.results[0].geometry.location.lng();
+    //     marker = {lat: latitude, lng: longitude};
+    //   }
+    // });
   };
-  const [form] = Form.useForm();
+  const [form] = useState(initialFormState);
   const onReset = () => {
     form.resetFields();
   };
-
-  const address = Form.useWatch("address", form);
-  console.log("Address:" + address);
-  const marker = {lat: 41.5096738, lng: -81.60274249999999};
-  // const geocoder = new google.maps.Geocoder().geocode({'address': address}).then((response) => {
-  //   if(response.results[0]){
-  //     const latitude=response.results[0].geometry.location.lat();
-  //     const longitude=response.results[0].geometry.location.lng();
-  //     console.log(latitude)
-  //     console.log(longitude)
-  //   }
-  // });
-
-  // geocoder.geocode( { 'address': address}, function(results, status) {
-  //   if (status === google.maps.GeocoderStatus.OK) {
-
-  //     latitude = results[0].geometry.location.lat();
-  //     longitude = results[0].geometry.location.lng();
-  //   } 
-
-  //   else {
-  //     console.log("Geocode was not successful for the following reason: " + status);
-  //   }
-  // });
+  
   return (
     <div>
         <Form 
-        form={form}
-        name='control-hooks'
+        name='filter-search'
+        className='search-form'
         onFinish={onFinish}
         >
           <Form.Item
-          name="BobaShop.name"
+          name="BobaShop_name"
           label="Shop name"
           >
             <Input />
@@ -82,7 +75,7 @@ function MapSearch() {
           </Form.Item>
 
           <Form.Item
-          name="Drink.name"
+          name="Drink_name"
           label="Drink name"
           rules={[
             {
