@@ -33,7 +33,27 @@ function MapSearch() {
 
   const address = Form.useWatch("address", form);
   console.log("Address:" + address);
+  const marker = {lat: 41.5096738, lng: -81.60274249999999};
+  // const geocoder = new google.maps.Geocoder().geocode({'address': address}).then((response) => {
+  //   if(response.results[0]){
+  //     const latitude=response.results[0].geometry.location.lat();
+  //     const longitude=response.results[0].geometry.location.lng();
+  //     console.log(latitude)
+  //     console.log(longitude)
+  //   }
+  // });
 
+  // geocoder.geocode( { 'address': address}, function(results, status) {
+  //   if (status === google.maps.GeocoderStatus.OK) {
+
+  //     latitude = results[0].geometry.location.lat();
+  //     longitude = results[0].geometry.location.lng();
+  //   } 
+
+  //   else {
+  //     console.log("Geocode was not successful for the following reason: " + status);
+  //   }
+  // });
   return (
     <div>
         <Form 
@@ -54,7 +74,7 @@ function MapSearch() {
           rules={[
             {
               required: true,
-              message: 'Please inpur your preferred store location',
+              message: 'Please input your preferred store location!',
             }
           ]}
           >
@@ -67,7 +87,7 @@ function MapSearch() {
           rules={[
             {
               required: true,
-              message: 'Please inpur your preferred drink name!',
+              message: 'Please input your preferred drink name!',
             }
           ]}
           >
@@ -87,11 +107,11 @@ function MapSearch() {
 
       <GoogleMap 
         zoom={10} 
-        center={center} 
+        center={marker} 
         mapContainerClassName="map-container"
         >
           <Marker 
-          position={center} 
+          position={marker}
           />
       </GoogleMap>
     </div>
