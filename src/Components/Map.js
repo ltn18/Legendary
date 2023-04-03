@@ -1,5 +1,7 @@
 import React from 'react'
 import { Button, Input, Select, Form } from 'antd';
+import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+/* global google */
 
 const { Search } = Input;
 const { Option } = Select;
@@ -7,15 +9,15 @@ const { Option } = Select;
 
 const Map = () => {
 
-  // const { isLoaded } = useLoadScript(
-  //   {
-  //     id: 'google-map-script',
-  //     googleMapsApiKey: "AIzaSyBxZCkiGPOBS0rtuGSoiXLd-7tAKT94kgw",
-  //     libraries: ['places'],
-  //   }
-  // );
+  const { isLoaded } = useLoadScript(
+    {
+      id: 'google-map-script',
+      googleMapsApiKey: "AIzaSyDF2B7vD2UXJ7nRg74gVAzkRtomGBc5Vt0",
+      libraries: ['places'],
+    }
+  );
 
-  //   if(!isLoaded) return <div>Loading...</div>
+    if(!isLoaded) return <div>Loading...</div>
     return <MapSearch />
   }
 
@@ -28,6 +30,9 @@ function MapSearch() {
   const onReset = () => {
     form.resetFields();
   };
+
+  const address = Form.useWatch("address", form);
+  console.log("Address:" + address);
 
   return (
     <div>
@@ -68,15 +73,6 @@ function MapSearch() {
           >
             <Input />
           </Form.Item>
-        {/* <GoogleMap 
-        zoom={10} 
-        center={center} 
-        mapContainerClassName="map-container"
-        >
-          <Marker 
-          position={center} 
-          />
-        </GoogleMap> */}
         <Form.Item>
           <Button type="primary" htmlType="submit">
             Submit
@@ -87,6 +83,17 @@ function MapSearch() {
           </Button>
         </Form.Item>
       </Form>
+      
+
+      <GoogleMap 
+        zoom={10} 
+        center={center} 
+        mapContainerClassName="map-container"
+        >
+          <Marker 
+          position={center} 
+          />
+      </GoogleMap>
     </div>
   )
 }
