@@ -98,7 +98,7 @@ function MapSearch() {
       </Form>
       
 
-      <GoogleMap 
+      {/* <GoogleMap 
         zoom={10} 
         center={marker} 
         mapContainerClassName="map-container"
@@ -106,7 +106,7 @@ function MapSearch() {
           <Marker 
           position={marker}
           />
-      </GoogleMap>
+      </GoogleMap> */}
     </div>
   )
 }
