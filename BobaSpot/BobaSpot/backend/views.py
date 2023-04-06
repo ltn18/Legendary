@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render
+from django.http import JsonResponse
 from backend.auth import JWTAuthentication
 from backend.models import CustomUser
 from backend.serializers import CustomUserSerializer
@@ -52,9 +53,38 @@ class LoginView(APIView):
         body = {'token': jwt_encode_handler(payload)}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
 
+class UserProfileView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+    
+    def get(self, request, format=None):
+        user = request.user
+        user_serializer = CustomUserSerializer(user)
+        user_info = user_serializer.data
+        user_info.pop('hashpass')
+        return JsonResponse(user_info)
+    
+    def put(self, request, format=None):
+        user = request.user
+        request.data['username'] = user.username
+        if not request.data['password']:
+            request.data['hashpass'] = user.hashpass
+        else:
+            request.data['hashpass'] = str(base64.b64encode(request.data['password'].encode("utf-8")))
+            request.data.pop('password')
+        user_serializer = CustomUserSerializer(user, data = request.data)
+        print(user_serializer.instance.username)
+        if (user_serializer.is_valid()):
+            user_serializer.save()
+            return JsonResponse({'token': user_serializer.data['token']})
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
 class TestView(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (JWTAuthentication,)
+    
     def get(self, request, format=None):
         body = {'message': "hello Aiden!"}
+        print(request.user)
+        print(request.auth)
         return Response(json.dumps(body), status=status.HTTP_200_OK)
