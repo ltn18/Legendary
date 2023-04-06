@@ -3,7 +3,7 @@ from django.shortcuts import render
 from backend.auth import JWTAuthentication
 from backend.models import CustomUser, BobaShop
 from django.db.models import Avg
-from backend.serializers import CustomUserSerializer
+from backend.serializers import CustomUserSerializer, BobaShopSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -87,10 +87,11 @@ class BobaShopView(APIView):
         shop_info = request.data
         if shop_info is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
         try:
             shop = BobaShop.objects.get(id=shop_info['id'])
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
-        return Response(status=status.HTTP_200_OK)
+        serializer_class = BobaShopSerializer(shop)
+        serialized_data =  {'data': serializer_class.data}
+        return Response(serialized_data, status=status.HTTP_200_OK)
