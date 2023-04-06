@@ -1,7 +1,8 @@
 import json
 from django.shortcuts import render
 from backend.auth import JWTAuthentication
-from backend.models import CustomUser
+from backend.models import CustomUser, BobaShop
+from django.db.models import Avg
 from backend.serializers import CustomUserSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -58,3 +59,38 @@ class TestView(APIView):
     def get(self, request, format=None):
         body = {'message': "hello Aiden!"}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
+    
+class BobaShopView(APIView):
+    def put(self, request, format=None):
+        permission_classes = (IsAuthenticated,)
+        authentication_classes = (JWTAuthentication,)
+        shop_info = request.data
+        if shop_info is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            shop = BobaShop.objects.get(id=shop_info['id'])
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+        for key, value in shop_info.items():
+            if hasattr(shop, key):
+                setattr(shop, key, value)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        shop.save()
+        return Response(status=status.HTTP_200_OK)
+    
+    def get(self, request, format=None):
+        permission_classes = (IsAuthenticated,)
+        authentication_classes = (JWTAuthentication,)
+        shop_info = request.data
+        if shop_info is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            shop = BobaShop.objects.get(id=shop_info['id'])
+        except Exception:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(status=status.HTTP_200_OK)
