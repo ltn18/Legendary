@@ -26,18 +26,31 @@ const Map = () => {
 }
 
 function MapSearch() {
+  const [address, setAddress] = useState('');
+
   const onFinish = (values) => {
     console.log(values);
     const address = values.address;
     console.log("Address:" + address);
-    // const geocoder = new google.maps.Geocoder().geocode({'address': address}).then((response) => {
-    //   if(response.results[0]){
-    //     const latitude=response.results[0].geometry.location.lat();
-    //     const longitude=response.results[0].geometry.location.lng();
-    //     console.log("lat: "+ latitude + " lon: "+ longitude)
-    //   }
-    // });
   };
+
+  const onSubmit = (values) => {
+    function handleSubmit() {
+      var latitude
+      var longitude
+  
+      const geocoder = new google.maps.Geocoder().geocode({'address': {address}}).then((response) => {
+        if(response.results[0]){
+          latitude=response.results[0].geometry.location.lat();
+          longitude=response.results[0].geometry.location.lng();
+          console.log("lat: "+ latitude + " lon: "+ longitude)
+        }
+      });
+  
+      return {lat: latitude, lng:longitude}
+    };
+  }
+  
   const [form] = useState(initialFormState);
   const onReset = () => {
     form.resetFields();
@@ -66,7 +79,11 @@ function MapSearch() {
               }
             ]}
             >
-              <Input />
+              <Input 
+                id='address'
+                name='address'
+                value={address}
+                onSubmit={onSubmit}/>
             </Form.Item>
 
             <Form.Item
@@ -127,12 +144,14 @@ function MapSearch() {
             center={{lat: 40, lng: -80}}
             mapContainerClassName="map-container"
           >
-            {testData.map((shop)=>(
+            {/* {testData.map((shop)=>(
               <Marker
                 key={shop.Rk}
                 position={{lat: shop.latitude, lng:shop.longitude}}
               ></Marker>
-            ))}
+            ))} */}
+
+            <Marker position={onSubmit.handleSubmit()}></Marker>
           </GoogleMap>
         </Col>
       </Row>
