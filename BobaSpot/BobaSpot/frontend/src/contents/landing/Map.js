@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Input, Form, InputNumber, Rate, Col, Row } from 'antd';
 import testData from "./us-capitals.json";
-import { GoogleMap, useLoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 /* global google */
 
 const initialFormState = {
@@ -26,39 +26,27 @@ const Map = () => {
 }
 
 function MapSearch() {
-  const [address, setAddress] = useState('');
+  const [selectedMarker, setSelectedMarker] = useState("");
+  const [center, setCenter] = useState({lat: 40, lng:-80});
 
-  const onFinish = (values) => {
-    console.log(values);
-    const address = values.address;
-    console.log("Address:" + address);
-  };
-
-  const onSubmit = (values) => {
-    function handleSubmit() {
-      var latitude
-      var longitude
-  
-      const geocoder = new google.maps.Geocoder().geocode({'address': {address}}).then((response) => {
-        if(response.results[0]){
-          latitude=response.results[0].geometry.location.lat();
-          longitude=response.results[0].geometry.location.lng();
-          console.log("lat: "+ latitude + " lon: "+ longitude)
-        }
-      });
-  
-      return {lat: latitude, lng:longitude}
-    };
-  }
-  
   const [form] = useState(initialFormState);
   const onReset = () => {
     form.resetFields();
   };
 
-  const toggleSubmit = () =>{
-    
-  }
+  const onFinish = (values) => {
+    console.log(values);
+    const address = values.address;
+    console.log("Address:" + address);
+
+    const geocoder = new google.maps.Geocoder().geocode({'address': values.address}).then((response) => {
+      if(response.results[0]){
+        const latitude=response.results[0].geometry.location.lat();
+        const longitude=response.results[0].geometry.location.lng();
+        console.log("lat: "+ latitude + " lon: "+ longitude)
+      }
+    });
+  };
   
   return (
     <div>
@@ -72,29 +60,13 @@ function MapSearch() {
             <Form.Item
             name="address"
             label="Address"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your preferred store location!',
-              }
-            ]}
             >
-              <Input 
-                id='address'
-                name='address'
-                value={address}
-                onSubmit={onSubmit}/>
+              <Input />
             </Form.Item>
 
             <Form.Item
             name="drink_name"
             label="Drink name"
-            rules={[
-              {
-                required: true,
-                message: 'Please input your preferred drink name!',
-              }
-            ]}
             >
               <Input />
             </Form.Item>
@@ -141,17 +113,25 @@ function MapSearch() {
         <Col span={16} offset={2}>
           <GoogleMap
             zoom={10}
-            center={{lat: 40, lng: -80}}
+            center={center}
             mapContainerClassName="map-container"
           >
-            {/* {testData.map((shop)=>(
+            {testData.map((shop)=>(
               <Marker
                 key={shop.Rk}
                 position={{lat: shop.latitude, lng:shop.longitude}}
-              ></Marker>
-            ))} */}
-
-            <Marker position={onSubmit.handleSubmit()}></Marker>
+                onClick={() => {setSelectedMarker(shop); 
+                                setCenter({lat: shop.latitude, lng:shop.longitude})}}
+              />
+            ))}
+            {selectedMarker && (
+                  <InfoWindow
+                    position={{lat: selectedMarker.latitude, lng: selectedMarker.longitude}}
+                    onCloseClick={() => setSelectedMarker('')}
+                  >
+                    <h1>{selectedMarker.name}</h1>
+                  </InfoWindow>
+                )}
           </GoogleMap>
         </Col>
       </Row>
