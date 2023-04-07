@@ -84,7 +84,7 @@ class BobaShopView(APIView):
     def get(self, request, format=None):
         permission_classes = (IsAuthenticated,)
         authentication_classes = (JWTAuthentication,)
-        shop_info = request.data
+        shop_info = request.query_params
         if shop_info is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         try:
