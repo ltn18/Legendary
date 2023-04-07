@@ -19,7 +19,11 @@ class CustomUser(AbstractUser):
 class BobaShop(CustomUser):
     shop_name = models.CharField(max_length = 50)
     telephone = models.CharField(max_length = 50)
+<<<<<<< Updated upstream
     address = models.CharField(max_length = 500)
+=======
+    address = models.CharField(max_length = 50)
+>>>>>>> Stashed changes
     opening_hour = models.TimeField(blank=True, null=True)
     closing_hour = models.TimeField(blank=True, null=True)
     ad_image_url = ArrayField(models.CharField(max_length = 100), blank=True, null=True)

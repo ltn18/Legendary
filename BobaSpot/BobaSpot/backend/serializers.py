@@ -20,6 +20,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class BobaShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = BobaShop
+<<<<<<< Updated upstream
         fields = ['id', 'username', 'hashpass', 'image_url', 'shop_name', 'telephone', 'address', 'opening_hour', 'closing_hour', 'rating', 'ad_image_url']
         
 class DrinkSerializer(serializers.ModelSerializer):
@@ -31,3 +32,6 @@ class ReviewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviews
         fields = ['review_id', 'user', 'drink', 'text', 'rating', 'image_url', 'review_top_id']
+=======
+        fields = ['id', 'username', 'hashpass', 'image_url', 'shop_name', 'telephone', 'address', 'opening_hour', 'closing_hour', 'rating', 'ad_image_url']
+>>>>>>> Stashed changes

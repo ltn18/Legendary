@@ -1,11 +1,25 @@
 import { Col, Row, Image, Typography, Card, Form, Button } from "antd";
 import { StarOutlined, SendOutlined } from "@ant-design/icons";
 import "./ShopProfile.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
 
 
 function ShopProfile() {
+    const url = "http://127.0.0.1:8000/api/bobashop/?id=0cb08e98-d603-4545-8f33-63e9cf7e61b3";
+    // const relativeUrl = "/api/bobashop/";
+
+    const options = {
+        // method: 'PUT',
+        url: url,
+        data:
+        {
+            id: '0cb08e98-d603-4545-8f33-63e9cf7e61b3'
+        }
+
+    };
+
     const [reviewText, setReviewText] = useState('');
 
 
@@ -20,9 +34,37 @@ function ShopProfile() {
     const avatar = "data:image/jpeg;base64,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";
 
     const handleFormSubmit = () => {
-        console.log(reviewText);
+        // console.log(reviewText);
         setReviewText('');
+        axios.request(options)
+            .then((res) => { console.log(res) })
+            .catch((error) => {
+                console.log(error.response);
+                // if (error.response) {
+                //     // The request was made and the server responded with a status code
+                //     // that falls out of the range of 2xx
+                //     console.log('error at response');
+                //     console.log(error.response.data);
+                //     console.log(error.response.status);
+                //     console.log(error.response.headers);
+                // } else if (error.request) {
+                //     // The request was made but no response was received
+                //     console.log('request made but no response');
+                //     console.log(error.request);
+                // } else {
+                //     // Something happened in setting up the request that triggered an Error
+                //     console.log('request made but error');
+                //     console.log('Error', error.message);
+                // }
+            });
+
     };
+
+    useEffect(() => {
+        // axios.request(options)
+        // .then((res) => { console.log(res) })
+        // .catch((err) => { console.log(err) });
+    }, []);
 
 
 
@@ -199,7 +241,7 @@ function ShopProfile() {
                                         Drink ordered: Kung Fu Milk Tea
                                     </Typography>
                                 </Col>
-                                <Col span={24} style={{backgroundColor: 'white', fontSize: '1.5em', padding: '0.5em'}}>
+                                <Col span={24} style={{ backgroundColor: 'white', fontSize: '1.5em', padding: '0.5em' }}>
                                     This place is awesome! I go here daily to drink milk tea and Kung Fu Tea never disappoints! 10/10, would recommend.
                                     <br />
                                     <br />
