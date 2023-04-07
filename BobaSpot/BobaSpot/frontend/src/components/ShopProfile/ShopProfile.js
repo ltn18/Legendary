@@ -62,6 +62,7 @@ function ShopProfile() {
                             </Typography.Title>
                         </Col>
                         <Row gutter={[12, 12]}>
+                            {/* TODO receive imgs from backend and renders the img from the link */}
                             <Col span={14} className="center-image">
                                 <Image src={img1} height="20em" />
                             </Col>
