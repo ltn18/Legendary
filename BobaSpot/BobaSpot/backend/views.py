@@ -85,10 +85,6 @@ class BobaShopView(APIView):
         permission_classes = (IsAuthenticated,)
         authentication_classes = (JWTAuthentication,)
         shop_info = request.query_params
-<<<<<<< Updated upstream
-=======
-        print(shop_info)
->>>>>>> Stashed changes
         if shop_info is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         try:
