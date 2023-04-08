@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Button, Input, Form, InputNumber, Rate, Col, Row } from 'antd';
 import testData from "./us-capitals.json";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+import { StarOutlined } from '@ant-design/icons';
 /* global google */
 
 const initialFormState = {
@@ -47,11 +48,13 @@ function MapSearch() {
       }
     });
   };
+
+  const logoKFT = 'https://play-lh.googleusercontent.com/SUl4XjMnZ7AoG394N20DpStiI4e1jynSSVDsh6V6h4PzFBPn8UhZ2Sa9ZybBz5rWwEQ';
   
   return (
     <div>
       <Row>
-        <Col span={6}>
+        <Col span={4} offset={2}>
           <Form 
             name='filter-search'
             className='search-form'
@@ -110,7 +113,7 @@ function MapSearch() {
             </Form.Item>
           </Form>
         </Col>
-        <Col span={16} offset={2}>
+        <Col span={15} offset={1}>
           <GoogleMap
             zoom={10}
             center={center}
@@ -129,7 +132,19 @@ function MapSearch() {
                     position={{lat: selectedMarker.latitude, lng: selectedMarker.longitude}}
                     onCloseClick={() => setSelectedMarker('')}
                   >
-                    <h1>{selectedMarker.name}</h1>
+                    <div>
+                      <Row>
+                        <Col>
+                          <img src= {logoKFT} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }}/>
+                        </Col>
+                        <Col>
+                          <h1>{selectedMarker.name}</h1>
+                          <p>Address: Cleveland, OH 44106</p>
+                          <p>Hours: 12:00pm - 21:30pm</p>
+                          <p>Ratings: 4.3 <StarOutlined /></p>
+                        </Col>
+                      </Row>
+                    </div>
                   </InfoWindow>
                 )}
           </GoogleMap>

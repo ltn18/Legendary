@@ -4,7 +4,6 @@ import About from "./About"
 import Map from "./Map"
 import BannerBgr from "./Assets/landing_banner.png";
 import { DownCircleOutlined } from '@ant-design/icons';
-import './Home.css';
 
 const Home = () => {
   return (
