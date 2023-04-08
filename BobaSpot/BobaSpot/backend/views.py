@@ -1,7 +1,7 @@
 import json
 from django.shortcuts import render
 from backend.auth import JWTAuthentication
-from backend.models import CustomUser, BobaShop
+from backend.models import CustomUser, BobaShop, Customer, Drink
 from django.db.models import Avg
 from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer
 from rest_framework.views import APIView
@@ -105,6 +105,9 @@ class BobaShopView(APIView):
             for review in drink.reviews_set.all():
                 reviews.append(review)
         reviews_serializer = [ReviewsSerializer(review).data for review in reviews]
+        for rv_serializer in reviews_serializer:
+            rv_serializer['customer_name'] = str(Customer.objects.get(id=rv_serializer['user']))
+            rv_serializer['drink_name'] = str(Drink.objects.get(pk=rv_serializer['drink']))
         reviews_json = {"reviews": reviews_serializer}
         serialized_data['data'].update(reviews_json)
         return Response(serialized_data, status=status.HTTP_200_OK)
