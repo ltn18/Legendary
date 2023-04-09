@@ -161,7 +161,7 @@ const ShopOwnerInfo = () => {
                 }
             };
 
-            axios.post('/bobaplace', formData, config)
+            axios.post('/image', formData, config)
                 .then(res => console.log(res))
                 .catch(err => console.log(err));
         })
@@ -421,6 +421,9 @@ const ShopOwnerInfo = () => {
 
                             <button
                                 onClick={handleUploadImages}
+                                style={{
+                                    marginBottom: 10
+                                }}
                             >
                                 Upload to Google Blob
                             </button>

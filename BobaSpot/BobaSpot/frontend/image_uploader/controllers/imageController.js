@@ -1,8 +1,8 @@
 "use strict";
 
 // firebase
-const firebase = require("../firebase");
-const firestore = firebase.firestore();
+// const firebase = require("../firebase");
+// const firestore = firebase.firestore();
 
 const uploadImage = async (req, res, next) => {
     try {
