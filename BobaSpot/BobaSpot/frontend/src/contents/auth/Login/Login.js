@@ -62,11 +62,13 @@ function Login() {
   const onFinish = () => {
     console.log('Received values of form:', form);
     axios.post('http://localhost:8000/api/login/', {
-    username: 'aa',
-    password: 'a'
+    username: form.username,
+    password: form.password
     })
     .then(function (response) {
-      console.log(response);
+      console.log(JSON.parse(response.data).token);
+      sessionStorage.setItem("token", JSON.parse(response.data).token);
+      
     })
     .catch(function (error) {
       console.log(error);
@@ -80,6 +82,7 @@ function Login() {
      * backend will send back token if the user is valid
      */
   };
+  
 
   const toggleAuth = () => { 
     setIsLogin(!isLogin);
@@ -137,6 +140,7 @@ function Login() {
                   ]}
                 >
                   <Input
+                    
                     placeholder="Last name"
                     onChange={(e) => setForm({ ...form, lastname: e.target.value })}
                   />
@@ -167,6 +171,7 @@ function Login() {
             >
             
               <Input
+                
                 placeholder="Username"
                 onChange={(e) => setForm({ ...form, username: e.target.value})}
                 style={{borderRadius: '0px'}}
@@ -174,6 +179,7 @@ function Login() {
             </Form.Item>
             {/* password */}
             <Form.Item
+              
               name="password"
               rules={isLogin ? null : [
                 {
@@ -188,6 +194,7 @@ function Login() {
               extra={passwordStrength && `Password Strength: ${passwordStrength}`}
             >
               <Input
+                
                 type="password"
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -196,7 +203,7 @@ function Login() {
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button">{'Log In'}</Button> 
+              <Button  htmlType="submit" className="login-signup-button">{'Log In'}</Button> 
               <Link to='/signup'>
                          Don't have an account? Signup!
               </Link>

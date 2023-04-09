@@ -25,7 +25,8 @@ function Temp() {
   const printSessionData = () => {
     //fetching username from sesstion storage
       
-    console.log(sessionStorage.getItem("input"));
+      console.log(sessionStorage.getItem("token"));
+      
   };
   const clearSessionData = () => {
     //Removing username from sesstion storage

@@ -86,7 +86,6 @@ class TestView(APIView):
     
     def get(self, request, format=None):
         body = {'message': "hello Aiden!"}
-<<<<<<< HEAD
         return Response(json.dumps(body), status=status.HTTP_200_OK)
     
 class BobaShopView(APIView):
@@ -137,8 +136,3 @@ class BobaShopView(APIView):
         reviews_json = {"reviews": reviews_serializer}
         serialized_data['data'].update(reviews_json)
         return Response(serialized_data, status=status.HTTP_200_OK)
-=======
-        print(request.user)
-        print(request.auth)
-        return Response(json.dumps(body), status=status.HTTP_200_OK)
->>>>>>> LEGEND-19/User_Info_endpoint
