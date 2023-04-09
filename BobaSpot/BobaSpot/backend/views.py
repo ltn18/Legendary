@@ -61,34 +61,32 @@ class TestView(APIView):
         return Response(json.dumps(body), status=status.HTTP_200_OK)
     
 class BobaShopView(APIView):
-    def put(self, request, format=None):
-        permission_classes = (IsAuthenticated,)
-        authentication_classes = (JWTAuthentication,)
-        shop_info = request.data
-        if shop_info is None:
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+    def put(self, request, boba_id, format=None):
+        shop = request.user
+        if shop is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
-        try:
-            shop = BobaShop.objects.get(id=shop_info['id'])
-        except Exception:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-    
-        for key, value in shop_info.items():
-            if hasattr(shop, key):
-                setattr(shop, key, value)
+        if boba_id == (str)(shop.id):
+            if not BobaShop.objects.filter(id=boba_id).exists():
+                bobashop = BobaShop(customuser_ptr = shop)
+                bobashop.username = shop.username
+                bobashop.hashpass = str(base64.b64encode(shop['password'].encode("utf-8")))
+                bobashop.save_base(raw=True)
             else:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-        shop.save()
-        return Response(status=status.HTTP_200_OK)
+                bobashop = BobaShop.objects.get(id=boba_id)
+            for key, value in request.data.items():
+                if hasattr(bobashop, key):
+                    setattr(bobashop, key, value)
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+            bobashop.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
-    def get(self, request, format=None):
-        permission_classes = (IsAuthenticated,)
-        authentication_classes = (JWTAuthentication,)
-        shop_info = request.data
-        if shop_info is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, boba_id, format=None):
         try:
-            shop = BobaShop.objects.get(id=shop_info['id'])
+            shop = BobaShop.objects.get(id=boba_id)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
@@ -110,4 +108,4 @@ class BobaShopView(APIView):
             rv_serializer['drink_name'] = str(Drink.objects.get(pk=rv_serializer['drink']))
         reviews_json = {"reviews": reviews_serializer}
         serialized_data['data'].update(reviews_json)
-        return Response(serialized_data, status=status.HTTP_200_OK)
+        return Response(serialized_data, status=status.HTTP_200_OK)   
