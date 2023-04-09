@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
 
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import {
@@ -25,6 +26,13 @@ const UserInfo = () => {
     // how to show 1 overlay at a time
     const [showChangeInfoOverlay, setShowChangeInfoOverlay] = useState(false);
     const [showCreateShopOverlay, setShowCreateShopOverlay] = useState(false);
+
+    // change user's info
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
+    const [password, setPassword] = useState();
+    const [confirmPassword, setConfirmPassword] = useState();
+    const [username, setUsername] = useState();
 
     const handleHoverSubmitChangeInfoEnter = () => {
         setIsHoverSubmitChangeInfo(true);
@@ -78,6 +86,31 @@ const UserInfo = () => {
 
     const handleLogout = () => {
         navigate('/login');
+    }
+
+    const handleSubmitChangeUserInfo = () => {
+        console.log(firstName);
+        console.log(lastName);
+        console.log(username);
+        console.log(password);
+        console.log(confirmPassword);
+
+        const data = {
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+            password: password
+        }
+
+        // handle password = confirm password
+        if (password === confirmPassword) {
+            axios.put('/user', data)
+                .then(res => res.data)
+                .catch(err => console.log(err))
+        }
+        else {
+            alert("Password does not match with confirm password!")
+        }
     }
 
     const prefixSelector = (
@@ -140,28 +173,50 @@ const UserInfo = () => {
                                 name="firstname"
                                 rules={[{ message: 'Please input your first name!' }]}
                             >
-                                <Input />
+                                <Input
+                                    value={firstName}
+                                    onChange={e => setFirstName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Last name"
                                 name="lastname"
                                 rules={[{ message: 'Please input your last name!' }]}
                             >
-                                <Input />
+                                <Input
+                                    value={lastName}
+                                    onChange={e => setLastName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Username"
                                 name="username"
                                 rules={[{ message: 'Please input your username!' }]}
                             >
-                                <Input />
+                                <Input
+                                    value={username}
+                                    onChange={e => setUsername(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Password"
                                 name="password"
                                 rules={[{ message: 'Please input your password!' }]}
                             >
-                                <Input />
+                                <Input.Password
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="Confirm Password"
+                                name="confirm password"
+                                rules={[{ message: 'Please input your confirm password!' }]}
+                            >
+                                <Input.Password
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
+                                />
                             </Form.Item>
                             <Button
                                 onMouseEnter={handleHoverSubmitChangeInfoEnter}
@@ -173,6 +228,7 @@ const UserInfo = () => {
                                 }}
                                 type="primary"
                                 htmlType="submit"
+                                onClick={handleSubmitChangeUserInfo}
                             >
                                 Submit
                             </Button>

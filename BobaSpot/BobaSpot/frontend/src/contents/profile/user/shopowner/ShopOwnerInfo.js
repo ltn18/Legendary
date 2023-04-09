@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
-import { format } from "util";
 import axios from 'axios'
 
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
@@ -9,7 +8,8 @@ import {
     Image, Button, Space,
     Form, Input, Select,
     TimePicker, DatePicker,
-    Upload
+    Upload,
+    InputNumber
 } from 'antd';
 
 const { Option } = Select;
@@ -31,6 +31,27 @@ const ShopOwnerInfo = () => {
 
     // uploaded files
     const [uploadedFiles, setUploadedFiles] = useState([]);
+
+    // create shop
+    const [createShopName, setCreateShopName] = useState('');
+    const [createShopAddress, setCreateShopAddress] = useState('');
+    const [createShopHour, setCreateShopHour] = useState([]);
+    const [createShopNumber, setCreateShopNumber] = useState('');
+
+    // change user's info
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
+    const [password, setPassword] = useState();
+    const [confirmPassword, setConfirmPassword] = useState();
+    const [username, setUsername] = useState();
+
+    const dummyImgLinks = [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
+    ];
 
     const handleHoverSubmitChangeInfoEnter = () => {
         setIsHoverSubmitChangeInfo(true);
@@ -86,11 +107,32 @@ const ShopOwnerInfo = () => {
         navigate('/login');
     }
 
-    const handleUploadSingleImage = async () => {
+    const handleSubmitChangeUserInfo = () => {
+        console.log(firstName);
+        console.log(lastName);
+        console.log(username);
+        console.log(password);
+        console.log(confirmPassword);
 
+        const data = {
+            first_name: firstName,
+            last_name: lastName,
+            username: username,
+            password: password
+        }
+
+        // handle password = confirm password
+        if (password === confirmPassword) {
+            axios.put('/user', data)
+                .then(res => res.data)
+                .catch(err => console.log(err))
+        }
+        else {
+            alert("Password does not match with confirm password!")
+        }
     }
 
-    const handleSubmitCreateShopForm = async () => {
+    const handleUploadImages = () => {
         const unique_id = uuid();
         console.log(uploadedFiles);
 
@@ -123,10 +165,9 @@ const ShopOwnerInfo = () => {
 
             const baseUrl = `https://storage.googleapis.com/upload/storage/v1/b/${BUCKET_NAME}/o`;
 
-            // async await here
-            axios.post(baseUrl, file, config)
-                .then(res => console.log(res))
-                .catch(err => console.log(err));
+            // axios.post(baseUrl, file, config)
+            //     .then(res => console.log(res))
+            //     .catch(err => console.log(err));
 
             // axios.post({
             //     url: baseUrl,
@@ -143,7 +184,28 @@ const ShopOwnerInfo = () => {
 
         // url
         // post
+    }
 
+    const handleSubmitCreateShopForm = () => {
+        console.log(createShopName);
+        console.log(createShopAddress);
+        console.log(createShopHour);
+        console.log(createShopNumber);
+
+        const data = {
+            shop_name: createShopName,
+            telephone: createShopNumber,
+            address: createShopAddress,
+            hour: {
+                start: createShopHour[0],
+                end: createShopHour[1]
+            },
+            images: [...dummyImgLinks]
+        }
+
+        axios.post('/bobaplace', data)
+            .then(res => res.data)
+            .catch(err => console.log(err));
     }
 
     const prefixSelector = (
@@ -206,28 +268,50 @@ const ShopOwnerInfo = () => {
                                 name="firstname"
                                 rules={[{ message: 'Please input your first name!' }]}
                             >
-                                <Input />
+                                <Input
+                                    value={firstName}
+                                    onChange={e => setFirstName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Last name"
                                 name="lastname"
                                 rules={[{ message: 'Please input your last name!' }]}
                             >
-                                <Input />
+                                <Input
+                                    value={lastName}
+                                    onChange={e => setLastName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Username"
                                 name="username"
                                 rules={[{ message: 'Please input your username!' }]}
                             >
-                                <Input />
+                                <Input
+                                    value={username}
+                                    onChange={e => setUsername(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Password"
                                 name="password"
                                 rules={[{ message: 'Please input your password!' }]}
                             >
-                                <Input />
+                                <Input.Password
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="Confirm Password"
+                                name="confirm password"
+                                rules={[{ message: 'Please input your confirm password!' }]}
+                            >
+                                <Input.Password
+                                    value={confirmPassword}
+                                    onChange={e => setConfirmPassword(e.target.value)}
+                                />
                             </Form.Item>
                             <Button
                                 onMouseEnter={handleHoverSubmitChangeInfoEnter}
@@ -239,6 +323,7 @@ const ShopOwnerInfo = () => {
                                 }}
                                 type="primary"
                                 htmlType="submit"
+                                onClick={handleSubmitChangeUserInfo}
                             >
                                 Submit
                             </Button>
@@ -272,28 +357,44 @@ const ShopOwnerInfo = () => {
                                 name="shop name"
                                 rules={[{ message: 'Please input your shop name!' }]}
                             >
-                                <Input />
+                                <Input
+
+                                    value={createShopName}
+                                    onChange={e => setCreateShopName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Address"
                                 name="address"
                                 rules={[{ message: 'Please input your shop address!' }]}
                             >
-                                <Input />
+                                <Input
+                                    value={createShopAddress}
+                                    onChange={e => setCreateShopAddress(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Hours"
                                 name="hours"
-                                rules={[{ message: 'Please input your shop working hours!' }]}
+                            // rules={[{ message: 'Please input your shop working hours!' }]}
                             >
-                                <TimePicker.RangePicker />
+                                <TimePicker.RangePicker
+                                    value={createShopHour}
+                                    onChange={e => setCreateShopHour([e[0].$d.toTimeString(), e[1].$d.toTimeString()])}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Contact number"
                                 name="telephoneNumber"
                                 rules={[{ message: 'Please input your shop telephone number!' }]}
                             >
-                                <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                                <Input
+                                    // addonBefore={prefixSelector} 
+                                    style={{ width: '100%' }}
+                                    type="number"
+                                    value={createShopNumber}
+                                    onChange={e => setCreateShopNumber(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Upload feature images"

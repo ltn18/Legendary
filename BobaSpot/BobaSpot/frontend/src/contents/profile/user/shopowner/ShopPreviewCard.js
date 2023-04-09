@@ -3,9 +3,11 @@ import {
     Image, Button, Space,
     Form, Input, Select,
     TimePicker, DatePicker,
-    Upload
+    Upload,
+    InputNumber
 } from 'antd';
 import { UploadOutlined, InboxOutlined, StarOutlined } from '@ant-design/icons';
+import axios from 'axios'
 
 const { Option } = Select;
 
@@ -18,6 +20,12 @@ const ShopPreviewCard = (props) => {
     const [isHoverChangeShopInfo, setIsHoverChangeShopInfo] = useState(false);
     const [isHoverSubmitCreateShop, setIsHoverSubmitCreateShop] = useState(false);
     const [showChangeShopInfoOverlay, setShowChangeShopInfoOverlay] = useState(false);
+
+    // change shop's info
+    const [changeShopName, setChangeShopName] = useState('');
+    const [changeShopAddress, setChangeShopAddress] = useState('');
+    const [changeShopHour, setChangeShopHour] = useState([]);
+    const [changeShopNumber, setChangeShopNumber] = useState('');
 
     const handleDeleteShopMouseEnter = () => {
         setIsHoverDeleteShop(true);
@@ -45,6 +53,27 @@ const ShopPreviewCard = (props) => {
 
     const handleShowChangeShopOverlay = () => {
         setShowChangeShopInfoOverlay(!showChangeShopInfoOverlay);
+    }
+
+    const handleSubmitChangeShopInfo = () => {
+        console.log(changeShopName);
+        console.log(changeShopAddress);
+        console.log(changeShopHour);
+        console.log(changeShopNumber);
+
+        const data = {
+            shop_name: changeShopName,
+            telephone: changeShopNumber,
+            address: changeShopAddress,
+            hour: {
+                start: changeShopHour[0],
+                end: changeShopHour[1]
+            }
+        }
+
+        axios.put('/bobaplace', data)
+            .then(res => res.data)
+            .catch(err => console.log(err))
     }
 
     const prefixSelector = (
@@ -158,30 +187,43 @@ const ShopPreviewCard = (props) => {
                         <Form.Item
                             label="Shop name"
                             name="shop name"
-                            rules={[{ message: 'Please input your shop name!' }]}
+                            value={changeShopName}
+                            onChange={e => setChangeShopName(e.target.value)}
                         >
                             <Input />
                         </Form.Item>
                         <Form.Item
                             label="Address"
                             name="address"
-                            rules={[{ message: 'Please input your shop address!' }]}
                         >
-                            <Input />
+                            <Input
+                                value={changeShopAddress}
+                                onChange={e => setChangeShopAddress(e.target.value)}
+                            />
                         </Form.Item>
                         <Form.Item
                             label="Hours"
                             name="hours"
-                            rules={[{ message: 'Please input your shop working hours!' }]}
                         >
-                            <TimePicker.RangePicker />
+                            <TimePicker.RangePicker
+                                value={changeShopHour}
+                                onChange={e => setChangeShopHour([e[0].$d.toTimeString(), e[1].$d.toTimeString()])}
+                            />
                         </Form.Item>
+
+                        {/* allow number only */}
                         <Form.Item
                             label="Contact number"
                             name="telephoneNumber"
                             rules={[{ message: 'Please input your shop telephone number!' }]}
                         >
-                            <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                            <Input
+                                // addonBefore={prefixSelector}
+                                style={{ width: '100%' }}
+                                type="number"
+                                value={changeShopNumber}
+                                onChange={e => setChangeShopNumber(e.target.value)}
+                            />
                         </Form.Item>
                         <Button
                             onMouseEnter={handleHoverSubmitCreateShopEnter}
@@ -193,6 +235,7 @@ const ShopPreviewCard = (props) => {
                             }}
                             type="primary"
                             htmlType="submit"
+                            onClick={handleSubmitChangeShopInfo}
                         >
                             Submit
                         </Button>
