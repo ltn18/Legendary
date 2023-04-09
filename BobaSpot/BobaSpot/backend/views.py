@@ -71,7 +71,7 @@ class BobaShopView(APIView):
             if not BobaShop.objects.filter(id=boba_id).exists():
                 bobashop = BobaShop(customuser_ptr = shop)
                 bobashop.username = shop.username
-                bobashop.hashpass = str(base64.b64encode(shop['password'].encode("utf-8")))
+                bobashop.hashpass = shop.hashpass
                 bobashop.save_base(raw=True)
             else:
                 bobashop = BobaShop.objects.get(id=boba_id)
