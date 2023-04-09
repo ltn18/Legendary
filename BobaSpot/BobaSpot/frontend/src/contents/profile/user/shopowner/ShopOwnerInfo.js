@@ -96,7 +96,7 @@ const ShopOwnerInfo = () => {
 
         const GCLOUD_PROJECT_KEYFILE = `${__dirname}/service_account_key.json`;
         const BUCKET_NAME = "bobaspot-blob";
-        const GCLOUD_API_KEY = "AIzaSyBlGKGLeiR03WYgiBySCjCUhjY7BUdGPvg";
+        const GCLOUD_API_KEY = "";
 
         // const auth = new google.auth.GoogleAuth({
         //     keyFile: GCLOUD_PROJECT_KEYFILE,
