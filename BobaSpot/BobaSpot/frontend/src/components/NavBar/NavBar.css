@@ -1,0 +1,23 @@
+.links {
+    display: flex;
+    align-items: center;
+    transition: transform .2s; 
+}
+
+.links :hover {
+    cursor: pointer;
+}
+  
+.links a {
+    text-decoration: none;
+    color: #FDD0CF;
+    margin-left: 20px;
+    font-size: 25px;
+    font-family: "just another hand", cursive;
+    font-size: 3em;
+}
+
+/* style for whole page */
+body {
+    margin-right: 50px;
+}
