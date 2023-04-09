@@ -61,7 +61,7 @@ function Login() {
 
   const onFinish = () => {
     console.log('Received values of form:', form);
-    axios.post('http://localhost:8000/login', {
+    axios.post('http://localhost:8000/api/login/', {
     username: 'aa',
     password: 'a'
     })

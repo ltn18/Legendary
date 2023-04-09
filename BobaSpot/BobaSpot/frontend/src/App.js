@@ -17,14 +17,14 @@ import ShopProfile from './components/ShopProfile/ShopProfile';
 
 const App = () => {
   return (
-    <Temp/>
-    // <Router>
-    //       <Routes>
+    // <Temp/>
+    <Router>
+          <Routes>
             
-    //           <Route exact path="/login" element={<Login />} /> 
-    //           <Route exact path="/signup" element={<Signup />} /> 
-    //     </Routes>   
-    // </Router>
+              <Route exact path="/login" element={<Login />} /> 
+              <Route exact path="/signup" element={<Signup />} /> 
+        </Routes>   
+    </Router>
   );
 }
 
