@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
-import { Button, Image } from 'antd';
-import { StarOutlined } from '@ant-design/icons';
+import {
+    Image, Button, Space,
+    Form, Input, Select,
+    TimePicker, DatePicker,
+    Upload
+} from 'antd';
+import { UploadOutlined, InboxOutlined, StarOutlined } from '@ant-design/icons';
+
+const { Option } = Select;
 
 const ShopPreviewCard = (props) => {
     const {
@@ -9,6 +16,8 @@ const ShopPreviewCard = (props) => {
 
     const [isHoverDeleteShop, setIsHoverDeleteShop] = useState(false);
     const [isHoverChangeShopInfo, setIsHoverChangeShopInfo] = useState(false);
+    const [isHoverSubmitCreateShop, setIsHoverSubmitCreateShop] = useState(false);
+    const [showChangeShopInfoOverlay, setShowChangeShopInfoOverlay] = useState(false);
 
     const handleDeleteShopMouseEnter = () => {
         setIsHoverDeleteShop(true);
@@ -26,10 +35,31 @@ const ShopPreviewCard = (props) => {
         setIsHoverChangeShopInfo(false);
     };
 
+    const handleHoverSubmitCreateShopEnter = () => {
+        setIsHoverSubmitCreateShop(true);
+    }
+
+    const handleHoverSubmitCreateShopLeave = () => {
+        setIsHoverSubmitCreateShop(false);
+    }
+
+    const handleShowChangeShopOverlay = () => {
+        setShowChangeShopInfoOverlay(!showChangeShopInfoOverlay);
+    }
+
+    const prefixSelector = (
+        <Form.Item name="prefix" noStyle>
+            <Select style={{ width: 70 }}>
+                <Option value="1">+1</Option>
+                <Option value="84">+84</Option>
+            </Select>
+        </Form.Item>
+    );
+
     return (
         <div style={{
             width: '90%',
-            height: '50%',
+            height: '60%',
             top: '30%',
             backgroundColor: 'white',
             color: 'black',
@@ -114,10 +144,60 @@ const ShopPreviewCard = (props) => {
                         borderColor: isHoverChangeShopInfo ? '#FDD0CF' : '#d7d7d7',
                         boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
                     }}
+                    onClick={handleShowChangeShopOverlay}
                     block
                 >
                     Change shop's info
                 </Button>
+
+                {
+                    showChangeShopInfoOverlay &&
+                    <Form style={{
+                        marginTop: 10
+                    }}>
+                        <Form.Item
+                            label="Shop name"
+                            name="shop name"
+                            rules={[{ message: 'Please input your shop name!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="Address"
+                            name="address"
+                            rules={[{ message: 'Please input your shop address!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+                        <Form.Item
+                            label="Hours"
+                            name="hours"
+                            rules={[{ message: 'Please input your shop working hours!' }]}
+                        >
+                            <TimePicker.RangePicker />
+                        </Form.Item>
+                        <Form.Item
+                            label="Contact number"
+                            name="telephoneNumber"
+                            rules={[{ message: 'Please input your shop telephone number!' }]}
+                        >
+                            <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                        </Form.Item>
+                        <Button
+                            onMouseEnter={handleHoverSubmitCreateShopEnter}
+                            onMouseLeave={handleHoverSubmitCreateShopLeave}
+                            style={{
+                                backgroundColor: isHoverSubmitCreateShop ? '#FDD0CF' : 'white',
+                                color: isHoverSubmitCreateShop ? 'white' : 'black',
+                                borderColor: isHoverSubmitCreateShop ? '#FDD0CF' : '#d7d7d7',
+                            }}
+                            type="primary"
+                            htmlType="submit"
+                        >
+                            Submit
+                        </Button>
+                    </Form>
+                }
 
                 <Button
                     onMouseEnter={handleDeleteShopMouseEnter}

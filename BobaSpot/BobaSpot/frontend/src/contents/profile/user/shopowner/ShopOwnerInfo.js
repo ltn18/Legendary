@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuid } from 'uuid';
+import { format } from "util";
+import axios from 'axios'
 
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import {
@@ -25,6 +28,9 @@ const ShopOwnerInfo = () => {
     // how to show 1 overlay at a time
     const [showChangeInfoOverlay, setShowChangeInfoOverlay] = useState(false);
     const [showCreateShopOverlay, setShowCreateShopOverlay] = useState(false);
+
+    // uploaded files
+    const [uploadedFiles, setUploadedFiles] = useState([]);
 
     const handleHoverSubmitChangeInfoEnter = () => {
         setIsHoverSubmitChangeInfo(true);
@@ -78,6 +84,66 @@ const ShopOwnerInfo = () => {
 
     const handleLogout = () => {
         navigate('/login');
+    }
+
+    const handleUploadSingleImage = async () => {
+
+    }
+
+    const handleSubmitCreateShopForm = async () => {
+        const unique_id = uuid();
+        console.log(uploadedFiles);
+
+        const GCLOUD_PROJECT_KEYFILE = `${__dirname}/service_account_key.json`;
+        const BUCKET_NAME = "bobaspot-blob";
+        const GCLOUD_API_KEY = "AIzaSyBlGKGLeiR03WYgiBySCjCUhjY7BUdGPvg";
+
+        // const auth = new google.auth.GoogleAuth({
+        //     keyFile: GCLOUD_PROJECT_KEYFILE,
+        //     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+        // })
+
+        uploadedFiles.map(file => {
+            console.log(URL.createObjectURL(file));
+            console.log(file.name);
+
+            const config = {
+                method: "POST",
+                data: file,
+                // how to add scope here?
+                // scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+                headers: {
+                    // add headers config here
+                    'Content-type': 'image/jpeg'
+                },
+                params: {
+                    key: GCLOUD_API_KEY
+                }
+            }
+
+            const baseUrl = `https://storage.googleapis.com/upload/storage/v1/b/${BUCKET_NAME}/o`;
+
+            // async await here
+            axios.post(baseUrl, file, config)
+                .then(res => console.log(res))
+                .catch(err => console.log(err));
+
+            // axios.post({
+            //     url: baseUrl,
+            //     method: "POST",
+            //     headers: {
+            //         authorization: `Bearer + token`,
+            //     },
+            //     params: {
+            //         key: GCLOUD_API_KEY
+            //     },
+            //     data: file,
+            // })
+        })
+
+        // url
+        // post
+
     }
 
     const prefixSelector = (
@@ -234,15 +300,35 @@ const ShopOwnerInfo = () => {
                                 name="images"
                                 rules={[{ message: 'Please input your shop feature images!' }]}
                             >
-                                <Upload
-                                    action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                                    listType="text"
-                                    maxCount={5}
+                                <input
+                                    type="file"
                                     multiple
-                                >
-                                    <Button icon={<UploadOutlined />}>Upload (Max: 5)</Button>
-                                </Upload>
+                                    onChange={(e) => {
+                                        // handle over 5 images uploaded
+                                        // get only top 5 most recent uploaded
+                                        setUploadedFiles([...uploadedFiles, ...e.target.files]);
+                                    }}
+                                    accept="image/*"
+                                />
                             </Form.Item>
+
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    marginBottom: 30
+                                }}
+                            >
+                                <b>Chosen Images</b>
+                                {
+                                    uploadedFiles.map(file =>
+                                        <div>
+                                            {file.name}
+                                        </div>
+                                    )
+                                }
+                            </div>
+
                             <Button
                                 onMouseEnter={handleHoverSubmitCreateShopEnter}
                                 onMouseLeave={handleHoverSubmitCreateShopLeave}
@@ -253,6 +339,7 @@ const ShopOwnerInfo = () => {
                                 }}
                                 type="primary"
                                 htmlType="submit"
+                                onClick={handleSubmitCreateShopForm}
                             >
                                 Submit
                             </Button>
