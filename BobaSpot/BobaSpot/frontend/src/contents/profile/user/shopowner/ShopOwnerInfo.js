@@ -18,6 +18,7 @@ const { Option } = Select;
 // TODO2: see how Upload of antd works
 const ShopOwnerInfo = () => {
     const navigate = useNavigate();
+
     const [isHoverLogout, setIsHoverLogout] = useState(false);
     const [isHoverCreateShop, setIsHoverCreateShop] = useState(false)
     const [isHoverChangeInfo, setIsHoverChangeInfo] = useState(false)
@@ -107,7 +108,7 @@ const ShopOwnerInfo = () => {
         navigate('/login');
     }
 
-    const handleSubmitChangeUserInfo = () => {
+    const handleSubmitChangeUserInfo = async () => {
         console.log(firstName);
         console.log(lastName);
         console.log(username);
@@ -123,15 +124,17 @@ const ShopOwnerInfo = () => {
 
         // handle password = confirm password
         if (password === confirmPassword) {
-            axios.put('/user', data)
+            const result = await axios.put('/user', data)
                 .then(res => res.data)
-                .catch(err => console.log(err))
+                .catch(err => console.log(err));
+            console.log(result);
         }
         else {
             alert("Password does not match with confirm password!")
         }
     }
 
+    // we can await this
     const handleUploadImages = () => {
         const unique_id = uuid();
         console.log(uploadedFiles);
@@ -145,45 +148,23 @@ const ShopOwnerInfo = () => {
         //     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
         // })
 
+        console.log(uploadedFiles);
+
         uploadedFiles.map(file => {
-            console.log(URL.createObjectURL(file));
-            console.log(file.name);
-
+            const formData = new FormData();
+            formData.append("filename", file);
+            formData.append("destination", "images");
+            formData.append("create_thumbnail", true);
             const config = {
-                method: "POST",
-                data: file,
-                // how to add scope here?
-                // scopes: ["https://www.googleapis.com/auth/cloud-platform"],
                 headers: {
-                    // add headers config here
-                    'Content-type': 'image/jpeg'
-                },
-                params: {
-                    key: GCLOUD_API_KEY
+                    "content-type": "multipart/form-data"
                 }
-            }
+            };
 
-            const baseUrl = `https://storage.googleapis.com/upload/storage/v1/b/${BUCKET_NAME}/o`;
-
-            // axios.post(baseUrl, file, config)
-            //     .then(res => console.log(res))
-            //     .catch(err => console.log(err));
-
-            // axios.post({
-            //     url: baseUrl,
-            //     method: "POST",
-            //     headers: {
-            //         authorization: `Bearer + token`,
-            //     },
-            //     params: {
-            //         key: GCLOUD_API_KEY
-            //     },
-            //     data: file,
-            // })
+            axios.post('/bobaplace', formData, config)
+                .then(res => console.log(res))
+                .catch(err => console.log(err));
         })
-
-        // url
-        // post
     }
 
     const handleSubmitCreateShopForm = () => {
@@ -396,23 +377,31 @@ const ShopOwnerInfo = () => {
                                     onChange={e => setCreateShopNumber(e.target.value)}
                                 />
                             </Form.Item>
-                            <Form.Item
-                                label="Upload feature images"
-                                name="images"
-                                rules={[{ message: 'Please input your shop feature images!' }]}
+                            <div
+                                style={{
+                                    marginBottom: 10
+                                }}
                             >
-                                <input
-                                    type="file"
-                                    multiple
-                                    onChange={(e) => {
-                                        // handle over 5 images uploaded
-                                        // get only top 5 most recent uploaded
+                                Upload shop images:
+                            </div>
+                            <input
+                                type="file"
+                                multiple
+                                onChange={(e) => {
+                                    // handle over 5 images uploaded
+                                    // get only top 5 most recent uploaded
+                                    if (uploadedFiles.length + e.target.files.length > 5) {
+                                        setUploadedFiles([...uploadedFiles, ...e.target.files].slice(-5));
+                                    }
+                                    else {
                                         setUploadedFiles([...uploadedFiles, ...e.target.files]);
-                                    }}
-                                    accept="image/*"
-                                />
-                            </Form.Item>
-
+                                    }
+                                }}
+                                style={{
+                                    marginBottom: 10
+                                }}
+                                accept="image/*"
+                            />
                             <div
                                 style={{
                                     display: 'flex',
@@ -429,6 +418,12 @@ const ShopOwnerInfo = () => {
                                     )
                                 }
                             </div>
+
+                            <button
+                                onClick={handleUploadImages}
+                            >
+                                Upload to Google Blob
+                            </button>
 
                             <Button
                                 onMouseEnter={handleHoverSubmitCreateShopEnter}
