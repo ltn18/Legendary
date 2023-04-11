@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_jwt.settings import api_settings
+from rest_framework import serializers
 import base64
 
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -84,16 +85,7 @@ class BobaShopView(APIView):
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
-<<<<<<< HEAD
-    def get(self, request, format=None):
-        permission_classes = (IsAuthenticated,)
-        authentication_classes = (JWTAuthentication,)
-        shop_info = request.query_params
-        if shop_info is None:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-=======
     def get(self, request, boba_id, format=None):
->>>>>>> LEGEND-03/Create_Tables
         try:
             shop = BobaShop.objects.get(id=boba_id)
         except Exception:
@@ -102,6 +94,8 @@ class BobaShopView(APIView):
         serializer_class = BobaShopSerializer(shop)
         serialized_data =  {'data': serializer_class.data}
         drinks_serializer = DrinkSerializer(shop.drink_set, many=True).data
+        # for drink_serializer in drinks_serializer:
+        #     drink_serializer.pop('boba_shop')
         drinks_serializer.sort(key=lambda x: x['rating'], reverse=True)
         #retrieve top 5 drinks
         top_drink = {'top_drink': drinks_serializer[:5]}
@@ -113,8 +107,13 @@ class BobaShopView(APIView):
                 reviews.append(review)
         reviews_serializer = [ReviewsSerializer(review).data for review in reviews]
         for rv_serializer in reviews_serializer:
-            rv_serializer['customer_name'] = str(Customer.objects.get(id=rv_serializer['user']))
+            cus = Customer.objects.get(id=rv_serializer['user'])
+            rv_serializer['customer_name'] = str(cus)
             rv_serializer['drink_name'] = str(Drink.objects.get(pk=rv_serializer['drink']))
+            rv_serializer['profile_pic'] = cus.image_url
+            # rv_serializer.pop('user')
+            # rv_serializer.pop('review_id')
         reviews_json = {"reviews": reviews_serializer}
         serialized_data['data'].update(reviews_json)
-        return Response(serialized_data, status=status.HTTP_200_OK)   
+        print(serialized_data['data'])
+        return Response(serialized_data['data'], status=status.HTTP_200_OK)   

@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length = 50, unique = True)
     hashpass = models.CharField(max_length = 500)
-    image_url = models.CharField(max_length = 100, blank = True, null = True)
+    image_url = models.CharField(max_length = 500, blank = True, null = True)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['hashpass']
     def __str__(self):
@@ -22,7 +22,7 @@ class BobaShop(CustomUser):
     address = models.CharField(max_length = 500)
     opening_hour = models.TimeField(blank=True, null=True)
     closing_hour = models.TimeField(blank=True, null=True)
-    ad_image_url = ArrayField(models.CharField(max_length = 100), blank=True, null=True)
+    ad_image_url = ArrayField(models.CharField(max_length = 500), blank=True, null=True)
     # drinks = models.ForeignKey(Drink, on_delete=models.CASCADE)
     
     @property
@@ -31,8 +31,10 @@ class BobaShop(CustomUser):
         tot_rate = 0
         for drink in self.drink_set.all():
             for review in drink.reviews_set.all():
-                tot_rate += review.rating
-                count += 1
+                if review.rating is not None:
+                    tot_rate += review.rating
+                    count += 1
+        print(0 if count == 0 else round(tot_rate/count, 1))
         return 0 if count == 0 else round(tot_rate/count, 1)
     
     @property
