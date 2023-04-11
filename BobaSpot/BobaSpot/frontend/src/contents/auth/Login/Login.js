@@ -61,12 +61,23 @@ function Login() {
 
   const onFinish = () => {
     console.log('Received values of form:', form);
+<<<<<<< HEAD
     axios.post('http://localhost:8000/login', {
     username: 'aa',
     password: 'a'
     })
     .then(function (response) {
       console.log(response);
+=======
+    axios.post('http://localhost:8000/api/login/', {
+    username: form.username,
+    password: form.password
+    })
+    .then(function (response) {
+      console.log(JSON.parse(response.data).token);
+      sessionStorage.setItem("token", JSON.parse(response.data).token);
+      
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
     })
     .catch(function (error) {
       console.log(error);
@@ -80,6 +91,10 @@ function Login() {
      * backend will send back token if the user is valid
      */
   };
+<<<<<<< HEAD
+=======
+  
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
 
   const toggleAuth = () => { 
     setIsLogin(!isLogin);
@@ -137,6 +152,10 @@ function Login() {
                   ]}
                 >
                   <Input
+<<<<<<< HEAD
+=======
+                    
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
                     placeholder="Last name"
                     onChange={(e) => setForm({ ...form, lastname: e.target.value })}
                   />
@@ -167,6 +186,10 @@ function Login() {
             >
             
               <Input
+<<<<<<< HEAD
+=======
+                
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
                 placeholder="Username"
                 onChange={(e) => setForm({ ...form, username: e.target.value})}
                 style={{borderRadius: '0px'}}
@@ -174,6 +197,10 @@ function Login() {
             </Form.Item>
             {/* password */}
             <Form.Item
+<<<<<<< HEAD
+=======
+              
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
               name="password"
               rules={isLogin ? null : [
                 {
@@ -188,6 +215,10 @@ function Login() {
               extra={passwordStrength && `Password Strength: ${passwordStrength}`}
             >
               <Input
+<<<<<<< HEAD
+=======
+                
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
                 type="password"
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -196,7 +227,11 @@ function Login() {
               />
             </Form.Item>
             <Form.Item>
+<<<<<<< HEAD
               <Button htmlType="submit" className="login-signup-button">{'Log In'}</Button> 
+=======
+              <Button  htmlType="submit" className="login-signup-button">{'Log In'}</Button> 
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
               <Link to='/signup'>
                          Don't have an account? Signup!
               </Link>

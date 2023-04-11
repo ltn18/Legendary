@@ -19,7 +19,11 @@ function Signup() {
   const errorMessage = 'Password is too weak';
   const [level,setLevel]=useState(0)
   const [isLogin, setIsLogin] = useState(true);
+<<<<<<< HEAD
   const [form, setForm] = useState(initialFormState);
+=======
+  const [form_signup, setForm] = useState(initialFormState);
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
   const [passwordStrength, setPasswordStrength] = useState(null);
 
   const checkPasswordStrength = (rule, value, callback) => {
@@ -59,10 +63,25 @@ function Signup() {
   };
 
 const onFinish = () => {
+<<<<<<< HEAD
       console.log('Received values of form:', form);
       axios({
         method: 'put',
         data: form
+=======
+      console.log('Received values of form:', form_signup);
+      axios.put('http://localhost:8000/api/login/', {
+        username: form_signup.username,
+        password: form_signup.password,
+        first_name: form_signup.firstname,
+        last_name: form_signup.lastname
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
       });
     // console.log('Received values of form:', values);
     /**
@@ -113,7 +132,11 @@ const onFinish = () => {
                 >
                   <Input
                     placeholder="First name"
+<<<<<<< HEAD
                     onChange={(e) => setForm({ ...form, firstname: e.target.value })}
+=======
+                    onChange={(e) => setForm({ ...form_signup, firstname: e.target.value })}
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
                   />
                   
                 </Form.Item>
@@ -132,7 +155,11 @@ const onFinish = () => {
                 >
                   <Input
                     placeholder="Last name"
+<<<<<<< HEAD
                     onChange={(e) => setForm({ ...form, lastname: e.target.value })}
+=======
+                    onChange={(e) => setForm({ ...form_signup, lastname: e.target.value })}
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
                   />
                   
                 </Form.Item>
@@ -161,7 +188,11 @@ const onFinish = () => {
             >
               <Input
                 placeholder="Username"
+<<<<<<< HEAD
                 onChange={(e) => setForm({ ...form, username: e.target.value})}
+=======
+                onChange={(e) => setForm({ ...form_signup, username: e.target.value})}
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
                 style={{borderRadius: '0px'}}
               />
             </Form.Item> }
@@ -183,7 +214,11 @@ const onFinish = () => {
               <Input
                 type="password"
                 placeholder="Password"
+<<<<<<< HEAD
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
+=======
+                onChange={(e) => setForm({ ...form_signup, password: e.target.value })}
+>>>>>>> e046a58fcc0f19c21038b651cbf6ebea2de274b4
                 onLevelChange={ setLevel}
                 style={{borderRadius: '0px'}}
               />
