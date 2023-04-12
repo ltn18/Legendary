@@ -18,29 +18,29 @@ def test_bobashop(db):
     return BobaShop.objects.create(username='dagunoodle', hashpass="b'YQ=='", shop_name="Dagu")
 
     
-# @pytest.mark.django_db
-# def test_unauthorized_request(api_client):
-#     url = reverse('test-view')
-#     response = api_client.get(url)
-#     assert response.status_code == 403
+@pytest.mark.django_db
+def test_unauthorized_request(api_client):
+    url = reverse('test-view')
+    response = api_client.get(url)
+    assert response.status_code == 403
     
-# @pytest.mark.django_db
-# def test_log_in(api_client, test_user):
-#     url = reverse('login-view')
-#     response = api_client.post(url, {'username':'someone', 'password':'a'}, format='json')
-#     print(CustomUser.objects.get(username='someone').hashpass)
-#     assert response.status_code == 200
+@pytest.mark.django_db
+def test_log_in(api_client, test_user):
+    url = reverse('login-view')
+    response = api_client.post(url, {'username':'someone', 'password':'a'}, format='json')
+    print(CustomUser.objects.get(username='someone').hashpass)
+    assert response.status_code == 200
     
-# @pytest.mark.django_db
-# def test_authorized_request(api_client, test_user):
-#     url = reverse('login-view')
-#     response = api_client.post(url, {'username':'someone', 'password':'a'}, format='json')
-#     token = json.loads(response.data)['token']
-#     api_client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
-#     url = reverse('test-view')
-#     response = api_client.get(url)
-#     assert response.status_code == 200
-#     assert json.loads(response.data)['message'] == "hello Aiden!"
+@pytest.mark.django_db
+def test_authorized_request(api_client, test_user):
+    url = reverse('login-view')
+    response = api_client.post(url, {'username':'someone', 'password':'a'}, format='json')
+    token = json.loads(response.data)['token']
+    api_client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+    url = reverse('test-view')
+    response = api_client.get(url)
+    assert response.status_code == 200
+    assert json.loads(response.data)['message'] == "hello Aiden!"
 
 @pytest.mark.django_db
 def test_update_bobashop(api_client, test_bobashop):
@@ -48,7 +48,28 @@ def test_update_bobashop(api_client, test_bobashop):
     response = api_client.post(login, {'username':'dagunoodle', 'password':'a'}, format='json')
     token = json.loads(response.data)['token']
     api_client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
-    url = reverse('bobashop-view')
+    url = '/api/bobashop/' + (str)(BobaShop.objects.get(username="dagunoodle").id) + '/'
     response = api_client.put(url, {"shop_name": "Daguboba"})
     assert response.status_code == 200
     assert BobaShop.objects.get(username="dagunoodle").shop_name == "Daguboba"
+    
+def test_create_bobashop(api_client, test_user):
+    login = reverse('login-view')
+    response = api_client.post(login, {'username':'someone', 'password':'a'}, format='json')
+    token = json.loads(response.data)['token']
+    api_client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+    url = '/api/bobashop/' + (str)(CustomUser.objects.get(username="someone").id) + '/'
+    response = api_client.put(url, {"address": "1641 E 115th Street", "shop_name": "bucks"})
+    assert response.status_code == 200
+    shop = BobaShop.objects.get(username="someone")
+    assert shop.address == "1641 E 115th Street" and shop.shop_name == "bucks"
+
+def test_get_bobashop(api_client, test_user, test_bobashop):
+    login = reverse('login-view')
+    response = api_client.post(login, {'username':'someone', 'password':'a'}, format='json')
+    token = json.loads(response.data)['token']
+    api_client.credentials(HTTP_AUTHORIZATION='Bearer ' + token)
+    url = '/api/bobashop/' + (str)(BobaShop.objects.get(username="dagunoodle").id) + '/'
+    response = api_client.get(url)
+    assert response.status_code == 200
+    assert response.data['data']['id'] == str(BobaShop.objects.get(username="dagunoodle").id) and response.data['data']['shop_name'] == 'Dagu'
