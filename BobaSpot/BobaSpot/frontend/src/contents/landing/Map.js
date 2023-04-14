@@ -135,10 +135,10 @@ function MapSearch() {
                     <div>
                       <Row>
                         <Col>
-                          <img src= {logoKFT} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }}/>
+                          <img src={logoKFT} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }}/>
                         </Col>
                         <Col>
-                          <h1>{selectedMarker.name}</h1>
+                          <h1>{selectedMarker.description}</h1>
                           <p>Address: Cleveland, OH 44106</p>
                           <p>Hours: 12:00pm - 21:30pm</p>
                           <p>Ratings: 4.3 <StarOutlined /></p>
