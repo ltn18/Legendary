@@ -34,12 +34,11 @@ class BobaShop(CustomUser):
                 if review.rating is not None:
                     tot_rate += review.rating
                     count += 1
-        print(0 if count == 0 else round(tot_rate/count, 1))
         return 0 if count == 0 else round(tot_rate/count, 1)
     
     @property
     def average_price(self):
-        return round(self.drink_set.aggregate(average_price=Avg('price'))['average_price'],2)
+        return round(self.drink_set.aggregate(average_price=Avg('price'))['average_price'],2) if len(self.drink_set.all()) > 0 else 0
     
     def __str__(self):
         return "{}".format(self.shop_name)
