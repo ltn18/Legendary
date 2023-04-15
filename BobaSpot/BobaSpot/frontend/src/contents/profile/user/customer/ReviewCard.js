@@ -13,7 +13,12 @@ const ReviewCard = (props) => {
 
     const {
         handleCloseOverlay,
-        reviewText
+        firstName,
+        lastName,
+        reviewText,
+        date,
+        rating,
+        drinkOrdered
     } = props;
 
     const [isHoverLogout, setIsHoverLogout] = useState(false);
@@ -28,10 +33,10 @@ const ReviewCard = (props) => {
 
     return (
         <div style={{
-            width: '70%',
-            height: '60%',
-            top: '30%',
-            backgroundColor: 'white',
+            width: '68%',
+            height: '50%',
+            top: '20%',
+            backgroundColor: '#FFB6C1',
             color: 'black',
             padding: 20,
             margin: 10,
@@ -42,13 +47,13 @@ const ReviewCard = (props) => {
             justifyContent: 'space-between',
         }}>
             <div style={{
-                width: '10%',
+                width: '20%',
                 marginRight: 10,
             }}>
                 <Image height={'60%'} src="https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c" />
             </div>
             <div style={{
-                width: '90%',
+                width: '80%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between'
@@ -58,33 +63,24 @@ const ReviewCard = (props) => {
                         display: 'flex',
                         flexDirection: 'row',
                         justifyContent: 'space-between',
-                        marginBottom: 10
+                        marginBottom: 10,
+                        fontSize: '20px'
                     }}
                 >
                     <div style={{
                         fontSize: 25,
                         fontWeight: 'bolder'
-                    }}>Escanord Le</div>
-                    <div>Date: 03/31/2023</div>
-                    <div>Rating: 5 <StarOutlined/> </div>
-                    <div>Drink ordered: Kung Fu Milk Tea</div>
+                    }}>{firstName} {lastName}</div>
+                    <div>Date: {date}</div>
+                    <div>Rating: {rating} <StarOutlined /> </div>
+                    <div>Drink ordered: {drinkOrdered}</div>
                 </div>
                 <div style={{
                     marginBottom: 10,
-                    maxWidth: '300ch'
+                    maxWidth: '300ch',
+                    fontSize: '20px'
                 }}>
-                    Escanord Le reviewed Koko Bakery: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                    It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                    It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                    and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                    It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                    It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                    and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                    {reviewText}
                 </div>
                 <Button
                     onMouseEnter={handleLogoutMouseEnter}

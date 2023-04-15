@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import axios from 'axios'
+
+import { storage } from "../../../../services/firebase";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
 import { UploadOutlined, InboxOutlined } from '@ant-design/icons';
 import {
@@ -33,19 +36,7 @@ const ShopOwnerInfo = () => {
     // uploaded files
     const [uploadedFiles, setUploadedFiles] = useState([]);
 
-    // create shop
-    const [createShopName, setCreateShopName] = useState('');
-    const [createShopAddress, setCreateShopAddress] = useState('');
-    const [createShopHour, setCreateShopHour] = useState([]);
-    const [createShopNumber, setCreateShopNumber] = useState('');
-
-    // change user's info
-    const [firstName, setFirstName] = useState();
-    const [lastName, setLastName] = useState();
-    const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
-    const [username, setUsername] = useState();
-
+    // dummy imgs
     const dummyImgLinks = [
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
@@ -53,6 +44,40 @@ const ShopOwnerInfo = () => {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxp-pYanOg63_FoAgSlnJCLanxj6ipaz7hfA&usqp=CAU",
     ];
+
+    // create shop
+    const [createShopName, setCreateShopName] = useState('');
+    const [createShopAddress, setCreateShopAddress] = useState('');
+    const [createShopHour, setCreateShopHour] = useState([]);
+    const [createShopNumber, setCreateShopNumber] = useState('');
+    const [createShopImages, setCreateShopImages] = useState([])
+
+    // change user's info
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
+    const [password, setPassword] = useState();
+    const [confirmPassword, setConfirmPassword] = useState();
+
+    const [data, setData] = useState({
+        first_name: '',
+        last_name: '',
+        image_url: ''
+    });
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const result = await axios.get('http://localhost:8000/api/user/', {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+                }
+            })
+            setData(result.data);
+        }
+
+        // console.log("api_key:", process.env.REACT_APP_FIREBASE_API_KEY);
+
+        fetchUser();
+    }, [data])
 
     const handleHoverSubmitChangeInfoEnter = () => {
         setIsHoverSubmitChangeInfo(true);
@@ -109,84 +134,116 @@ const ShopOwnerInfo = () => {
     }
 
     const handleSubmitChangeUserInfo = async () => {
-        console.log(firstName);
-        console.log(lastName);
-        console.log(username);
-        console.log(password);
-        console.log(confirmPassword);
+        const options = {
+            method: 'PUT',
+            url: 'http://localhost:8000/api/user/',
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            data: {
+                "first_name": firstName,
+                "last_name": lastName,
+                "password": password
+            }
+        };
 
-        const data = {
-            first_name: firstName,
-            last_name: lastName,
-            username: username,
-            password: password
+        const updateInfo = async () => {
+            const result = await axios.request(options)
+                .then(res => res.data)
+                .catch(err => console.log(err))
+            console.log("result: ", result);
         }
 
         // handle password = confirm password
         if (password === confirmPassword) {
-            const result = await axios.put('/user', data)
-                .then(res => res.data)
-                .catch(err => console.log(err));
-            console.log(result);
+            updateInfo();
         }
         else {
             alert("Password does not match with confirm password!")
         }
     }
 
-    // we can await this
-    const handleUploadImages = () => {
+    const [imgUrl, setImgUrl] = useState(null);
+    const [progresspercent, setProgresspercent] = useState(0);
+
+    const handleUploadSingleImage = (file) => {
         const unique_id = uuid();
-        console.log(uploadedFiles);
+        console.log(unique_id);
 
-        const GCLOUD_PROJECT_KEYFILE = `${__dirname}/service_account_key.json`;
-        const BUCKET_NAME = "bobaspot-blob";
-        const GCLOUD_API_KEY = "";
+        if (!file) return;
 
-        // const auth = new google.auth.GoogleAuth({
-        //     keyFile: GCLOUD_PROJECT_KEYFILE,
-        //     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-        // })
+        const storageRef = ref(storage, `images/${unique_id}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
 
-        console.log(uploadedFiles);
+        uploadTask.on("state_changed",
+            (snapshot) => {
+                const progress =
+                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setProgresspercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
 
-        uploadedFiles.map(file => {
-            const formData = new FormData();
-            formData.append("filename", file);
-            formData.append("destination", "images");
-            formData.append("create_thumbnail", true);
-            const config = {
-                headers: {
-                    "content-type": "multipart/form-data"
-                }
-            };
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log(downloadURL);
+                    setImgUrl(downloadURL);
 
-            axios.post('/image', formData, config)
-                .then(res => console.log(res))
-                .catch(err => console.log(err));
-        })
+                    // save to state
+                    let tmpShopImages = createShopImages;
+                    tmpShopImages.push(downloadURL);
+                    setCreateShopImages(tmpShopImages);
+                });
+            }
+        );
+    }
+
+    const handleUploadImages = (e) => {
+        e.preventDefault();
+        const files = uploadedFiles;
+
+        files.forEach(file => {
+            handleUploadSingleImage(file);
+        });
     }
 
     const handleSubmitCreateShopForm = () => {
-        console.log(createShopName);
-        console.log(createShopAddress);
-        console.log(createShopHour);
-        console.log(createShopNumber);
+        // console.log(createShopName);
+        // console.log(createShopAddress);
+        // console.log(createShopHour);
+        // console.log(createShopNumber);
+        // console.log(createShopImages);
 
-        const data = {
-            shop_name: createShopName,
-            telephone: createShopNumber,
-            address: createShopAddress,
-            hour: {
-                start: createShopHour[0],
-                end: createShopHour[1]
+        const options = {
+            method: 'PUT',
+            url: 'http://localhost:8000/api/bobashop/',
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
-            images: [...dummyImgLinks]
+            data: {
+                "shop_name": createShopName,
+                "telephone": createShopNumber,
+                "address": createShopAddress,
+                "hour": {
+                    "start": createShopHour[0],
+                    "end": createShopHour[1]
+                },
+                "images": [...createShopImages]
+            }
+        };
+
+        const createShop = async () => {
+            const result = await axios.request(options)
+                .then(res => res.data)
+                .catch(err => console.log(err));
+
+            console.log("result: ", result);
         }
 
-        axios.post('/bobaplace', data)
-            .then(res => res.data)
-            .catch(err => console.log(err));
+        if (progresspercent == 100) {
+            createShop();
+        }
     }
 
     const prefixSelector = (
@@ -215,8 +272,8 @@ const ShopOwnerInfo = () => {
                     <Image src="https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c" />
                 </div>
                 <div style={{ color: 'white', width: '50%', paddingLeft: 30 }}>
-                    <h1 style={{ fontSize: 30, color: 'black' }}>Escanord Le</h1>
-                    <div style={{ fontSize: 20, color: 'black' }}>dhl64@case.edu</div>
+                    <h1 style={{ fontSize: 30, color: 'black' }}>{data.first_name} {data.last_name}</h1>
+                    <div style={{ fontSize: 20, color: 'black' }}><i style={{}}>username:</i> {data.username}</div>
                 </div>
             </div>
 
@@ -262,16 +319,6 @@ const ShopOwnerInfo = () => {
                                 <Input
                                     value={lastName}
                                     onChange={e => setLastName(e.target.value)}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                label="Username"
-                                name="username"
-                                rules={[{ message: 'Please input your username!' }]}
-                            >
-                                <Input
-                                    value={username}
-                                    onChange={e => setUsername(e.target.value)}
                                 />
                             </Form.Item>
                             <Form.Item
@@ -377,6 +424,7 @@ const ShopOwnerInfo = () => {
                                     onChange={e => setCreateShopNumber(e.target.value)}
                                 />
                             </Form.Item>
+
                             <div
                                 style={{
                                     marginBottom: 10
@@ -419,29 +467,49 @@ const ShopOwnerInfo = () => {
                                 }
                             </div>
 
-                            <button
+                            {/* <button
                                 onClick={handleUploadImages}
                                 style={{
                                     marginBottom: 10
                                 }}
                             >
-                                Upload to Google Blob
-                            </button>
+                            </button> */}
 
-                            <Button
-                                onMouseEnter={handleHoverSubmitCreateShopEnter}
-                                onMouseLeave={handleHoverSubmitCreateShopLeave}
-                                style={{
-                                    backgroundColor: isHoverSubmitCreateShop ? '#FDD0CF' : 'white',
-                                    color: isHoverSubmitCreateShop ? 'white' : 'black',
-                                    borderColor: isHoverSubmitCreateShop ? '#FDD0CF' : '#d7d7d7',
-                                }}
-                                type="primary"
-                                htmlType="submit"
-                                onClick={handleSubmitCreateShopForm}
-                            >
-                                Submit
-                            </Button>
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column'
+                            }}>
+                                <Button
+                                    onClick={handleUploadImages}
+                                    style={{
+                                        marginBottom: 10
+                                    }}
+                                >
+                                    Upload to Google Blob
+                                </Button>
+
+                                {
+                                    !imgUrl &&
+                                    <div>
+                                        <div style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
+                                    </div>
+                                }
+
+                                <Button
+                                    onMouseEnter={handleHoverSubmitCreateShopEnter}
+                                    onMouseLeave={handleHoverSubmitCreateShopLeave}
+                                    style={{
+                                        backgroundColor: isHoverSubmitCreateShop ? '#FDD0CF' : 'white',
+                                        color: isHoverSubmitCreateShop ? 'white' : 'black',
+                                        borderColor: isHoverSubmitCreateShop ? '#FDD0CF' : '#d7d7d7',
+                                    }}
+                                    type="primary"
+                                    htmlType="submit"
+                                    onClick={handleSubmitCreateShopForm}
+                                >
+                                    Submit
+                                </Button>
+                            </div>
                         </Form>
                     }
 

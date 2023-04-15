@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
@@ -32,7 +32,30 @@ const UserInfo = () => {
     const [lastName, setLastName] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
-    const [username, setUsername] = useState();
+
+    const [data, setData] = useState({
+        first_name: '',
+        last_name: '',
+        image_url: ''
+    });
+
+    const options = {
+        method: 'GET',
+        url: 'http://localhost:8000/api/user/',
+        headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+    }
+
+    const fetchUser = async () => {
+        const result = await axios.request(options)
+        setData(result.data);
+    }
+
+    useEffect(() => {
+        console.log(`Bearer ${sessionStorage.getItem("token")}`);
+        fetchUser();
+    }, [data])
 
     const handleHoverSubmitChangeInfoEnter = () => {
         setIsHoverSubmitChangeInfo(true);
@@ -89,24 +112,29 @@ const UserInfo = () => {
     }
 
     const handleSubmitChangeUserInfo = () => {
-        console.log(firstName);
-        console.log(lastName);
-        console.log(username);
-        console.log(password);
-        console.log(confirmPassword);
+        const options = {
+            method: 'PUT',
+            url: 'http://localhost:8000/api/user/',
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            data: {
+                "first_name": firstName,
+                "last_name": lastName,
+                "password": password
+            }
+        };
 
-        const data = {
-            first_name: firstName,
-            last_name: lastName,
-            username: username,
-            password: password
+        const updateInfo = async () => {
+            const result = await axios.request(options)
+                .then(res => res.data)
+                .catch(err => console.log(err))
+            // console.log("result: ", result);
         }
 
         // handle password = confirm password
         if (password === confirmPassword) {
-            axios.put('/user', data)
-                .then(res => res.data)
-                .catch(err => console.log(err))
+            updateInfo();
         }
         else {
             alert("Password does not match with confirm password!")
@@ -139,8 +167,8 @@ const UserInfo = () => {
                     <Image src="https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c" />
                 </div>
                 <div style={{ color: 'white', width: '50%', paddingLeft: 30 }}>
-                    <h1 style={{ fontSize: 30, color: 'black' }}>Escanord Le</h1>
-                    <div style={{ fontSize: 20, color: 'black' }}>dhl64@case.edu</div>
+                    <h1 style={{ fontSize: 30, color: 'black' }}>{data.first_name} {data.last_name}</h1>
+                    <div style={{ fontSize: 20, color: 'black' }}><i style={{}}>username:</i> {data.username}</div>
                 </div>
             </div>
 
@@ -186,16 +214,6 @@ const UserInfo = () => {
                                 <Input
                                     value={lastName}
                                     onChange={e => setLastName(e.target.value)}
-                                />
-                            </Form.Item>
-                            <Form.Item
-                                label="Username"
-                                name="username"
-                                rules={[{ message: 'Please input your username!' }]}
-                            >
-                                <Input
-                                    value={username}
-                                    onChange={e => setUsername(e.target.value)}
                                 />
                             </Form.Item>
                             <Form.Item

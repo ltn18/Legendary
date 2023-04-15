@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
 import {
     Image, Button, Space,
     Form, Input, Select,
@@ -16,6 +17,8 @@ const ShopPreviewCard = (props) => {
         reviewText
     } = props;
 
+    const navigate = useNavigate();
+
     const [isHoverDeleteShop, setIsHoverDeleteShop] = useState(false);
     const [isHoverChangeShopInfo, setIsHoverChangeShopInfo] = useState(false);
     const [isHoverSubmitCreateShop, setIsHoverSubmitCreateShop] = useState(false);
@@ -27,9 +30,29 @@ const ShopPreviewCard = (props) => {
     const [changeShopHour, setChangeShopHour] = useState([]);
     const [changeShopNumber, setChangeShopNumber] = useState('');
 
+    // shop preview
+    const [isHoverShopName, setIsHoverShopName] = useState(false);
+
+    // TODO: fetch user's shop data
+    const [shopData, setShopData] = useState({
+        id: "123"
+    })
+
+    const handleShopNameMouseEnter = () => {
+        setIsHoverShopName(true);
+    }
+
+    const handleShopNameMouseLeave = () => {
+        setIsHoverShopName(false);
+    }
+
     const handleDeleteShopMouseEnter = () => {
         setIsHoverDeleteShop(true);
     };
+
+    const handleClickOnShopName = () => {
+        navigate(`/bobaplace/${shopData.id}`)
+    }
 
     const handleDeleteShopMouseLeave = () => {
         setIsHoverDeleteShop(false);
@@ -122,7 +145,8 @@ const ShopPreviewCard = (props) => {
                 width: '40%',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                fontSize: '20px'
             }}>
                 <div
                     style={{
@@ -135,7 +159,18 @@ const ShopPreviewCard = (props) => {
                         fontSize: 25,
                         fontWeight: 'bolder'
                     }}>
-                        Kung Fu Tea
+                        <div
+                            onMouseEnter={handleShopNameMouseEnter}
+                            onMouseLeave={handleShopNameMouseLeave}
+                            style={{
+                                textDecoration: isHoverShopName ? 'underline' : 'none',
+                                color: isHoverShopName ? '#FFB6C1' : 'black',
+                                cursor: 'pointer'
+                            }}
+                            onClick={handleClickOnShopName}
+                        >
+                            Kung Fu Tea
+                        </div>
                     </div>
                     <div style={{
                         marginTop: 20

@@ -12,7 +12,7 @@ const SingleComment = (props) => {
 
     const {
         handleShowMoreComment, onCloseSingleComment, toggleShowOverlay,
-        reviewText
+        reviewText, date
     } = props;
 
     const [isHoverButton, setIsHoverButton] = useState(false);
@@ -37,7 +37,7 @@ const SingleComment = (props) => {
             flexDirection: 'column',
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
         }}>
-            <div style={{ marginBottom: 10 }}>Date: 03/31/2023</div>
+            <div style={{ marginBottom: 10 }}>Date: {date}</div>
             <div style={{
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
@@ -45,13 +45,7 @@ const SingleComment = (props) => {
                 maxWidth: '300ch',
                 marginBottom: 10
             }}>
-                {/* {reviewText} */}
-                Escanord Le reviewed Koko Bakery: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
-                It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages,
-                and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+                {reviewText}
             </div>
             <Button
                 onMouseEnter={handleButtonMouseEnter}
