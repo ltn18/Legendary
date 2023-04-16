@@ -74,7 +74,7 @@ const UserInfo = () => {
     }
 
     const toggleChangeInfoOverlay = () => {
-        setShowChangeInfoOverlay(true);
+        setShowChangeInfoOverlay(!showChangeInfoOverlay);
         setShowCreateShopOverlay(false)
     }
 

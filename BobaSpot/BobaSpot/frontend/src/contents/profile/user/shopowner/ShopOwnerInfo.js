@@ -96,12 +96,12 @@ const ShopOwnerInfo = () => {
     }
 
     const toggleChangeInfoOverlay = () => {
-        setShowChangeInfoOverlay(true);
+        setShowChangeInfoOverlay(!showChangeInfoOverlay);
         setShowCreateShopOverlay(false)
     }
 
     const toggleCreateShopOverlay = () => {
-        setShowCreateShopOverlay(true);
+        setShowCreateShopOverlay(!showCreateShopOverlay);
         setShowChangeInfoOverlay(false);
     }
 
