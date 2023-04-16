@@ -40,21 +40,22 @@ function ShopProfile() {
         setReviewForm(initialFormState);
     };
 
-    const fetchData = async () => {
-        const result = await axios.request(options)
-            .then((res) => res.data)
-            .catch((error) => console.log(error.response));
-
-        result.opening_hour = result?.opening_hour?.slice(0, 5);
-        result.closing_hour = result?.closing_hour?.slice(0, 5);
-
-        const jsonResult = JSON.parse(JSON.stringify(result));
-        console.log(jsonResult);
-        setData(jsonResult);
-        console.log(data);
-    }
+    
 
     useEffect(() => {
+        const fetchData = async () => {
+            const result = await axios.request(options)
+                .then(res => res.data)
+                .catch(error => console.log(error.response));
+    
+            result.opening_hour = result?.opening_hour?.slice(0, 5);
+            result.closing_hour = result?.closing_hour?.slice(0, 5);
+    
+            const jsonResult = JSON.parse(JSON.stringify(result)).data;
+            console.log(jsonResult);
+            setData(jsonResult);
+            console.log(data);
+        }
         fetchData();
     }, []);
 

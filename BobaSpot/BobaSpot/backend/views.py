@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import render
+from django.http import JsonResponse
 from backend.auth import JWTAuthentication
 from backend.models import CustomUser, BobaShop, Customer, Drink
 from django.db.models import Avg
@@ -54,9 +55,36 @@ class LoginView(APIView):
         body = {'token': jwt_encode_handler(payload)}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
 
+class UserProfileView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+    
+    def get(self, request, format=None):
+        user = request.user
+        user_serializer = CustomUserSerializer(user)
+        user_info = user_serializer.data
+        user_info.pop('hashpass')
+        return JsonResponse(user_info)
+    
+    def put(self, request, format=None):
+        user = request.user
+        request.data['username'] = user.username
+        if not request.data['password']:
+            request.data['hashpass'] = user.hashpass
+        else:
+            request.data['hashpass'] = str(base64.b64encode(request.data['password'].encode("utf-8")))
+            request.data.pop('password')
+        user_serializer = CustomUserSerializer(user, data = request.data)
+        print(user_serializer.instance.username)
+        if (user_serializer.is_valid()):
+            user_serializer.save()
+            return JsonResponse({'token': user_serializer.data['token']})
+        return Response(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
 class TestView(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (JWTAuthentication,)
+    
     def get(self, request, format=None):
         body = {'message': "hello Aiden!"}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
@@ -90,7 +118,6 @@ class BobaShopView(APIView):
             shop = BobaShop.objects.get(id=boba_id)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
         serializer_class = BobaShopSerializer(shop)
         serialized_data =  {'data': serializer_class.data}
         drinks_serializer = DrinkSerializer(shop.drink_set, many=True).data
@@ -106,14 +133,35 @@ class BobaShopView(APIView):
             for review in drink.reviews_set.all():
                 reviews.append(review)
         reviews_serializer = [ReviewsSerializer(review).data for review in reviews]
-        for rv_serializer in reviews_serializer:
-            cus = Customer.objects.get(id=rv_serializer['user'])
-            rv_serializer['customer_name'] = str(cus)
-            rv_serializer['drink_name'] = str(Drink.objects.get(pk=rv_serializer['drink']))
-            rv_serializer['profile_pic'] = cus.image_url
-            # rv_serializer.pop('user')
-            # rv_serializer.pop('review_id')
         reviews_json = {"reviews": reviews_serializer}
         serialized_data['data'].update(reviews_json)
-        print(serialized_data['data'])
-        return Response(serialized_data['data'], status=status.HTTP_200_OK)   
+        return Response(serialized_data, status=status.HTTP_200_OK)
+        
+
+class ReviewView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+    
+    def get(self, request, format=None):
+        user = request.user
+        user = Customer.objects.get(id=user.id)
+        reviews = []
+        for review in user.reviews_set.all():
+            reviews.append(review)
+        reviews_data = [ReviewsSerializer(review).data for review in reviews]
+        reviews_json = {"reviews": reviews_data}
+        return JsonResponse(reviews_json)
+    
+    def put(self, request, format=None):
+        user = request.user
+        drink_name = request.data['drink_name']
+        drink = Drink.objects.get(drink_name=drink_name)
+        request.data['user'] = user.pk
+        request.data['drink'] = drink.pk
+        print(request.data['user'])
+        review_serializer = ReviewsSerializer(data=request.data)
+        if (review_serializer.is_valid()):
+            review_serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        print(review_serializer.validated_data)
+        return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
