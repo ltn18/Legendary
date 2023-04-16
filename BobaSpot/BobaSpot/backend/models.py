@@ -54,7 +54,7 @@ class Drink(models.Model):
     description = models.CharField(max_length = 500)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=6.00)
     type = models.CharField(max_length = 50)
-    image_url = models.CharField(max_length = 100, blank = True, null = True)
+    image_url = models.CharField(max_length = 500, blank = True, null = True)
     
     @property
     def rating(self):
