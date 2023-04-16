@@ -1,25 +1,28 @@
 import { Col, Row, Image, Typography, Card, Form, Button, Rate, Input } from "antd";
 import { StarOutlined, SendOutlined } from "@ant-design/icons";
 import "./ShopProfile.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 
 const initialFormState = {
-    review: "",
+    profile_pic: "https://media.licdn.com/dms/image/D5603AQH503kJ6XqNxQ/profile-displayphoto-shrink_800_800/0/1666810388572?e=1686787200&v=beta&t=RZamxmNrhbyR1eWTHtlvUvaNTlyk9_aNhOXHYW9UL_U",
+    text: "",
     rating: 0,
-    drink_ordered: ""
+    drink_name: "",
+    customer_name: "Lam Nguyen",
 };
 
 
 function ShopProfile() {
     const jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Ijc2MTIxNzA1LWU3ZjQtNDI4ZC1iOTk1LTUzYzNmY2QwMjVhMyIsInVzZXJuYW1lIjoiamFuaWNlIiwiaGFzaHBhc3MiOiJiJ2FtbDZhR1U9JyJ9.Aok-VWRAkraeWvzTiZRa0s69sM8cP_MFZWgCGM9BtaA\"}";
-    const url = "http://127.0.0.1:8000/api/bobashop/fdc4875e-c552-486e-b6c3-a4e0d715eaed/";
+    const url1 = "http://127.0.0.1:8000/api/bobashop/fdc4875e-c552-486e-b6c3-a4e0d715eaed/";
+    const url2 = "http://127.0.0.1:8000/api/bobashop/0cb08e98-d603-4545-8f33-63e9cf7e61b3/";
     // const relativeUrl = "/api/bobashop/";
 
     const options = {
         method: 'GET',
-        url: url,
+        url: url1,
         headers: {
             Authorization: `Bearer ${jwt}`,
         }
@@ -31,7 +34,9 @@ function ShopProfile() {
     const avatar = "https://media.licdn.com/dms/image/D5603AQH503kJ6XqNxQ/profile-displayphoto-shrink_800_800/0/1666810388572?e=1686787200&v=beta&t=RZamxmNrhbyR1eWTHtlvUvaNTlyk9_aNhOXHYW9UL_U";
 
     const onSubmit = () => {
-        console.log(reviewForm);
+        const newData = JSON.parse(JSON.stringify(data));
+        newData.reviews.unshift(reviewForm);
+        setData(newData);
         setReviewForm(initialFormState);
     };
 
@@ -40,8 +45,8 @@ function ShopProfile() {
             .then((res) => res.data)
             .catch((error) => console.log(error.response));
 
-        result.opening_hour = result.opening_hour.slice(0, 5);
-        result.closing_hour = result.closing_hour.slice(0, 5);
+        result.opening_hour = result?.opening_hour?.slice(0, 5);
+        result.closing_hour = result?.closing_hour?.slice(0, 5);
 
         const jsonResult = JSON.parse(JSON.stringify(result));
         console.log(jsonResult);
@@ -126,23 +131,23 @@ function ShopProfile() {
                             ))
                         }
                     </Row>
-                    {/* input user's review */}
+                    {/* input user's text */}
                     <Row gutter={[10, 0]} className='grey-bg'>
                         {/* avatar */}
                         <Col span={2}>
                             <Image src={avatar} />
                         </Col>
-                        {/* review form and submission */}
+                        {/* text form and submission */}
                         <Col span={22}>
                             <Form style={{ backgroundColor: 'white', padding: '1em' }}>
                                 <Form.Item>
-                                    <TextArea style={{fontSize: '1.5em'}} placeholder="Write a review here" rows={4} value={reviewForm.review} onChange={(e) => setReviewForm({ ...reviewForm, review: e.target.value })} />
+                                    <TextArea style={{fontSize: '1.5em'}} placeholder="Write a text here" rows={4} value={reviewForm.text} onChange={(e) => setReviewForm({ ...reviewForm, text: e.target.value })} />
                                 </Form.Item>
                                 <Form.Item>
                                     <Row style={{display: 'flex', justifyContent: 'space-between'}}>
                                         <Col style={{ fontSize: '1.5em' }}>
                                             Drink Ordered <br />
-                                            <Input onChange={(e) => setReviewForm({ ...reviewForm, drink_ordered: e.target.value})} />
+                                            <Input onChange={(e) => setReviewForm({ ...reviewForm, drink_name: e.target.value})} />
                                         </Col>
                                         <Col style={{ fontSize: '1.5em' }}>
                                             Rating:<br />
@@ -163,25 +168,25 @@ function ShopProfile() {
                     {/* show all reviews */}
 
                     {
-                        data?.reviews?.map((review, i) => (
+                        data?.reviews?.map((text, i) => (
                             <Row key={i} gutter={[10, 0]} className='grey-bg'>
                                 {/* avatar */}
                                 <Col span={2}>
-                                    <Image src={review.profile_pic} />
+                                    <Image src={text.profile_pic} />
                                 </Col>
-                                {/* review text */}
+                                {/* text text */}
                                 <Col span={22}>
                                     <Row>
                                         <Col span={24} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                             <Typography style={{ fontSize: '2em' }}>
-                                                <b>{review.customer_name}</b> {review.rating} <StarOutlined />
+                                                <b>{text.customer_name}</b> {text.rating} <StarOutlined />
                                             </Typography>
                                             <Typography style={{ fontSize: '1.5em' }}>
-                                                Drink ordered: {review.drink_name}
+                                                Drink ordered: {text.drink_name}
                                             </Typography>
                                         </Col>
                                         <Col span={24} style={{ backgroundColor: 'white', fontSize: '1.5em', padding: '0.5em', minHeight: '5em' }}>
-                                            {review.text}
+                                            {text.text}
                                         </Col>
                                     </Row>
                                 </Col>
