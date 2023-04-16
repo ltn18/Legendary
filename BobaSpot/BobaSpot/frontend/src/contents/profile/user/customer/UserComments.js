@@ -184,7 +184,7 @@ const UserComments = () => {
             // slice dummy comments to only max 7 latest
             // we should sort ascending order
             // -> 7 will be highest rating
-            const MAX_COMMENTS = 7;
+            const MAX_COMMENTS = 5;
             setDummyComments([
                 ...dummyComments.slice(-MAX_COMMENTS)
             ])
