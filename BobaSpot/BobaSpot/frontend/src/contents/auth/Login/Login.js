@@ -24,7 +24,7 @@ function Login() {
   const [form, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
   
-  // const navigate = useNavigate(); 
+  const navigate = useNavigate(); 
   // const routeChange = () =>{ 
   //   let path = `/temp`; 
   //   navigate(path);
