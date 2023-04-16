@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { v4 as uuid } from 'uuid';
 import axios from 'axios'
 
+// firebase
 import { storage } from "../../../../services/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 
@@ -58,6 +59,10 @@ const ShopOwnerInfo = () => {
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
 
+    // upload single image
+    const [imgUrl, setImgUrl] = useState(null);
+    const [progresspercent, setProgresspercent] = useState(0);
+
     const [data, setData] = useState({
         first_name: '',
         last_name: '',
@@ -71,6 +76,7 @@ const ShopOwnerInfo = () => {
                     Authorization: `Bearer ${sessionStorage.getItem('token')}`,
                 }
             })
+
             setData(result.data);
         }
 
@@ -163,16 +169,15 @@ const ShopOwnerInfo = () => {
         }
     }
 
-    const [imgUrl, setImgUrl] = useState(null);
-    const [progresspercent, setProgresspercent] = useState(0);
-
     const handleUploadSingleImage = (file) => {
+        const user_id = data.id;
+
         const unique_id = uuid();
         console.log(unique_id);
 
         if (!file) return;
 
-        const storageRef = ref(storage, `images/${unique_id}`);
+        const storageRef = ref(storage, `bobaplace/${user_id}/${unique_id}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on("state_changed",
