@@ -1,4 +1,4 @@
-import { Button, Form, Input,Typography, Checkbox } from 'antd';
+import { Button, Form, Input,Typography,Checkbox } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
 import "../login-signup.css";
@@ -22,7 +22,6 @@ function Signup() {
   const [isLogin, setIsLogin] = useState(true);
   const [form_signup, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
-  
   const navigate = useNavigate(); 
   const routeChange = () =>{ 
     let path = `/temp`; 
@@ -75,6 +74,8 @@ const onFinish = () => {
       })
       .then(function (response) {
         console.log(response);
+        let path = `/temp`; 
+        navigate(path);
       })
       .catch(function (error) {
         console.log(error);
@@ -208,7 +209,7 @@ const toggleAuth = () => {
               <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" onClick={routeChange}>{'Sign Up'}</Button>            
+              <Button htmlType="submit" className="login-signup-button" >{'Sign Up'}</Button>            
               <Link to='/login'>
                     Already had an account? Log in
                 </Link>

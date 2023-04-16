@@ -24,11 +24,18 @@ function Login() {
   const [form, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
   
-  const navigate = useNavigate(); 
-  const routeChange = () =>{ 
-    let path = `/temp`; 
-    navigate(path);
-  }
+  // const navigate = useNavigate(); 
+  // const routeChange = () =>{ 
+  //   let path = `/temp`; 
+  //   navigate(path);
+  // }
+
+  // const navigate = useNavigate(); 
+  // const routeChange = () =>{ 
+  //   let path = `/temp`; 
+  //   navigate(path);
+
+  // }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -75,11 +82,14 @@ function Login() {
     .then(function (response) {
       console.log(JSON.parse(response.data).token);
       sessionStorage.setItem("token", JSON.parse(response.data).token);
-      
+      let path = `/temp`; 
+      navigate(path);
     })
+    
     .catch(function (error) {
       console.log(error);
     });
+    
     /**
      * MANUAL VALIDATOR
      * Signup -> check fields (length, strength)
@@ -210,7 +220,7 @@ function Login() {
               />
             </Form.Item>
             <Form.Item>
-              <Button  htmlType="submit" className="login-signup-button" onClick={routeChange}>{'Log In'}</Button> 
+              <Button htmlType="submit" className="login-signup-button" >{'Log In'}</Button> 
               <Link to='/signup'>
                          Don't have an account? Signup!
               </Link>
