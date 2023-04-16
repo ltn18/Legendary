@@ -12,7 +12,7 @@ const SingleComment = (props) => {
 
     const {
         handleShowMoreComment, onCloseSingleComment, toggleShowOverlay,
-        reviewText, date
+        reviewText, date, id
     } = props;
 
     const [isHoverButton, setIsHoverButton] = useState(false);
@@ -47,18 +47,21 @@ const SingleComment = (props) => {
             }}>
                 {reviewText}
             </div>
-            <Button
+            <button
                 onMouseEnter={handleButtonMouseEnter}
                 onMouseLeave={handleButtonMouseLeave}
                 style={{
                     backgroundColor: isHoverButton ? '#FDD0CF' : 'white',
                     color: isHoverButton ? 'white' : 'black',
-                    borderColor: isHoverButton ? '#FDD0CF' : '#d7d7d7'
+                    borderColor: isHoverButton ? '#FDD0CF' : '#d7d7d7',
+                    height: '30%',
+                    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                    cursor: 'pointer'
                 }}
                 onClick={handleShowMoreComment}
             >
                 Click to see more
-            </Button>
+            </button>
         </div>
     )
 }

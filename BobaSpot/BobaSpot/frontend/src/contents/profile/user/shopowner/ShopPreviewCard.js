@@ -84,17 +84,35 @@ const ShopPreviewCard = (props) => {
         console.log(changeShopHour);
         console.log(changeShopNumber);
 
-        const data = {
-            shop_name: changeShopName,
-            telephone: changeShopNumber,
-            address: changeShopAddress,
-            hour: {
-                start: changeShopHour[0],
-                end: changeShopHour[1]
-            }
-        }
+        // const data = {
+        //     shop_name: changeShopName,
+        //     telephone: changeShopNumber,
+        //     address: changeShopAddress,
+        //     hour: {
+        //         start: changeShopHour[0],
+        //         end: changeShopHour[1]
+        //     }
+        // }
 
-        axios.put('/bobaplace', data)
+        const options = {
+            method: 'PUT',
+            url: 'http://localhost:8000/api/bobashop/',
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            data: {
+                "shop_name": changeShopName,
+                "telephone": changeShopNumber,
+                "address": changeShopAddress,
+                "hour": {
+                    "start": changeShopHour[0],
+                    "end": changeShopHour[1]
+                },
+                // "images": [...createShopImages]
+            }
+        };
+
+        axios.request(options)
             .then(res => res.data)
             .catch(err => console.log(err))
     }

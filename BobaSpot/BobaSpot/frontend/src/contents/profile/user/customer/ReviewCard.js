@@ -18,7 +18,8 @@ const ReviewCard = (props) => {
         reviewText,
         date,
         rating,
-        drinkOrdered
+        drinkOrdered,
+        id
     } = props;
 
     const [isHoverLogout, setIsHoverLogout] = useState(false);
