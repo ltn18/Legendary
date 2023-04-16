@@ -22,5 +22,6 @@ urlpatterns = [
     path('api/login/', views.LoginView.as_view()),
     path('api/test/', views.TestView.as_view()),
     path('api/bobashop/', views.BobaShopView.as_view()),
-    path('api/user/', views.UserProfileView.as_view())
+    path('api/user/', views.UserProfileView.as_view()),
+    path('api/reviews/', views.ReviewView.as_view()),
 ]

@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from backend.auth import JWTAuthentication
-from backend.models import CustomUser, BobaShop
+from backend.models import CustomUser, BobaShop, Drink, Customer
 from django.db.models import Avg
 from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer
 from rest_framework.views import APIView
@@ -87,7 +87,35 @@ class TestView(APIView):
     def get(self, request, format=None):
         body = {'message': "hello Aiden!"}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
+
+class ReviewView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
     
+    def get(self, request, format=None):
+        user = request.user
+        user = Customer.objects.get(id=user.id)
+        reviews = []
+        for review in user.reviews_set.all():
+            reviews.append(review)
+        reviews_data = [ReviewsSerializer(review).data for review in reviews]
+        reviews_json = {"reviews": reviews_data}
+        return JsonResponse(reviews_json)
+    
+    def put(self, request, format=None):
+        user = request.user
+        drink_name = request.data['drink_name']
+        drink = Drink.objects.get(drink_name=drink_name)
+        request.data['user'] = user.pk
+        request.data['drink'] = drink.pk
+        print(request.data['user'])
+        review_serializer = ReviewsSerializer(data=request.data)
+        if (review_serializer.is_valid()):
+            review_serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        print(review_serializer.validated_data)
+        return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
 class BobaShopView(APIView):
     def put(self, request, format=None):
         permission_classes = (IsAuthenticated,)
