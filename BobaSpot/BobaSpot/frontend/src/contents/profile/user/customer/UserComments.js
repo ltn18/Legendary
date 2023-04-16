@@ -13,6 +13,8 @@ const UserComments = () => {
         image_url: ''
     });
 
+    const [reviews, setReviews] = useState([]);
+
     // comments dummy data
     const [dummyComments, setDummyComments] = useState([
         {
@@ -56,7 +58,7 @@ const UserComments = () => {
             lastName: data.last_name,
             rating: "2",
             drinkOrdered: "Mango Slush"
-        }, 
+        },
         {
             id: 3,
             reviewText: `${data.first_name} ${data.last_name} reviewed Koko Bakery: \"Lorem Ipsum is simply dummy text of the printing and typesetting industry.
@@ -98,7 +100,7 @@ const UserComments = () => {
             lastName: data.last_name,
             rating: "5",
             drinkOrdered: "Mango Slush"
-        }, 
+        },
         {
             id: 6,
             reviewText: `${data.first_name} ${data.last_name} reviewed Koko Bakery: \"Lorem Ipsum is simply dummy text of the printing and typesetting industry.
@@ -140,7 +142,7 @@ const UserComments = () => {
             lastName: data.last_name,
             rating: "8",
             drinkOrdered: "Mango Slush"
-        }, 
+        },
         {
             id: 9,
             reviewText: `${data.first_name} ${data.last_name} reviewed Koko Bakery: \"Lorem Ipsum is simply dummy text of the printing and typesetting industry.
@@ -180,6 +182,34 @@ const UserComments = () => {
                 }
             })
             setData(result.data);
+
+            const optionsGetReview = {
+                method: 'GET',
+                url: 'http://localhost:8000/api/reviews/',
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                },
+            };
+
+            axios.request(optionsGetReview)
+                .then(res => {
+                    // process res.data
+                    let resultReviews = res.data.reviews;
+                    console.log(resultReviews);
+                    resultReviews = resultReviews.map(review => {
+                        let obj = {
+                            id: review.review_id,
+                            reviewText: review.text,
+                            rating: review.rating,
+                            firstName: data.first_name,
+                            lastName: data.last_name
+                        }
+                        return obj;
+                    });
+
+                    setReviews(resultReviews);
+                })
+                .catch(err => console.log(err))
 
             // slice dummy comments to only max 7 latest
             // we should sort ascending order
@@ -227,7 +257,7 @@ const UserComments = () => {
                 // filter: showOverlay ? 'blur(5px)' : 'none'
             }}>
                 {
-                    dummyComments.map(comment =>
+                    reviews.map(comment =>
                         <>
                             <SingleComment
                                 id={comment.id}

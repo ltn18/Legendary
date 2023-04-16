@@ -4,9 +4,11 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
+
 import NavBar from './components/layout/NavBar';
 import UserProfile from './contents/profile/user/customer/UserProfile';
 import ShopOwnerProfile from './contents/profile/user/shopowner/ShopOwnerProfile';
+
 import Temp from "./temp";
 import Login from "../src/contents/auth/Login/Login"
 import Signup from "../src/contents/auth/Signup/Signup"

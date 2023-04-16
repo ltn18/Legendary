@@ -53,8 +53,19 @@ const UserInfo = () => {
     }
 
     useEffect(() => {
-        console.log(`Bearer ${sessionStorage.getItem("token")}`);
-        fetchUser();
+        // console.log(`Bearer ${sessionStorage.getItem("token")}`);
+        // fetchUser();
+        const options = {
+            method: 'GET',
+            url: 'http://localhost:8000/api/user/',
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+        }
+
+        axios.request(options)
+            .then(res => setData(res.data))
+            .catch(err => console.log(err));
     }, [data])
 
     const handleHoverSubmitChangeInfoEnter = () => {
