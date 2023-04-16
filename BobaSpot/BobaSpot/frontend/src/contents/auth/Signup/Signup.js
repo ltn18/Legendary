@@ -1,8 +1,8 @@
-import { Button, Form, Input,Typography } from 'antd';
+import { Button, Form, Input,Typography,Checkbox } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
 import "../login-signup.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const { Title } = Typography;
@@ -11,7 +11,8 @@ const initialFormState = {
   firstname: '',
   lastname: '',
   username: '',
-  password: ''
+  password: '',
+  shopowner: false
 }
 
 function Signup() { 
@@ -21,6 +22,11 @@ function Signup() {
   const [isLogin, setIsLogin] = useState(true);
   const [form_signup, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
+  const navigate = useNavigate(); 
+  const routeChange = () =>{ 
+    let path = `/temp`; 
+    navigate(path);
+  }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -68,6 +74,8 @@ const onFinish = () => {
       })
       .then(function (response) {
         console.log(response);
+        let path = `/temp`; 
+        navigate(path);
       })
       .catch(function (error) {
         console.log(error);
@@ -197,7 +205,10 @@ const onFinish = () => {
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button">{'Sign Up'}</Button>            
+              <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit" className="login-signup-button" >{'Sign Up'}</Button>            
               <Link to='/login'>
                     Already had an account? Log in
                 </Link>
