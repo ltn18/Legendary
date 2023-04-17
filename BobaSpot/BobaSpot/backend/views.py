@@ -12,6 +12,8 @@ from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework import serializers
 import base64
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
 
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -135,33 +137,41 @@ class BobaShopView(APIView):
         reviews_serializer = [ReviewsSerializer(review).data for review in reviews]
         reviews_json = {"reviews": reviews_serializer}
         serialized_data['data'].update(reviews_json)
-        return Response(serialized_data, status=status.HTTP_200_OK)
-        
-
-class ReviewView(APIView):
+        return Response(serialized_data['data'], status=status.HTTP_200_OK)   
+    
+class SearchView(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (JWTAuthentication,)
-    
+    def calculate_distance(self,origin, destination):
+        geolocator = Nominatim(user_agent="backend")
+        if not origin:
+            return 100
+        addr1 = geolocator.geocode(origin)
+        lon_1 = addr1.longitude
+        lat_1 = addr1.latitude
+        addr2 = geolocator.geocode(destination)
+        lon_2 = addr2.longitude
+        lat_2 = addr2.latitude
+        return (geodesic((lat_1, lon_1), (lat_2, lon_2)).miles) 
     def get(self, request, format=None):
-        user = request.user
-        user = Customer.objects.get(id=user.id)
-        reviews = []
-        for review in user.reviews_set.all():
-            reviews.append(review)
-        reviews_data = [ReviewsSerializer(review).data for review in reviews]
-        reviews_json = {"reviews": reviews_data}
-        return JsonResponse(reviews_json)
-    
-    def put(self, request, format=None):
-        user = request.user
-        drink_name = request.data['drink_name']
-        drink = Drink.objects.get(drink_name=drink_name)
-        request.data['user'] = user.pk
-        request.data['drink'] = drink.pk
-        print(request.data['user'])
-        review_serializer = ReviewsSerializer(data=request.data)
-        if (review_serializer.is_valid()):
-            review_serializer.save()
-            return Response(status=status.HTTP_200_OK)
-        print(review_serializer.validated_data)
-        return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+        predicates = request.data
+        res = BobaShop.objects
+        if "shop_name" in predicates:
+            res = res.filter(shop_name__icontains=predicates['shop_name'])
+        if "drink_name" in predicates:
+            res = res.filter(drink__drink_name__icontains=predicates['drink_name'])
+        res = res.all()
+        for constrain, value in predicates.items():
+            if constrain == 'max_price':
+                res = [x for x in res if x.average_price <= value]
+            elif constrain == 'min_price':
+                res = [x for x in res if x.average_price >= value]
+            elif constrain == 'min_rating':
+                res = [x for x in res if x.rating >= value]
+            elif constrain == 'address':
+                res = [x for x in res if self.calculate_distance(x.address, value) <= 15]
+            elif constrain == 'shop_name' or constrain == 'drink_name':
+                continue
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(json.dumps([BobaShopSerializer(r).data for r in res]), status=status.HTTP_200_OK)

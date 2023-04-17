@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/bobashop/<str:boba_id>/', views.BobaShopView.as_view()),
     path('api/user/', views.UserProfileView.as_view()),
     path('api/reviews/', views.ReviewView.as_view()),
+    path('api/search/', views.SearchView.as_view())
 ]
