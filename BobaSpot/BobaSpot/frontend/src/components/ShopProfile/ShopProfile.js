@@ -169,25 +169,25 @@ function ShopProfile() {
                     {/* show all reviews */}
 
                     {
-                        data?.reviews?.map((text, i) => (
+                        data?.reviews?.map((review, i) => (
                             <Row key={i} gutter={[10, 0]} className='grey-bg'>
                                 {/* avatar */}
                                 <Col span={2}>
-                                    <Image src={text.profile_pic} />
+                                    <Image src={review.profile_pic} />
                                 </Col>
                                 {/* text text */}
                                 <Col span={22}>
                                     <Row>
                                         <Col span={24} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                             <Typography style={{ fontSize: '2em' }}>
-                                                <b>{text.customer_name}</b> {text.rating} <StarOutlined />
+                                                <b>{review.customer_name}</b> {review.rating} <StarOutlined />
                                             </Typography>
                                             <Typography style={{ fontSize: '1.5em' }}>
-                                                Drink ordered: {text.drink_name}
+                                                Drink ordered: {review.drink_name}
                                             </Typography>
                                         </Col>
                                         <Col span={24} style={{ backgroundColor: 'white', fontSize: '1.5em', padding: '0.5em', minHeight: '5em' }}>
-                                            {text.text}
+                                            {review.text}
                                         </Col>
                                     </Row>
                                 </Col>
