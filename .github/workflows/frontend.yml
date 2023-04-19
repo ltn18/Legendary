@@ -11,14 +11,16 @@ jobs:
         working-directory: ./BobaSpot/BobaSpot/frontend/
 
     steps:
+
       - uses: actions/checkout@v3
+
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      # - name: go to frontend directory
-      #   run: cd ./BobaSpot/BobaSpot/frontend/
+
       - name: Install dependencies
         run: npm install
+        
       # - name: linting
       #   run: npm run eslint
       # - name: build
