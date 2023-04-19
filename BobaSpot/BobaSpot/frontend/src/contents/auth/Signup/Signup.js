@@ -1,8 +1,8 @@
-import { Button, Form, Input,Typography } from 'antd';
+import { Button, Form, Input,Typography,Checkbox } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
 import "../login-signup.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const { Title } = Typography;
@@ -11,7 +11,8 @@ const initialFormState = {
   firstname: '',
   lastname: '',
   username: '',
-  password: ''
+  password: '',
+  shopowner: false
 }
 
 function Signup() { 
@@ -21,6 +22,11 @@ function Signup() {
   const [isLogin, setIsLogin] = useState(true);
   const [form_signup, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
+  const navigate = useNavigate(); 
+  const routeChange = () =>{ 
+    let path = `/temp`; 
+    navigate(path);
+  }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -64,10 +70,13 @@ const onFinish = () => {
         username: form_signup.username,
         password: form_signup.password,
         first_name: form_signup.firstname,
-        last_name: form_signup.lastname
+        last_name: form_signup.lastname,
+        shopowner: form_signup.shopowner
       })
       .then(function (response) {
         console.log(response);
+        let path = `/temp`; 
+        navigate(path);
       })
       .catch(function (error) {
         console.log(error);
@@ -83,9 +92,10 @@ const onFinish = () => {
      */
 };
 
-  const toggleAuth = () => { 
-    setIsLogin(!isLogin);
-  }
+const toggleAuth = () => { 
+  setIsLogin(!isLogin);
+}
+
   return (
     <>
       <Row className='Full-page'>
@@ -197,11 +207,16 @@ const onFinish = () => {
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button">{'Sign Up'}</Button>            
+              <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit" className="login-signup-button" >{'Sign Up'}</Button>            
               <Link to='/login'>
                     Already had an account? Log in
                 </Link>
             </Form.Item>
+
+            
             
           </Form>
           

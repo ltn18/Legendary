@@ -2,9 +2,9 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from backend.auth import JWTAuthentication
-from backend.models import CustomUser, BobaShop
+from backend.models import CustomUser, BobaShop, Drink, Customer
 from django.db.models import Avg
-from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer
+from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer, CustomerSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,16 +22,26 @@ class LoginView(APIView):
     
     def put(self, request, format=None):
         user_info = request.data
+        isShopOwner = request.data['shopowner']
         if (user_info is None):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         user_info['hashpass'] = str(base64.b64encode(user_info['password'].encode("utf-8")))
         user_info.pop('password')
         
-        serializer = CustomUserSerializer(data=user_info)
-        if serializer.is_valid():
+        user_serializer = CustomUserSerializer(data=user_info)
+        
+        if not isShopOwner:
+            serializer = CustomerSerializer(data=user_info)
+        else:
+            user_info['shop_name'] = 'Kung'
+            user_info['telephone'] = '216216'
+            user_info['address'] = '1641 E115 th, Cleveland'
+            serializer = BobaShopSerializer(data=user_info)
+        if serializer.is_valid() and user_serializer.is_valid():
             serializer.save()
-            body = {'token': serializer.data['token']}
+            user_serializer = CustomUserSerializer(serializer.instance)
+            body = {'token': user_serializer.data['token']}
             return Response(json.dumps(body), status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -87,7 +97,35 @@ class TestView(APIView):
     def get(self, request, format=None):
         body = {'message': "hello Aiden!"}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
+
+class ReviewView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
     
+    def get(self, request, format=None):
+        user = request.user
+        user = Customer.objects.get(id=user.id)
+        reviews = []
+        for review in user.reviews_set.all():
+            reviews.append(review)
+        reviews_data = [ReviewsSerializer(review).data for review in reviews]
+        reviews_json = {"reviews": reviews_data}
+        return JsonResponse(reviews_json)
+    
+    def put(self, request, format=None):
+        user = request.user
+        drink_name = request.data['drink_name']
+        drink = Drink.objects.get(drink_name=drink_name)
+        request.data['user'] = user.pk
+        request.data['drink'] = drink.pk
+        print(request.data['user'])
+        review_serializer = ReviewsSerializer(data=request.data)
+        if (review_serializer.is_valid()):
+            review_serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        print(review_serializer.validated_data)
+        return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
 class BobaShopView(APIView):
     def put(self, request, format=None):
         permission_classes = (IsAuthenticated,)
