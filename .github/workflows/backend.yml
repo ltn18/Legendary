@@ -7,6 +7,10 @@ jobs:
 
     runs-on: macos-latest
 
+    defaults:
+      run:
+        working-directory: ./BobaSpot/BobaSpot/backend/
+
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.9
@@ -17,7 +21,6 @@ jobs:
     #   run: cd ./BobaSpot/BobaSpot/backend/
     - name: Install dependencies
       run: |
-        cd ./BobaSpot/BobaSpot/backend/
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pytest-django
