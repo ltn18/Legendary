@@ -6,27 +6,31 @@ import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 
 const initialFormState = {
-    profile_pic: "https://media.licdn.com/dms/image/D5603AQH503kJ6XqNxQ/profile-displayphoto-shrink_800_800/0/1666810388572?e=1686787200&v=beta&t=RZamxmNrhbyR1eWTHtlvUvaNTlyk9_aNhOXHYW9UL_U",
+    // profile_pic: "https://media.licdn.com/dms/image/D5603AQH503kJ6XqNxQ/profile-displayphoto-shrink_800_800/0/1666810388572?e=1686787200&v=beta&t=RZamxmNrhbyR1eWTHtlvUvaNTlyk9_aNhOXHYW9UL_U",
     text: "",
     rating: 0,
     drink_name: "",
-    customer_name: "Lam Nguyen",
+    // customer_name: "Lam Nguyen",
 };
 
 
 function ShopProfile() {
     const jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Ijc2MTIxNzA1LWU3ZjQtNDI4ZC1iOTk1LTUzYzNmY2QwMjVhMyIsInVzZXJuYW1lIjoiamFuaWNlIiwiaGFzaHBhc3MiOiJiJ2FtbDZhR1U9JyJ9.Aok-VWRAkraeWvzTiZRa0s69sM8cP_MFZWgCGM9BtaA\"}";
+    const jwt2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjZhMmRlMTU2LWQ2NzAtNDNlMC05NDM5LTVlNTVmYThlNzhmZSIsInVzZXJuYW1lIjoiRE0iLCJoYXNocGFzcyI6ImInWVE9PScifQ.OusPbgVk04hRQoMsvjkK7uKS0K2948jXQQIk0b-3BBs";
     const url1 = "http://127.0.0.1:8000/api/bobashop/fdc4875e-c552-486e-b6c3-a4e0d715eaed/";
     const url2 = "http://127.0.0.1:8000/api/bobashop/0cb08e98-d603-4545-8f33-63e9cf7e61b3/";
+    const putUrl = "http://127.0.0.1:8000/api/reviews/";
     // const relativeUrl = "/api/bobashop/";
 
-    const options = {
+    const getOptions = {
         method: 'GET',
         url: url1,
         headers: {
-            Authorization: `Bearer ${jwt}`,
+            Authorization: `Bearer ${jwt2}`,
         }
     };
+
+    
 
     const [reviewForm, setReviewForm] = useState(initialFormState);
     const [data, setData] = useState({});
@@ -37,21 +41,40 @@ function ShopProfile() {
         const newData = JSON.parse(JSON.stringify(data));
         newData.reviews.unshift(reviewForm);
         setData(newData);
+
+        putReview();
+
         setReviewForm(initialFormState);
     };
 
-    
+    const putOptions = {
+        method: 'PUT',
+        url: putUrl,
+        headers: {
+            Authorization: `Bearer ${jwt2}`,
+        },
+        data: reviewForm,
+    };
+
+    const putReview = async () => {
+        const result = await axios.request(putOptions)
+                        .then(res => res.data)
+                        .catch(error => console.log(error.response));
+        
+
+        console.log(result);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios.request(options)
+            const result = await axios.request(getOptions)
                 .then(res => res.data)
                 .catch(error => console.log(error.response));
     
             result.opening_hour = result?.opening_hour?.slice(0, 5);
             result.closing_hour = result?.closing_hour?.slice(0, 5);
     
-            const jsonResult = JSON.parse(JSON.stringify(result)).data;
+            const jsonResult = JSON.parse(JSON.stringify(result));
             console.log(jsonResult);
             setData(jsonResult);
             console.log(data);
@@ -70,21 +93,21 @@ function ShopProfile() {
                         <Col span={8}>
                             <Row justify="center" align="middle">
                                 <Col span={24} className="center-image">
-                                    <Image src={data.image_url} width="14em" />
+                                    <Image src={data?.image_url} width="14em" />
                                 </Col>
                                 <Col span={24} style={{ fontSize: '2em', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    {data.rating} <StarOutlined />
+                                    {data?.rating} <StarOutlined />
                                 </Col>
                             </Row>
                         </Col>
                         {/* shop info */}
                         <Col span={16} style={{ fontSize: '1.7em' }}>
                             <Typography.Title strong={true} style={{ marginTop: '0', fontWeight: '1000' }}>
-                                <b>{data.shop_name}</b> <br />
+                                <b>{data?.shop_name}</b> <br />
                             </Typography.Title>
-                            <b>Address:</b>{data.address}<br />
-                            <b>Hours:</b> {data.opening_hour} - {data.closing_hour} <br />
-                            <b>Tel:</b> {data.telephone} <br />
+                            <b>Address:</b>{data?.address}<br />
+                            <b>Hours:</b> {data?.opening_hour} - {data?.closing_hour} <br />
+                            <b>Tel:</b> {data?.telephone} <br />
                         </Col>
                     </Row>
                     {/* shop images */}
