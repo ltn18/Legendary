@@ -14,12 +14,12 @@ jobs:
       with:
         python-version: 3.9
     - run: ls -al
-    - run: ls -al ../
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
-    #     pip install pytest-django
+    - name: Install dependencies
+      run: |
+        cd ./BobaSpot/BobaSpot/backend/
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest-django
     # - name: check dependencies
     #   run: python -m pip list
     # - name: Run migrations
