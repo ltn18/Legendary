@@ -70,7 +70,8 @@ const onFinish = () => {
         username: form_signup.username,
         password: form_signup.password,
         first_name: form_signup.firstname,
-        last_name: form_signup.lastname
+        last_name: form_signup.lastname,
+        shopowner: form_signup.shopowner
       })
       .then(function (response) {
         console.log(response);
