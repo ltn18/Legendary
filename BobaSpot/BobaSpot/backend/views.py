@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from backend.auth import JWTAuthentication
 from backend.models import CustomUser, BobaShop, Drink, Customer
 from django.db.models import Avg
-from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer
+from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer, CustomerSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,16 +22,26 @@ class LoginView(APIView):
     
     def put(self, request, format=None):
         user_info = request.data
+        isShopOwner = request.data['shopowner']
         if (user_info is None):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         user_info['hashpass'] = str(base64.b64encode(user_info['password'].encode("utf-8")))
         user_info.pop('password')
         
-        serializer = CustomUserSerializer(data=user_info)
-        if serializer.is_valid():
+        user_serializer = CustomUserSerializer(data=user_info)
+        
+        if not isShopOwner:
+            serializer = CustomerSerializer(data=user_info)
+        else:
+            user_info['shop_name'] = 'Kung'
+            user_info['telephone'] = '216216'
+            user_info['address'] = '1641 E115 th, Cleveland'
+            serializer = BobaShopSerializer(data=user_info)
+        if serializer.is_valid() and user_serializer.is_valid():
             serializer.save()
-            body = {'token': serializer.data['token']}
+            user_serializer = CustomUserSerializer(serializer.instance)
+            body = {'token': user_serializer.data['token']}
             return Response(json.dumps(body), status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
