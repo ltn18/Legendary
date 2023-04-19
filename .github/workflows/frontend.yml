@@ -1,0 +1,22 @@
+name: Frontend Pipeline
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: go to frontend directory
+        run: cd ./BobaSpot/BobaSpot/frontend/
+      - name: Install dependencies
+        run: npm install
+      # - name: linting
+      #   run: npm run eslint
+      # - name: build
+      #   run: npm run build
+      # - name: test
+      #   run: npm run test
