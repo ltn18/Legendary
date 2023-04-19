@@ -10,10 +10,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - name: go to frontend directory
-        run: cd ./BobaSpot/BobaSpot/frontend/
+      # - name: go to frontend directory
+      #   run: cd ./BobaSpot/BobaSpot/frontend/
       - name: Install dependencies
-        run: npm install
+        run: |
+          cd ./BobaSpot/BobaSpot/frontend/
+          npm install
       # - name: linting
       #   run: npm run eslint
       # - name: build
