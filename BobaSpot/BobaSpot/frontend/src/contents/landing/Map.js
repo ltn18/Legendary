@@ -9,7 +9,8 @@ import axios from "axios";
 const initialFormState = {
   shop_name: "",
   address: "",
-  drink_name: ''
+  drink_name: '',
+  min_rating: 0
 }
 
 
@@ -125,7 +126,7 @@ function MapSearch() {
               name="min_rating"
               label="Minimum rating"
             >
-              <Rate allowHalf defaultValue={0} />
+              <Rate allowHalf/>
             </Form.Item>
 
             <Form.Item
