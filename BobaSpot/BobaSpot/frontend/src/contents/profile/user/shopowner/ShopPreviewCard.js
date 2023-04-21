@@ -27,6 +27,10 @@ const ShopPreviewCard = (props) => {
 
     const navigate = useNavigate();
 
+    // forms
+    const [formCreateDrink] = Form.useForm();
+    const [formChangeInfo] = Form.useForm();
+
     const [isHoverDeleteShop, setIsHoverDeleteShop] = useState(false);
     const [isHoverChangeShopInfo, setIsHoverChangeShopInfo] = useState(false);
     const [isHoverSubmitCreateShop, setIsHoverSubmitCreateShop] = useState(false);
@@ -48,9 +52,9 @@ const ShopPreviewCard = (props) => {
     const [newDrinkDescription, setNewDrinkDescription] = useState('');
     const [newDrinkType, setNewDrinkType] = useState('')
     const [newDrinkPrice, setNewDrinkPrice] = useState();
-    const [newDrinkImageFile, setNewDrinkImageFile] = useState();
+    const [newDrinkImageFile, setNewDrinkImageFile] = useState(null);
     // retrieve url from firebase
-    const [newDrinkImageUrl, setNewDrinkImageUrl] = useState();
+    const [newDrinkImageUrl, setNewDrinkImageUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
 
     // TODO: fetch user's shop data
@@ -149,6 +153,9 @@ const ShopPreviewCard = (props) => {
         axios.request(options)
             .then(res => res.data)
             .catch(err => console.log(err))
+        
+            
+        formChangeInfo.resetFields();
     }
 
     const prefixSelector = (
@@ -204,9 +211,41 @@ const ShopPreviewCard = (props) => {
             imageUrl: newDrinkImageUrl
         }
 
-        // handle submit content if percent = 100% or file not available
+        const options = {
+            method: 'PUT',
+            url: 'http://localhost:8000/api/drinks/',
+            headers: {
+                Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            data: {
+                "name": newDrinkName,
+                "description": newDrinkDescription,
+                "type": newDrinkType,
+                "price": newDrinkPrice,
+                "imageUrl": newDrinkImageUrl
+            }
+        };
 
-        console.log(data);
+        const createDrink = async () => {
+            const result = await axios.request(options)
+                .then(res => res.data)
+                .catch(err => console.log(err));
+
+            console.log("result: ", result);
+        }
+
+        // handle submit content if percent = 100% or file not available
+        if (!newDrinkImageFile || progresspercent === 100) {
+            // submit
+            createDrink();
+            console.log(data);
+
+            // reset the fields
+            formCreateDrink.resetFields();
+            setNewDrinkImageFile(null);
+            setNewDrinkImageUrl(null);
+            setProgresspercent(0);
+        }
     }
 
     return (
@@ -304,7 +343,7 @@ const ShopPreviewCard = (props) => {
                     style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        height: '20%',
+                        height: '15%',
                         justifyContent: 'space-between'
                     }}
                 >
@@ -327,16 +366,20 @@ const ShopPreviewCard = (props) => {
 
                     {
                         showChangeShopInfoOverlay &&
-                        <Form style={{
-                            marginTop: 10
-                        }}>
+                        <Form
+                            style={{
+                                marginTop: 10
+                            }}
+                            form={formChangeInfo}
+                        >
                             <Form.Item
                                 label="Shop name"
                                 name="shop name"
-                                value={changeShopName}
-                                onChange={e => setChangeShopName(e.target.value)}
                             >
-                                <Input />
+                                <Input
+                                    value={changeShopName}
+                                    onChange={e => setChangeShopName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Address"
@@ -407,18 +450,22 @@ const ShopPreviewCard = (props) => {
 
                     {
                         showCreateDrinkOverlay &&
-                        <Form style={{
-                            marginTop: 10,
-                            display: 'flex',
-                            flexDirection: 'column'
-                        }}>
+                        <Form
+                            style={{
+                                marginTop: 10,
+                                display: 'flex',
+                                flexDirection: 'column'
+                            }}
+                            form={formCreateDrink}
+                        >
                             <Form.Item
                                 label="Drink Name"
                                 name="drink name"
-                                value={newDrinkName}
-                                onChange={e => setNewDrinkName(e.target.value)}
                             >
-                                <Input />
+                                <Input
+                                    value={newDrinkName}
+                                    onChange={e => setNewDrinkName(e.target.value)}
+                                />
                             </Form.Item>
                             <Form.Item
                                 label="Description"
@@ -457,7 +504,7 @@ const ShopPreviewCard = (props) => {
                             </Form.Item>
 
                             {/* allow upload a single image */}
-                            <input
+                            <Input
                                 type="file"
                                 onChange={(e) => { setNewDrinkImageFile(e.target.files[0]) }}
                                 style={{

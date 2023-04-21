@@ -23,6 +23,10 @@ const { Option } = Select;
 const ShopOwnerInfo = () => {
     const navigate = useNavigate();
 
+    // forms
+    const [formChangeInfo] = Form.useForm();
+    const [formCreateShop] = Form.useForm();
+
     const [isHoverLogout, setIsHoverLogout] = useState(false);
     const [isHoverCreateShop, setIsHoverCreateShop] = useState(false)
     const [isHoverChangeInfo, setIsHoverChangeInfo] = useState(false)
@@ -163,6 +167,7 @@ const ShopOwnerInfo = () => {
         // handle password = confirm password
         if (password === confirmPassword) {
             updateInfo();
+            formChangeInfo.resetFields();
         }
         else {
             alert("Password does not match with confirm password!")
@@ -248,6 +253,8 @@ const ShopOwnerInfo = () => {
 
         if (progresspercent == 100) {
             createShop();
+            formCreateShop.resetFields();
+            setUploadedFiles([]);
         }
     }
 
@@ -303,9 +310,12 @@ const ShopOwnerInfo = () => {
                     </Button>
 
                     {showChangeInfoOverlay &&
-                        <Form style={{
-                            marginTop: 10
-                        }}>
+                        <Form 
+                            style={{
+                                marginTop: 10
+                            }}
+                            form={formChangeInfo}
+                        >
                             <Form.Item
                                 label="First name"
                                 name="firstname"
@@ -382,16 +392,18 @@ const ShopOwnerInfo = () => {
                     </Button>
 
                     {showCreateShopOverlay &&
-                        <Form style={{
-                            marginTop: 10
-                        }}>
+                        <Form 
+                            style={{
+                                marginTop: 10
+                            }}
+                            form={formCreateShop}
+                        >
                             <Form.Item
                                 label="Shop name"
                                 name="shop name"
                                 rules={[{ message: 'Please input your shop name!' }]}
                             >
                                 <Input
-
                                     value={createShopName}
                                     onChange={e => setCreateShopName(e.target.value)}
                                 />

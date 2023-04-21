@@ -59,29 +59,31 @@ const ReviewCard = (props) => {
                 flexDirection: 'column',
                 justifyContent: 'space-between'
             }}>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginBottom: 10,
-                        fontSize: '20px'
-                    }}
-                >
+                <div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            marginBottom: 10,
+                            fontSize: '20px'
+                        }}
+                    >
+                        <div style={{
+                            fontSize: 25,
+                            fontWeight: 'bolder'
+                        }}>{firstName} {lastName}</div>
+                        <div>Date: {date}</div>
+                        <div>Rating: {rating} <StarOutlined /> </div>
+                        <div>Drink ordered: {drinkOrdered}</div>
+                    </div>
                     <div style={{
-                        fontSize: 25,
-                        fontWeight: 'bolder'
-                    }}>{firstName} {lastName}</div>
-                    <div>Date: {date}</div>
-                    <div>Rating: {rating} <StarOutlined /> </div>
-                    <div>Drink ordered: {drinkOrdered}</div>
-                </div>
-                <div style={{
-                    marginBottom: 10,
-                    maxWidth: '300ch',
-                    fontSize: '20px'
-                }}>
-                    {reviewText}
+                        marginBottom: 10,
+                        maxWidth: '300ch',
+                        fontSize: '20px'
+                    }}>
+                        {reviewText}
+                    </div>
                 </div>
                 <Button
                     onMouseEnter={handleLogoutMouseEnter}
