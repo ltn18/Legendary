@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
-import { Button, Input, Form, InputNumber, Rate, Col, Row } from 'antd';
-import testData from "./us-capitals.json";
+import { Button, Input, Form, InputNumber, Rate, Col, Row, Alert } from 'antd';
+import testData from "./data.json";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { StarOutlined } from '@ant-design/icons';
+import axios from "axios";
 /* global google */
 
 const initialFormState = {
-  BobaShop_name: '',
-  address: '',
-  Drink_name: ''
+  shop_name: "",
+  address: "",
+  drink_name: ''
 }
 
 
@@ -28,29 +29,68 @@ const Map = () => {
 
 function MapSearch() {
   const [selectedMarker, setSelectedMarker] = useState("");
-  const [center, setCenter] = useState({lat: 40, lng:-80});
+  const [center, setCenter] = useState({lat: 41.5, lng:-81.6});
+
+  const jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Ijc2MTIxNzA1LWU3ZjQtNDI4ZC1iOTk1LTUzYzNmY2QwMjVhMyIsInVzZXJuYW1lIjoiamFuaWNlIiwiaGFzaHBhc3MiOiJiJ2FtbDZhR1U9JyJ9.Aok-VWRAkraeWvzTiZRa0s69sM8cP_MFZWgCGM9BtaA\"}";
+  const url = "http://127.0.0.1:8000/api/search/";
 
   const [form] = useState(initialFormState);
+  const [data, setData] = useState();
+  const [validSearch, setValidSearch] = useState(false)
+
   const onReset = () => {
     form.resetFields();
   };
 
   const onFinish = (values) => {
     console.log(values);
-    const address = values.address;
-    console.log("Address:" + address);
-
-    const geocoder = new google.maps.Geocoder().geocode({'address': values.address}).then((response) => {
-      if(response.results[0]){
-        const latitude=response.results[0].geometry.location.lat();
-        const longitude=response.results[0].geometry.location.lng();
-        console.log("lat: "+ latitude + " lon: "+ longitude)
-      }
-    });
+    fetchData(values);
   };
 
+  const fetchData = async (values) => {
+    const result = await axios.get(url, 
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+        params: values
+      })
+        .then((res) => res.data)
+        .catch((error) => console.log(error.response));
+
+    // result.opening_hour = result.opening_hour.slice(0, 5);
+    // result.closing_hour = result.closing_hour.slice(0, 5);
+      
+    if(typeof(result) !== 'undefined'){
+      const jsonResult = JSON.parse(result)
+      console.log(typeof(result))
+      lat(jsonResult)
+      setData(jsonResult);
+      setValidSearch(true)
+    }
+
+    else{
+      setData([]);
+      setValidSearch(false)
+    }
+  }
+
+  const geocoder = new google.maps.Geocoder();
+
+  const lat = (result) =>{
+    for (let i = 0; i<result.length; i++){
+      geocoder.geocode({'address': result[i].address}).then((response) => {
+        if(response.results[0]){
+          result[i].latitude = response.results[0].geometry.location.lat()
+          result[i].longitude = response.results[0].geometry.location.lng()
+          setCenter({lat: result[i].latitude, lng: result[i].longitude})
+        }
+      })
+    };
+  } 
+
   const logoKFT = 'https://play-lh.googleusercontent.com/SUl4XjMnZ7AoG394N20DpStiI4e1jynSSVDsh6V6h4PzFBPn8UhZ2Sa9ZybBz5rWwEQ';
-  
+  console.log(data)
   return (
     <div>
       <Row>
@@ -64,21 +104,21 @@ function MapSearch() {
             name="address"
             label="Address"
             >
-              <Input />
+              <Input allowClear />
             </Form.Item>
 
             <Form.Item
             name="drink_name"
             label="Drink name"
             >
-              <Input />
+              <Input allowClear />
             </Form.Item>
             
             <Form.Item
             name="shop_name"
             label="Shop name"
             >
-              <Input />
+              <Input allowClear />
             </Form.Item>
             
             <Form.Item
@@ -115,14 +155,15 @@ function MapSearch() {
         </Col>
         <Col span={15} offset={1}>
           <GoogleMap
-            zoom={10}
+            zoom={14}
             center={center}
             mapContainerClassName="map-container"
           >
-            {testData.map((shop)=>(
+            {data?.map((shop) => (
+              // console.log((shop))
               <Marker
-                key={shop.Rk}
-                position={{lat: shop.latitude, lng:shop.longitude}}
+                key={shop.shop_name}
+                position={{lat: shop.latitude, lng: shop.longitude}}
                 onClick={() => {setSelectedMarker(shop); 
                                 setCenter({lat: shop.latitude, lng:shop.longitude})}}
               />
@@ -135,13 +176,13 @@ function MapSearch() {
                     <div>
                       <Row>
                         <Col>
-                          <img src={logoKFT} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }}/>
+                          <img src={selectedMarker.image_url} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }}/>
                         </Col>
                         <Col>
-                          <h1>{selectedMarker.description}</h1>
-                          <p>Address: Cleveland, OH 44106</p>
+                          <h1>{selectedMarker.shop_name}</h1>
+                          <p>{selectedMarker.address}</p>
                           <p>Hours: 12:00pm - 21:30pm</p>
-                          <p>Ratings: 4.3 <StarOutlined /></p>
+                          <p>{selectedMarker.rating}<StarOutlined /></p>
                         </Col>
                       </Row>
                     </div>
