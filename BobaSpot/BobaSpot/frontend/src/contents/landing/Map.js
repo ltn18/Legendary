@@ -37,7 +37,6 @@ function MapSearch() {
 
   const [form] = useState(initialFormState);
   const [data, setData] = useState();
-  const [validSearch, setValidSearch] = useState(false)
 
   const onReset = () => {
     form.resetFields();
@@ -45,6 +44,7 @@ function MapSearch() {
 
   const onFinish = (values) => {
     console.log(values);
+    setSelectedMarker('')
     fetchData(values);
   };
 
@@ -67,12 +67,10 @@ function MapSearch() {
       console.log(typeof(result))
       lat(jsonResult)
       setData(jsonResult);
-      setValidSearch(true)
     }
 
     else{
       setData([]);
-      setValidSearch(false)
     }
   }
 
