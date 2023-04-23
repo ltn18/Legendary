@@ -1,8 +1,9 @@
-django==3.2
+django==3.2.0
 djangorestframework==3.14.0
 psycopg2-binary
 python_dotenv==1.0.0
 djangorestframework-jwt==1.11.0
 PyJWT==1.7.1
 django_cors_headers==3.14.0
-geopy
+geopy==2.3.0
+requests
