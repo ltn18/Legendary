@@ -135,7 +135,7 @@ class SearchView(APIView):
         lat_2 = addr2.latitude
         return (geodesic((lat_1, lon_1), (lat_2, lon_2)).miles) 
     def get(self, request, format=None):
-        predicates = request.data
+        predicates = request.query_params
         res = BobaShop.objects
         if "shop_name" in predicates:
             res = res.filter(shop_name__icontains=predicates['shop_name'])
@@ -144,11 +144,11 @@ class SearchView(APIView):
         res = res.all()
         for constrain, value in predicates.items():
             if constrain == 'max_price':
-                res = [x for x in res if x.average_price <= value]
+                res = [x for x in res if x.average_price <= float(value)]
             elif constrain == 'min_price':
-                res = [x for x in res if x.average_price >= value]
+                res = [x for x in res if x.average_price >= float(value)]
             elif constrain == 'min_rating':
-                res = [x for x in res if x.rating >= value]
+                res = [x for x in res if x.rating >= float(value)]
             elif constrain == 'address':
                 res = [x for x in res if self.calculate_distance(x.address, value) <= 15]
             elif constrain == 'shop_name' or constrain == 'drink_name':
