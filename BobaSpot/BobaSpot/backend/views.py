@@ -39,7 +39,7 @@ class LoginView(APIView):
         if serializer.is_valid() and user_serializer.is_valid():
             serializer.save()
             user_serializer = CustomUserSerializer(serializer.instance)
-            body = {'token': user_serializer.data['token']}
+            body = {'token': user_serializer.data['token'], 'isShopOwner': isShopOwner}
             return Response(json.dumps(body), status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
