@@ -28,12 +28,15 @@ import Signup from "../src/contents/auth/Signup/Signup"
 const App = () => {
   const [authenticated, setAuthenticated] = useState(sessionStorage.getItem("token") !== null);
 
+  // sesionStorage.getItem("isShopOwner")
+  const [isShopOwner, setIsShopOwner] = useState(false)
+
   useEffect(() => {
     const user = sessionStorage.getItem("token");
     console.log("user:", user);
     if (user) {
       setAuthenticated(user);
-      // navigate("/", { replace: true });
+      // set isShopOwner here
     }
 
   }, [authenticated])
@@ -55,25 +58,35 @@ const App = () => {
         <Route path="/" element={
           authenticated ? <Landing /> : <Login />
         } />
-        <Route path="*" element={<LandingRoute authenticated={authenticated} />} />
+
+        <Route path="*" element={
+          authenticated ? <LandingRoute /> : <Navigate to="/login" replace />
+        } />
 
         {/* authentication */}
         <Route path="login" element={
-          <AuthRoute authenticated={!authenticated}>
-            <Login />
-          </AuthRoute>
+          !authenticated ? <Login /> : <Navigate to="/home" replace />
         } />
 
         <Route path="signup" element={
-          <AuthRoute authenticated={!authenticated}>
-            <Signup />
-          </AuthRoute>
+          !authenticated ? <Signup /> : <Navigate to="/home" replace />
         } />
 
         {/* in app */}
-        <Route path="home" element={<Landing />} />
-        <Route path="user" element={<UserProfile />} />
-        <Route path="shopowner" element={<ShopOwnerProfile />} />
+        <Route path="home" element={
+          <AuthRoute authenticated={authenticated}>
+            <Landing />
+          </AuthRoute>
+        } />
+        <Route path="user" element={
+          <AuthRoute authenticated={authenticated}>
+            {
+              isShopOwner ? <ShopOwnerProfile /> : <UserProfile />
+            }
+          </AuthRoute>
+        } />
+
+        {/* <Route path="shopowner" element={<ShopOwnerProfile />} /> */}
 
       </Routes>
     </Router>

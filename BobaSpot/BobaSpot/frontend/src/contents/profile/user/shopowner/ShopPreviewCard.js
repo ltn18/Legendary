@@ -330,7 +330,7 @@ const ShopPreviewCard = (props) => {
                 shopData &&
                 <div style={{
                     width: '90%',
-                    height: '90%',
+                    height: '75%',
                     top: '30%',
                     backgroundColor: 'white',
                     color: 'black',
@@ -679,7 +679,7 @@ const ShopPreviewCard = (props) => {
                             }
                         </div>
 
-                        <Button
+                        {/* <Button
                             onMouseEnter={handleDeleteShopMouseEnter}
                             onMouseLeave={handleDeleteShopMouseLeave}
                             size='large'
@@ -693,7 +693,7 @@ const ShopPreviewCard = (props) => {
                             block
                         >
                             Delete shop
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
             }
