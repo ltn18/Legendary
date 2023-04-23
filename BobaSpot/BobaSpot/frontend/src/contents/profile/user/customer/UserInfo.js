@@ -12,8 +12,6 @@ import {
 
 const { Option } = Select;
 
-// TODO1: handle submit buttons
-// TODO2: see how Upload of antd works
 const UserInfo = () => {
     // const navigate = useNavigate();
     const [isHoverLogout, setIsHoverLogout] = useState(false);

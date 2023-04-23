@@ -24,11 +24,16 @@ const ShopOwnerProfile = () => {
     // fetch shop data
     useEffect(() => {
         const fetchShop = async () => {
-            const result = await axios.get('http://localhost:8000/api/bobaplace/', {
+            const options = {
+                method: 'GET',
+                url: 'http://localhost:8000/api/bobashop/',
                 headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-                }
-            })
+                    Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+                },
+            }
+
+            const result = await axios.request(options);
+            console.log(result);
 
             setShopData({
                 id: "123",
@@ -54,12 +59,12 @@ const ShopOwnerProfile = () => {
             }}
         >
             <div style={{ width: '25%' }}>
-                <ShopOwnerInfo shopData={nullShopData}/>
+                <ShopOwnerInfo shopData={nullShopData} />
             </div>
             <div style={{
                 width: '75%',
             }}>
-                <ShopPreview shopData={shopData}/>
+                <ShopPreview shopData={shopData} />
             </div>
         </div>
     )

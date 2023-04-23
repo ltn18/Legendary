@@ -29,7 +29,7 @@ const App = () => {
   const [authenticated, setAuthenticated] = useState(sessionStorage.getItem("token") !== null);
 
   // sesionStorage.getItem("isShopOwner")
-  const [isShopOwner, setIsShopOwner] = useState(false)
+  const [isShopOwner, setIsShopOwner] = useState(true)
 
   useEffect(() => {
     const user = sessionStorage.getItem("token");
@@ -86,7 +86,7 @@ const App = () => {
           </AuthRoute>
         } />
 
-        {/* <Route path="shopowner" element={<ShopOwnerProfile />} /> */}
+        <Route path="bobaplace/:id" element={<Landing />} />
 
       </Routes>
     </Router>

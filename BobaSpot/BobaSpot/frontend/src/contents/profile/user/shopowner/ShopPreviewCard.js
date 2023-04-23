@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 
 import { v4 as uuid } from 'uuid';
@@ -317,11 +317,6 @@ const ShopPreviewCard = (props) => {
             return '(' + match[1] + ') ' + match[2] + '-' + match[3];
         }
         return null;
-    }
-
-    // TODO: implement this
-    const handleDeleteShop = () => {
-
     }
 
     return (
