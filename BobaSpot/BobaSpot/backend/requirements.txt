@@ -4,4 +4,5 @@ psycopg2-binary
 python_dotenv==1.0.0
 djangorestframework-jwt==1.11.0
 PyJWT==1.7.1
-django-cors-headers
+django_cors_headers==3.14.0
+geopy

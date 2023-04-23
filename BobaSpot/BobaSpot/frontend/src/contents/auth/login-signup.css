@@ -1,0 +1,53 @@
+.Full-page {
+  height: 100vh;
+  align-items: stretch;
+  display: flex;
+}
+
+.Column {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text {
+  font-weight: 200;
+  font-size: 6rem !important;
+  text-align: center;
+  vertical-align: middle;
+  margin-top: calc(-15vh);
+  font-family: 'Just Another Hand', cursive;
+}
+
+.form-field {
+  /*display: flex;
+    width: fit-content;*/
+  align-items: center;
+}
+
+.auth-toggle {
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.login-signup-button {
+  width: 100%;
+  background-color: #FFEEEF;
+  color: black;
+  border-radius: 0px;
+}
+
+.login-signup-button:hover {
+  background-color: inherit;
+  color: inherit;
+
+}
+
+.login-form {
+  display: flexbox;
+  align-items: center;
+  height: 200px;
+  width: 50%;
+}
