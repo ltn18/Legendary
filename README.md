@@ -1,1 +1,1 @@
-This is the BobaSpot project of the Legendary team.
+This is the BobaSpot project of the Legendary team
