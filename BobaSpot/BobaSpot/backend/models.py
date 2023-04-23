@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length = 50, unique = True)
     hashpass = models.CharField(max_length = 500)
     image_url = models.CharField(max_length = 500, blank = True, null = True)
+    is_shop_owner = models.BooleanField(default=False)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['hashpass']
     def __str__(self):
