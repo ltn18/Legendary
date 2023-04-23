@@ -12,7 +12,12 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework import serializers
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
+import requests
 import base64
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -122,7 +127,30 @@ class BobaShopView(APIView):
     
 class SearchView(APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (JWTAuthentication,)
+    authentication_classes = (JWTAuthentication,) 
+
+    def extract_lat_long_via_address(self,address_or_zipcode):
+        lat, lng = None, None
+        api_key = os.getenv('GOOGLE_API_KEY')
+        print(api_key)
+        base_url = "https://maps.googleapis.com/maps/api/geocode/json"
+        endpoint = f"{base_url}?address={address_or_zipcode}&key={api_key}"
+        # see how our endpoint includes our API key? Yes this is yet another reason to restrict the key
+        r = requests.get(endpoint)
+        if r.status_code not in range(200, 299):
+            return None, None
+        try:
+            '''
+            This try block incase any of our inputs are invalid. This is done instead
+            of actually writing out handlers for all kinds of responses.
+            '''
+            results = r.json()['results'][0]
+            lat = results['geometry']['location']['lat']
+            lng = results['geometry']['location']['lng']
+        except:
+            pass
+        return lat, lng
+
     def calculate_distance(self,origin, lat, lon):
         print(lat, lon)
         if not origin.longitude or not origin.latitude:
@@ -132,26 +160,24 @@ class SearchView(APIView):
         return (geodesic((origin.latitude, origin.longitude), (lat, lon)).miles) 
     
     def get(self, request, format=None):
-        predicates = request.data
+        predicates = request.query_params
         res = BobaShop.objects
         if "shop_name" in predicates:
             res = res.filter(shop_name__icontains=predicates['shop_name'])
         if "drink_name" in predicates:
-            res = res.filter(drink__drink_name__icontains=predicates['drink_name'])
+            if len(predicates['drink_name']) > 0:
+                res = res.filter(drink__drink_name__icontains=predicates['drink_name'])
         res = res.all()
         for constrain, value in predicates.items():
             if constrain == 'max_price':
-                res = [x for x in res if x.average_price <= value]
+                res = [x for x in res if x.average_price <= float(value)]
             elif constrain == 'min_price':
-                res = [x for x in res if x.average_price >= value]
+                res = [x for x in res if x.average_price >= float(value)]
             elif constrain == 'min_rating':
-                res = [x for x in res if x.rating >= value]
+                res = [x for x in res if x.rating >= float(value)]
             elif constrain == 'address':
                 if len(value) > 0:
-                    geolocator = Nominatim(user_agent="backend") 
-                    addr = geolocator.geocode(value)
-                    lon = addr.longitude
-                    lat = addr.latitude
+                    lat, lon = self.extract_lat_long_via_address(value)
                     res = [x for x in res if self.calculate_distance(x, lat, lon) <= 15]
             elif constrain == 'shop_name' or constrain == 'drink_name':
                 continue

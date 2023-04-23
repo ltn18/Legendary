@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
-import { Button, Input, Form, InputNumber, Rate, Col, Row, Alert } from 'antd';
+import { Button, Input, Form, InputNumber, Rate, Col, Row } from 'antd';
 import testData from "./data.json";
 import { GoogleMap, useLoadScript, Marker, InfoWindow } from '@react-google-maps/api';
 import { StarOutlined } from '@ant-design/icons';
 import axios from "axios";
+import { Outlet, Link } from "react-router-dom";
+import { useForm } from 'antd/es/form/Form';
 /* global google */
 
-const initialFormState = {
-  shop_name: "",
-  address: "",
-  drink_name: ''
-}
+// const initialFormState = {
+//   shop_name: "",
+//   address: "",
+//   drink_name: '',
+//   min_rating: 0
+// }
 
 
 const Map = () => {
@@ -31,12 +34,11 @@ function MapSearch() {
   const [selectedMarker, setSelectedMarker] = useState("");
   const [center, setCenter] = useState({lat: 41.5, lng:-81.6});
 
-  const jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Ijc2MTIxNzA1LWU3ZjQtNDI4ZC1iOTk1LTUzYzNmY2QwMjVhMyIsInVzZXJuYW1lIjoiamFuaWNlIiwiaGFzaHBhc3MiOiJiJ2FtbDZhR1U9JyJ9.Aok-VWRAkraeWvzTiZRa0s69sM8cP_MFZWgCGM9BtaA\"}";
+  const jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Imtob2F2dSIsImhhc2hwYXNzIjoiYidiR1U9JyJ9.A0uAjiDqxkHsl-36oF3KBj01yj1NQrja0mY_Y0jYKd8\"}";
   const url = "http://127.0.0.1:8000/api/search/";
 
-  const [form] = useState(initialFormState);
+  const [form] = Form.useForm();
   const [data, setData] = useState();
-  const [validSearch, setValidSearch] = useState(false)
 
   const onReset = () => {
     form.resetFields();
@@ -44,6 +46,7 @@ function MapSearch() {
 
   const onFinish = (values) => {
     console.log(values);
+    setSelectedMarker('')
     fetchData(values);
   };
 
@@ -57,6 +60,8 @@ function MapSearch() {
       })
         .then((res) => res.data)
         .catch((error) => console.log(error.response));
+        console.log(values)
+        console.log(result);
 
     // result.opening_hour = result.opening_hour.slice(0, 5);
     // result.closing_hour = result.closing_hour.slice(0, 5);
@@ -66,12 +71,10 @@ function MapSearch() {
       console.log(typeof(result))
       lat(jsonResult)
       setData(jsonResult);
-      setValidSearch(true)
     }
 
     else{
       setData([]);
-      setValidSearch(false)
     }
   }
 
@@ -97,6 +100,7 @@ function MapSearch() {
         <Col span={4} offset={2}>
           <Form 
             name='filter-search'
+            form={form}
             className='search-form'
             onFinish={onFinish}
             >
@@ -125,7 +129,7 @@ function MapSearch() {
               name="min_rating"
               label="Minimum rating"
             >
-              <Rate allowHalf defaultValue={0} />
+              <Rate allowHalf/>
             </Form.Item>
 
             <Form.Item
@@ -179,7 +183,9 @@ function MapSearch() {
                           <img src={selectedMarker.image_url} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }}/>
                         </Col>
                         <Col>
-                          <h1>{selectedMarker.shop_name}</h1>
+                          <Link to={"/bobashop/" + selectedMarker.id} >
+                            <h1>{selectedMarker.shop_name}</h1>
+                            </Link>
                           <p>{selectedMarker.address}</p>
                           <p>Hours: 12:00pm - 21:30pm</p>
                           <p>{selectedMarker.rating}<StarOutlined /></p>
@@ -187,6 +193,7 @@ function MapSearch() {
                       </Row>
                     </div>
                   </InfoWindow>
+                  // console.log(selectedMarker.id)
                 )}
           </GoogleMap>
         </Col>

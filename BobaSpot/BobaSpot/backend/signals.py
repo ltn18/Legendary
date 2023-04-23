@@ -9,10 +9,8 @@ def on_change(sender, instance: BobaShop, **kwargs):
     if instance.id is None:
         pass
     else:
-        previous = BobaShop.objects.get(id=instance.id)
-        if previous.address != instance.address:
-            geolocator = Nominatim(user_agent="backend") 
-            addr1 = geolocator.geocode(instance.address)
-            instance.longitude = addr1.longitude
-            instance.latitude = addr1.latitude
-            pass
+        geolocator = Nominatim(user_agent="backend") 
+        addr1 = geolocator.geocode(instance.address)
+        instance.longitude = addr1.longitude
+        instance.latitude = addr1.latitude
+        pass
