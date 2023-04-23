@@ -2,6 +2,7 @@ import { Col, Row, Image, Typography, Card, Form, Button, Rate, Select, Input } 
 import { StarOutlined, SendOutlined } from "@ant-design/icons";
 import "./ShopProfile.css";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 const { Option } = Select;
@@ -18,26 +19,24 @@ const initialFormState = {
 function ShopProfile() {
     const [reviewForm, setReviewForm] = useState(initialFormState);
     const [data, setData] = useState({});
+    let { boba_id } = useParams();
 
-    const avatar = "https://media.licdn.com/dms/image/D5603AQH503kJ6XqNxQ/profile-displayphoto-shrink_800_800/0/1666810388572?e=1686787200&v=beta&t=RZamxmNrhbyR1eWTHtlvUvaNTlyk9_aNhOXHYW9UL_U";
+    // get jwt from session storage
+    const jwt = sessionStorage.getItem("token");
     const placeholder = "https://scontent.xx.fbcdn.net/v/t1.15752-9/329766254_5741560349290924_4541925126048218166_n.png?_nc_cat=100&ccb=1-7&_nc_sid=aee45a&_nc_ohc=fs_zPy5csoQAX8k9vVU&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdStPVW_X4iWO-IslSvJKRRmdR_bIqbnOO-wu-GVV6zVYw&oe=646C02C8";
 
-    const jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Ijc2MTIxNzA1LWU3ZjQtNDI4ZC1iOTk1LTUzYzNmY2QwMjVhMyIsInVzZXJuYW1lIjoiamFuaWNlIiwiaGFzaHBhc3MiOiJiJ2FtbDZhR1U9JyJ9.Aok-VWRAkraeWvzTiZRa0s69sM8cP_MFZWgCGM9BtaA\"}";
-    const jwt2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjZhMmRlMTU2LWQ2NzAtNDNlMC05NDM5LTVlNTVmYThlNzhmZSIsInVzZXJuYW1lIjoiRE0iLCJoYXNocGFzcyI6ImInWVE9PScifQ.OusPbgVk04hRQoMsvjkK7uKS0K2948jXQQIk0b-3BBs";
-    const url1 = "http://127.0.0.1:8000/api/bobashop/fdc4875e-c552-486e-b6c3-a4e0d715eaed/";
-    const url2 = "http://127.0.0.1:8000/api/bobashop/0cb08e98-d603-4545-8f33-63e9cf7e61b3/";
-    const putUrl = "http://127.0.0.1:8000/api/reviews/";
     // const relativeUrl = "/api/bobashop/";
 
     const getOptions = {
         method: 'GET',
-        url: url1,
+        url: `http://127.0.0.1:8000/api/bobashop/${boba_id}/`,
         headers: {
-            Authorization: `Bearer ${jwt2}`,
+            Authorization: `Bearer ${jwt}`,
         }
     };
 
     useEffect(() => {
+        console.log(jwt);
         const fetchData = async () => {
             const result = await axios.request(getOptions)
                 .then(res => res.data)
@@ -72,9 +71,9 @@ function ShopProfile() {
 
     const putOptions = {
         method: 'PUT',
-        url: putUrl,
+        url: "http://127.0.0.1:8000/api/reviews/",
         headers: {
-            Authorization: `Bearer ${jwt2}`,
+            Authorization: `Bearer ${jwt}`,
         },
         data: reviewForm,
     };
@@ -147,10 +146,14 @@ function ShopProfile() {
                             </Typography.Title>
                         </Col>
                         {
-                            data?.top_drink?.map((drink, i) => (
+                            data?.top_drink?.slice(0, 6).map((drink, i) => (
                                 <Col key={i} span={4}>
                                     <Card
-                                        cover={<img alt="example" src={drink.image_url} width='3em' height="250vh" />}
+                                        cover={<img
+                                            alt="example"
+                                            src={drink.image_url}
+                                            style={{ height: '15em', width: '15em', objectFit: 'cover' }}
+                                        />}
                                     >
                                         <Row style={{ margin: '-1em' }}>
                                             <Col span={24} style={{ fontSize: '1.5em', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '3em' }}>
@@ -166,10 +169,10 @@ function ShopProfile() {
                         }
                     </Row>
                     {/* REVIEW FORM */}
-                    {false || <Row gutter={[10, 0]} className='grey-bg'>
+                    {data.is_shop_owner || <Row gutter={[10, 0]} className='grey-bg'>
                         {/* avatar */}
                         <Col span={2}>
-                            <Image src={avatar} />
+                            <Image src={data?.user_picture || placeholder} />
                         </Col>
                         {/* text form and submission */}
                         <Col span={22}>
@@ -192,8 +195,11 @@ function ShopProfile() {
                                                 status={reviewForm.drink_name === "" ? "error" : "success"}
                                                 value={reviewForm.drink_name}
                                                 onChange={value => setReviewForm({ ...reviewForm, drink_name: value })}>
-                                                <Option value="Caffè macchiato">Caffè macchiato</Option>
-                                                <Option value="Pink drink">Pink drink</Option>
+                                                {
+                                                    data?.top_drink?.map((drink, i) => (
+                                                        <Option key={i} value={drink.drink_name}>{drink.drink_name}</Option>
+                                                    ))
+                                                }
                                             </Select>
                                         </Col>
                                         <Col style={{ fontSize: '1.5em' }}>

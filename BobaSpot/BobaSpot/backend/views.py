@@ -11,9 +11,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework import serializers
-import base64
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
+import requests
+import base64
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -31,20 +36,18 @@ class LoginView(APIView):
         
         user_info['hashpass'] = str(base64.b64encode(user_info['password'].encode("utf-8")))
         user_info.pop('password')
+        user_info['is_shop_owner'] = isShopOwner
         
         user_serializer = CustomUserSerializer(data=user_info)
         
         if not isShopOwner:
             serializer = CustomerSerializer(data=user_info)
         else:
-            user_info['shop_name'] = 'Kung'
-            user_info['telephone'] = '216216'
-            user_info['address'] = '1641 E115 th, Cleveland'
-            serializer = BobaShopSerializer(data=user_info)
+            serializer = CustomUserSerializer(data=user_info)
         if serializer.is_valid() and user_serializer.is_valid():
             serializer.save()
             user_serializer = CustomUserSerializer(serializer.instance)
-            body = {'token': user_serializer.data['token']}
+            body = {'token': user_serializer.data['token'], 'isShopOwner': isShopOwner}
             return Response(json.dumps(body), status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -64,7 +67,8 @@ class LoginView(APIView):
             return self.__invalid_user_response()
         
         payload = {'id': str(user.id), 'username': user.username, 'hashpass': user.hashpass}
-        body = {'token': jwt_encode_handler(payload)}
+        isShopOwner = user.is_shop_owner
+        body = {'token': jwt_encode_handler(payload), 'isShopOwner': isShopOwner}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
@@ -121,15 +125,18 @@ class BobaShopView(APIView):
                     setattr(bobashop, key, value)
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            bobashop.save()
+            bobashop.save(update_fields=request.data.keys())
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request, boba_id, format=None):
+        login = request.user
+        print(login)
         try:
             shop = BobaShop.objects.get(id=boba_id)
         except Exception:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
         serializer_class = BobaShopSerializer(shop)
         serialized_data =  {'data': serializer_class.data}
         drinks_serializer = DrinkSerializer(shop.drink_set, many=True).data
@@ -137,7 +144,7 @@ class BobaShopView(APIView):
         #     drink_serializer.pop('boba_shop')
         drinks_serializer.sort(key=lambda x: x['rating'], reverse=True)
         #retrieve top 5 drinks
-        top_drink = {'top_drink': drinks_serializer[:5]}
+        top_drink = {'top_drink': drinks_serializer}
         serialized_data['data'].update(top_drink)
         # retrieve all the reviews in the bobashop
         reviews = []
@@ -145,71 +152,103 @@ class BobaShopView(APIView):
             for review in drink.reviews_set.all():
                 reviews.append(review)
         reviews_serializer = [ReviewsSerializer(review).data for review in reviews]
+        for rv_serializer in reviews_serializer:
+            cus = Customer.objects.get(id=rv_serializer['user'])
+            rv_serializer['customer_name'] = str(cus)
+            rv_serializer['drink_name'] = str(Drink.objects.get(pk=rv_serializer['drink']))
+            rv_serializer['profile_pic'] = cus.image_url
+            rv_serializer.pop('user')
+            rv_serializer.pop('review_id')
         reviews_json = {"reviews": reviews_serializer}
+        user_login = {"user_picture": login.image_url, "is_shop_owner": login.is_shop_owner}
         serialized_data['data'].update(reviews_json)
+        serialized_data['data'].update(user_login)
         return Response(serialized_data['data'], status=status.HTTP_200_OK)   
+
+class ReviewView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
+    
+    def get(self, request, format=None):
+        user = request.user
+        user = Customer.objects.get(id=user.id)
+        reviews = []
+        for review in user.reviews_set.all():
+            reviews.append(review)
+        reviews_data = [ReviewsSerializer(review).data for review in reviews]
+        for review in reviews_data:
+            review['drink'] = Drink.objects.get(pk=review['drink']).drink_name
+        reviews_json = {"reviews": reviews_data}
+        return JsonResponse(reviews_json)
+    
+    def put(self, request, format=None):
+        user = request.user
+        drink_name = request.data['drink_name']
+        drink = Drink.objects.get(drink_name=drink_name)
+        request.data['user'] = user.pk
+        request.data['drink'] = drink.pk
+        review_serializer = ReviewsSerializer(data=request.data)
+        if (review_serializer.is_valid()):
+            review_serializer.save()
+            return Response(status=status.HTTP_200_OK)
+        return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
     
 class SearchView(APIView):
     permission_classes = (IsAuthenticated,)
-    authentication_classes = (JWTAuthentication,)
-    def calculate_distance(self,origin, destination):
-        geolocator = Nominatim(user_agent="backend")
-        if not origin:
+    authentication_classes = (JWTAuthentication,) 
+
+    def extract_lat_long_via_address(self,address_or_zipcode):
+        lat, lng = None, None
+        api_key = os.getenv('GOOGLE_API_KEY')
+        print(api_key)
+        base_url = "https://maps.googleapis.com/maps/api/geocode/json"
+        endpoint = f"{base_url}?address={address_or_zipcode}&key={api_key}"
+        # see how our endpoint includes our API key? Yes this is yet another reason to restrict the key
+        r = requests.get(endpoint)
+        if r.status_code not in range(200, 299):
+            return None, None
+        try:
+            '''
+            This try block incase any of our inputs are invalid. This is done instead
+            of actually writing out handlers for all kinds of responses.
+            '''
+            results = r.json()['results'][0]
+            lat = results['geometry']['location']['lat']
+            lng = results['geometry']['location']['lng']
+        except:
+            pass
+        return lat, lng
+
+    def calculate_distance(self,origin, lat, lon):
+        if not origin.longitude or not origin.latitude:
             return 100
-        addr1 = geolocator.geocode(origin)
-        lon_1 = addr1.longitude
-        lat_1 = addr1.latitude
-        addr2 = geolocator.geocode(destination)
-        lon_2 = addr2.longitude
-        lat_2 = addr2.latitude
-        return (geodesic((lat_1, lon_1), (lat_2, lon_2)).miles) 
+        return (geodesic((origin.latitude, origin.longitude), (lat, lon)).miles) 
+    
     def get(self, request, format=None):
-        predicates = request.data
+        predicates = request.query_params
         res = BobaShop.objects
         if "shop_name" in predicates:
             res = res.filter(shop_name__icontains=predicates['shop_name'])
         if "drink_name" in predicates:
-            res = res.filter(drink__drink_name__icontains=predicates['drink_name'])
+            if len(predicates['drink_name']) > 0:
+                res = res.filter(drink__drink_name__icontains=predicates['drink_name'])
         res = res.all()
         for constrain, value in predicates.items():
             if constrain == 'max_price':
-                res = [x for x in res if x.average_price <= value]
+                res = [x for x in res if x.average_price <= float(value)]
             elif constrain == 'min_price':
-                res = [x for x in res if x.average_price >= value]
+                res = [x for x in res if x.average_price >= float(value)]
             elif constrain == 'min_rating':
-                res = [x for x in res if x.rating >= value]
+                res = [x for x in res if x.rating >= float(value)]
             elif constrain == 'address':
-                res = [x for x in res if self.calculate_distance(x.address, value) <= 15]
+                if len(value) > 0:
+                    lat, lon = self.extract_lat_long_via_address(value)
+                    if not lat or not lon:
+                        return Response("The input is not supported",status=status.HTTP_400_BAD_REQUEST)
+                    res = [x for x in res if self.calculate_distance(x, lat, lon) <= 15]
             elif constrain == 'shop_name' or constrain == 'drink_name':
                 continue
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(json.dumps([BobaShopSerializer(r).data for r in res]), status=status.HTTP_200_OK)
-
-class ReviewView(APIView):
-     permission_classes = (IsAuthenticated,)
-     authentication_classes = (JWTAuthentication,)
-
-     def get(self, request, format=None):
-         user = request.user
-         user = Customer.objects.get(id=user.id)
-         reviews = []
-         for review in user.reviews_set.all():
-             reviews.append(review)
-         reviews_data = [ReviewsSerializer(review).data for review in reviews]
-         reviews_json = {"reviews": reviews_data}
-         return JsonResponse(reviews_json)
-
-     def put(self, request, format=None):
-         user = request.user
-         drink_name = request.data['drink_name']
-         drink = Drink.objects.get(drink_name=drink_name)
-         request.data['user'] = user.pk
-         request.data['drink'] = drink.pk
-         print(request.data['user'])
-         review_serializer = ReviewsSerializer(data=request.data)
-         if (review_serializer.is_valid()):
-             review_serializer.save()
-             return Response(status=status.HTTP_200_OK)
-         print(review_serializer.validated_data)
-         return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

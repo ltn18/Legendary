@@ -1,0 +1,35 @@
+[
+    {
+      "id": "0cb08e98-d603-4545-8f33-63e9cf7e61b3",
+      "username": "hihi",
+      "hashpass": "",
+      "image_url": "https://scontent.fbkl1-1.fna.fbcdn.net/v/t31.18172-8/16178433_10154174295451016_9054493299498175961_o.png?_nc_cat=106&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=681mIvfJPwsAX9AFyaV&_nc_ht=scontent.fbkl1-1.fna&oh=00_AfBFWCJ47om4RefddM9t-kTDRgI6TH1zKzaJ8M7pk-FqDg&oe=645C4AC2",
+      "shop_name": "KungFu tea",
+      "telephone": "(216) 862-7690",
+      "address": "11312 Euclid Ave, Cleveland, OH 44106",
+      "opening_hour": "11:00:00",
+      "closing_hour": "21:00:00",
+      "rating": 3,
+      "ad_image_url": [
+        "https://www.universitycircle.org/files/locations/slider/kenkokungfutea.jpg"
+      ]
+    },
+    {
+      "id": "fdc4875e-c552-486e-b6c3-a4e0d715eaed",
+      "username": "quang",
+      "hashpass": "",
+      "image_url": "https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Starbucks_Corporation_Logo_2011.svg/640px-Starbucks_Corporation_Logo_2011.svg.png",
+      "shop_name": "Starbucks",
+      "telephone": "(216) 368-2613",
+      "address": "1677 E 115th St, Cleveland, OH 44106",
+      "opening_hour": "07:30:00",
+      "closing_hour": "23:00:00",
+      "rating": 4,
+      "ad_image_url": [
+        "https://assets3.thrillist.com/v1/image/3134281/1200x630/flatten;crop_down;webp=auto;jpeg_quality=70",
+        "https://tb-static.uber.com/prod/image-proc/processed_images/cf1aabd5cb1115d75b57d79ecf712462/3ac2b39ad528f8c8c5dc77c59abb683d.jpeg",
+        "https://www.goodyclancy.com/wp-content/uploads/2014/05/cwru_village-at-115-int-starbucks_goody-clancy.jpg",
+        "https://scontent.fbkl1-1.fna.fbcdn.net/v/t1.6435-9/71487467_2742819102403863_4336257672769699840_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=8bfeb9&_nc_ohc=TJm8Qb9Pv58AX9pML_H&_nc_ht=scontent.fbkl1-1.fna&oh=00_AfBRrmLQ3w6gIb-LbwyIxGze_w6ha5V0Dy6IKTq76g7q_A&oe=645BB8CE"
+      ]
+    }
+  ]

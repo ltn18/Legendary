@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length = 50, unique = True)
     hashpass = models.CharField(max_length = 500)
     image_url = models.CharField(max_length = 500, blank = True, null = True)
+    is_shop_owner = models.BooleanField(default=False)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['hashpass']
     def __str__(self):
@@ -24,6 +25,8 @@ class BobaShop(CustomUser):
     closing_hour = models.TimeField(blank=True, null=True)
     ad_image_url = ArrayField(models.CharField(max_length = 500), blank=True, null=True)
     # drinks = models.ForeignKey(Drink, on_delete=models.CASCADE)
+    longitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0)
+    latitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0)
     
     @property
     def rating(self):

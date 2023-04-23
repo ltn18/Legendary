@@ -8,7 +8,7 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['id', 'username', 'hashpass', 'image_url', 'first_name', 'last_name']
+        fields = ['id', 'username', 'hashpass', 'image_url', 'first_name', 'last_name', 'is_shop_owner']
         
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -20,7 +20,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class BobaShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = BobaShop
-        fields = ['id', 'username', 'hashpass', 'image_url', 'shop_name', 'telephone', 'address', 'opening_hour', 'closing_hour', 'rating', 'ad_image_url']
+        fields = ['id', 'username', 'hashpass', 'image_url', 'shop_name', 'longitude', 'latitude', 'telephone', 'address', 'opening_hour', 'closing_hour', 'rating', 'ad_image_url']
         
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:

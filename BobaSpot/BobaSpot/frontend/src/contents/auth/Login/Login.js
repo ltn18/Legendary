@@ -1,7 +1,7 @@
 import { Button, Form, Input,Typography } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate } from "react-router-dom";
 import "../login-signup.css";
 import axios from 'axios';
 
@@ -15,6 +15,7 @@ const initialFormState = {
   password: ''
 }
 
+
 function Login() { 
   const minLevel = 0.1;
   const errorMessage = 'Password is too weak';
@@ -22,6 +23,19 @@ function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
+  
+  const navigate = useNavigate(); 
+  // const routeChange = () =>{ 
+  //   let path = `/temp`; 
+  //   navigate(path);
+  // }
+
+  // const navigate = useNavigate(); 
+  // const routeChange = () =>{ 
+  //   let path = `/temp`; 
+  //   navigate(path);
+
+  // }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -67,12 +81,17 @@ function Login() {
     })
     .then(function (response) {
       console.log(JSON.parse(response.data).token);
+      console.log(JSON.parse(response.data).isShopOwner);
       sessionStorage.setItem("token", JSON.parse(response.data).token);
-      
+      sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
+      let path = `/temp`; 
+      navigate(path);
     })
+    
     .catch(function (error) {
       console.log(error);
     });
+    
     /**
      * MANUAL VALIDATOR
      * Signup -> check fields (length, strength)
@@ -203,7 +222,7 @@ function Login() {
               />
             </Form.Item>
             <Form.Item>
-              <Button  htmlType="submit" className="login-signup-button">{'Log In'}</Button> 
+              <Button htmlType="submit" className="login-signup-button" >{'Log In'}</Button> 
               <Link to='/signup'>
                          Don't have an account? Signup!
               </Link>
