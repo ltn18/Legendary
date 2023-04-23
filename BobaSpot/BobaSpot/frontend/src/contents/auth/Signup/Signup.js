@@ -128,8 +128,11 @@ const onFinish = () => {
         shopowner: form_signup.shopowner,
         image_url: [...createUserImages]
       })
-      .then(function (response) {
-        console.log(response);
+        .then(function (response) {
+        console.log(JSON.parse(response.data).token);
+        console.log(JSON.parse(response.data).isShopOwner);
+        sessionStorage.setItem("token", JSON.parse(response.data).token);
+        sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
         let path = `/temp`; 
         navigate(path);
       })
@@ -271,6 +274,7 @@ const toggleAuth = () => {
                 </Link>
             </Form.Item>
 
+<<<<<<< HEAD
 
             <div style={{
                                 display: 'flex',
@@ -307,6 +311,8 @@ const toggleAuth = () => {
                                 </Button>
             </div>
 
+=======
+>>>>>>> main
             
             
           </Form>
