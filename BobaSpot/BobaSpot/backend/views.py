@@ -10,9 +10,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_jwt.settings import api_settings
 from rest_framework import serializers
-import base64
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
+import base64
 
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -83,7 +83,7 @@ class BobaShopView(APIView):
                     setattr(bobashop, key, value)
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            bobashop.save()
+            bobashop.save(update_fields=request.data.keys())
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -123,17 +123,14 @@ class BobaShopView(APIView):
 class SearchView(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (JWTAuthentication,)
-    def calculate_distance(self,origin, destination):
-        geolocator = Nominatim(user_agent="backend")
-        if not origin:
+    def calculate_distance(self,origin, lat, lon):
+        print(lat, lon)
+        if not origin.longitude or not origin.latitude:
             return 100
-        addr1 = geolocator.geocode(origin)
-        lon_1 = addr1.longitude
-        lat_1 = addr1.latitude
-        addr2 = geolocator.geocode(destination)
-        lon_2 = addr2.longitude
-        lat_2 = addr2.latitude
-        return (geodesic((lat_1, lon_1), (lat_2, lon_2)).miles) 
+        elif not lat or not lon:
+            return Response("The input is not supported by GeoPy", status=status.HTTP_400_BAD_REQUEST)
+        return (geodesic((origin.latitude, origin.longitude), (lat, lon)).miles) 
+    
     def get(self, request, format=None):
         predicates = request.data
         res = BobaShop.objects
@@ -150,7 +147,12 @@ class SearchView(APIView):
             elif constrain == 'min_rating':
                 res = [x for x in res if x.rating >= value]
             elif constrain == 'address':
-                res = [x for x in res if self.calculate_distance(x.address, value) <= 15]
+                if len(value) > 0:
+                    geolocator = Nominatim(user_agent="backend") 
+                    addr = geolocator.geocode(value)
+                    lon = addr.longitude
+                    lat = addr.latitude
+                    res = [x for x in res if self.calculate_distance(x, lat, lon) <= 15]
             elif constrain == 'shop_name' or constrain == 'drink_name':
                 continue
             else:
