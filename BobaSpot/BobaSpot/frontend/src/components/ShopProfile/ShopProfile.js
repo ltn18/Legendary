@@ -147,7 +147,7 @@ function ShopProfile() {
                                                 <b>{drink.drink_name}</b>
                                             </Col>
                                             <Col span={24} style={{ fontSize: '2em', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                                <b>{drink.rating}</b> <StarOutlined />
+                                                <b>{Math.round(drink.rating * 10) / 10}</b> <StarOutlined />
                                             </Col>
                                         </Row>
                                     </Card>
@@ -203,7 +203,7 @@ function ShopProfile() {
                                     <Row>
                                         <Col span={24} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                             <Typography style={{ fontSize: '2em' }}>
-                                                <b>{review.customer_name}</b> {review.rating} <StarOutlined />
+                                                <b>{review.customer_name}</b> {Math.round(review.rating * 10) / 10} <StarOutlined />
                                             </Typography>
                                             <Typography style={{ fontSize: '1.5em' }}>
                                                 Drink ordered: {review.drink_name}
