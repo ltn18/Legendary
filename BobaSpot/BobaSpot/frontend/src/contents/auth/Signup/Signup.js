@@ -1,6 +1,11 @@
 import { Button, Form, Input,Typography,Checkbox } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
+// firebase
+import { storage } from "../../../../services/firebase";
+import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import { v4 as uuid } from 'uuid';
+
 import "../login-signup.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from 'axios';
@@ -12,6 +17,7 @@ const initialFormState = {
   lastname: '',
   username: '',
   password: '',
+  image_url: '',
   shopowner: false
 }
 
@@ -27,6 +33,11 @@ function Signup() {
     let path = `/temp`; 
     navigate(path);
   }
+  // upload single image
+  const [imgUrl, setImgUrl] = useState(null);
+  const [progresspercent, setProgresspercent] = useState(0);
+  const [createUserImages, setCreateUserImages] = useState([])
+  const [isHoverSubmitImage, setIsHoverSubmitImage] = useState(false)
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -64,6 +75,49 @@ function Signup() {
     }
   };
 
+
+  const handleUploadSingleImage = (file) => {
+        const user_id = form_signup.id;
+        const unique_id = uuid();
+        console.log(unique_id);
+
+        if (!file) return;
+
+        const storageRef = ref(storage, `bobaplace/${user_id}/feature_images/${unique_id}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on("state_changed",
+            (snapshot) => {
+                const progress =
+                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setProgresspercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
+
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log(downloadURL);
+                    setImgUrl(downloadURL);
+
+                    // save to state
+                    let tmpUserImages = createUserImages;
+                    tmpUserImages.push(downloadURL);
+                    setCreateUserImages(tmpShopImages);
+                });
+            }
+        );
+  }
+
+  const handleHoverSubmitImageEnter = () => {
+        setIsHoverSubmitImage(true);
+  }
+
+  const handleHoverSubmitImageLeave = () => {
+        setIsHoverSubmitImage(false);
+  }
+
 const onFinish = () => {
       console.log('Received values of form:', form_signup);
       axios.put('http://localhost:8000/api/login/', {
@@ -71,7 +125,8 @@ const onFinish = () => {
         password: form_signup.password,
         first_name: form_signup.firstname,
         last_name: form_signup.lastname,
-        shopowner: form_signup.shopowner
+        shopowner: form_signup.shopowner,
+        image_url: [...createUserImages]
       })
       .then(function (response) {
         console.log(response);
@@ -215,6 +270,42 @@ const toggleAuth = () => {
                     Already had an account? Log in
                 </Link>
             </Form.Item>
+
+
+            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column'
+                            }}>
+                                <Button
+                                    onClick={handleUploadSingleImage}
+                                    style={{
+                                        marginBottom: 10
+                                    }}
+                                >
+                                    Upload to Google Blob
+                                </Button>
+
+                                {
+                                    !imgUrl &&
+                                    <div>
+                                        <div style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
+                                    </div>
+                                }
+
+                                <Button
+                                    onMouseEnter={handleHoverSubmitImageEnter}
+                                    onMouseLeave={handleHoverSubmitImageLeave}
+                                    style={{
+                                        backgroundColor: isHoverSubmitImage ? '#FDD0CF' : 'white',
+                                        color: isHoverSubmitImage ? 'white' : 'black',
+                                        borderColor: isHoverSubmitImage ? '#FDD0CF' : '#d7d7d7',
+                                    }}
+                                    type="primary"
+                                    htmlType="submit"
+                                >
+                                    Submit
+                                </Button>
+            </div>
 
             
             

@@ -15,12 +15,15 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "jest": {
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "moduleNameMapper" : {
+      "axios": "axios/dist/node/axios.cjs"
     }
   },
   "eslintConfig": {
@@ -47,4 +50,5 @@
     "@testing-library/react": "^14.0.0",
     "babel-jest": "^29.5.0"
   }
+  
 }

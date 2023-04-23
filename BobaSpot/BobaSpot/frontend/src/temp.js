@@ -26,6 +26,7 @@ function Temp() {
     //fetching username from sesstion storage
       
       console.log(sessionStorage.getItem("token"));
+      console.log(sessionStorage.getItem("isShopOwner"));
       
   };
   const clearSessionData = () => {
