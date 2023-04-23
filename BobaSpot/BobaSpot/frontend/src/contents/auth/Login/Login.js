@@ -81,7 +81,9 @@ function Login() {
     })
     .then(function (response) {
       console.log(JSON.parse(response.data).token);
+      console.log(JSON.parse(response.data).isShopOwner);
       sessionStorage.setItem("token", JSON.parse(response.data).token);
+      sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
       let path = `/temp`; 
       navigate(path);
     })
