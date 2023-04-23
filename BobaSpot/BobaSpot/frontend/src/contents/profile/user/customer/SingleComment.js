@@ -12,7 +12,7 @@ const SingleComment = (props) => {
 
     const {
         handleShowMoreComment, onCloseSingleComment, toggleShowOverlay,
-        reviewText, date, id
+        reviewText, date, id, firstName, lastName
     } = props;
 
     const [isHoverButton, setIsHoverButton] = useState(false);
@@ -28,7 +28,7 @@ const SingleComment = (props) => {
     return (
         <div style={{
             width: '95%',
-            height: '20%',
+            height: '25%',
             backgroundColor: 'white',
             color: 'black',
             padding: 10,
@@ -37,15 +37,16 @@ const SingleComment = (props) => {
             flexDirection: 'column',
             boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)'
         }}>
-            <div style={{ marginBottom: 10 }}>Date: {date}</div>
+            {/* <div style={{ marginBottom: 10 }}>Date: {date}</div> */}
             <div style={{
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
                 maxWidth: '300ch',
-                marginBottom: 10
+                height: '60%',
+                marginBottom: 20, 
             }}>
-                {reviewText}
+                <b>{firstName} {lastName} reviewed:</b> {reviewText}
             </div>
             <button
                 onMouseEnter={handleButtonMouseEnter}
@@ -54,7 +55,7 @@ const SingleComment = (props) => {
                     backgroundColor: isHoverButton ? '#FDD0CF' : 'white',
                     color: isHoverButton ? 'white' : 'black',
                     borderColor: isHoverButton ? '#FDD0CF' : '#d7d7d7',
-                    height: '30%',
+                    height: '40%',
                     boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
                     cursor: 'pointer'
                 }}

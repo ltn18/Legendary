@@ -24,6 +24,14 @@ const ReviewCard = (props) => {
 
     const [isHoverLogout, setIsHoverLogout] = useState(false);
 
+    const dummyText = `
+    Escanord Le reviewed Koko Bakery: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+    when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+    It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages"
+    `
+
     const handleLogoutMouseEnter = () => {
         setIsHoverLogout(true);
     };
@@ -34,8 +42,8 @@ const ReviewCard = (props) => {
 
     return (
         <div style={{
-            width: '68%',
-            height: '50%',
+            width: '50%',
+            height: '30%',
             top: '20%',
             backgroundColor: '#FFB6C1',
             color: 'black',
@@ -73,7 +81,7 @@ const ReviewCard = (props) => {
                             fontSize: 25,
                             fontWeight: 'bolder'
                         }}>{firstName} {lastName}</div>
-                        <div>Date: {date}</div>
+                        {/* <div>Date: {date}</div> */}
                         <div>Rating: {rating} <StarOutlined /> </div>
                         <div>Drink ordered: {drinkOrdered}</div>
                     </div>
@@ -82,6 +90,7 @@ const ReviewCard = (props) => {
                         maxWidth: '300ch',
                         fontSize: '20px'
                     }}>
+                        {/* {dummyText} */}
                         {reviewText}
                     </div>
                 </div>

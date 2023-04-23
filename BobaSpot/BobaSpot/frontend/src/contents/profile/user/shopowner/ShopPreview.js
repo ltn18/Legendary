@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import ShopPreviewCard from './ShopPreviewCard';
 
-const ShopPreview = () => {
+const ShopPreview = (props) => {
+    const { shopData } = props;
+
     return (
         <div
             style={{
@@ -13,7 +15,7 @@ const ShopPreview = () => {
                 alignItems: 'center',
             }}
         >
-            <ShopPreviewCard/>
+            <ShopPreviewCard shopData={shopData}/>
         </div>
     )
 }

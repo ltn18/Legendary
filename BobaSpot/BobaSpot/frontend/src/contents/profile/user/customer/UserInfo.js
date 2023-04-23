@@ -15,7 +15,7 @@ const { Option } = Select;
 // TODO1: handle submit buttons
 // TODO2: see how Upload of antd works
 const UserInfo = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const [isHoverLogout, setIsHoverLogout] = useState(false);
     const [isHoverCreateShop, setIsHoverCreateShop] = useState(false)
     const [isHoverChangeInfo, setIsHoverChangeInfo] = useState(false)
@@ -119,7 +119,7 @@ const UserInfo = () => {
     };
 
     const handleLogout = () => {
-        navigate('/login');
+        // navigate('/login');
     }
 
     const handleSubmitChangeUserInfo = () => {

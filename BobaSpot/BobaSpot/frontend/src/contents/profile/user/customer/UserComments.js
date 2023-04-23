@@ -197,6 +197,8 @@ const UserComments = () => {
                     let resultReviews = res.data.reviews;
                     console.log(resultReviews);
                     resultReviews = resultReviews.map(review => {
+                        // console.log(review);
+
                         let obj = {
                             id: review.review_id,
                             reviewText: review.text,
@@ -207,17 +209,17 @@ const UserComments = () => {
                         return obj;
                     });
 
-                    setReviews(resultReviews);
+                    const MAX_COMMENTS = 5;
+                    setReviews([...resultReviews.slice(-MAX_COMMENTS)]);
                 })
                 .catch(err => console.log(err))
 
             // slice dummy comments to only max 7 latest
             // we should sort ascending order
             // -> 7 will be highest rating
-            const MAX_COMMENTS = 5;
-            setDummyComments([
-                ...dummyComments.slice(-MAX_COMMENTS)
-            ])
+            // setDummyComments([
+            //     ...dummyComments.slice(-MAX_COMMENTS)
+            // ])
         }
 
         fetchUser();
@@ -262,6 +264,8 @@ const UserComments = () => {
                             <SingleComment
                                 id={comment.id}
                                 reviewText={comment.reviewText}
+                                firstName={comment.firstName}
+                                lastName={comment.lastName}
                                 date={comment.date}
                                 handleShowMoreComment={() => handleShowMoreComment(comment.id)}
                                 toggleShowOverlay={() => toggleShowOverlay(comment.id)}

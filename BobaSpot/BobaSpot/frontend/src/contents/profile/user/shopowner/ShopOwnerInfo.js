@@ -20,7 +20,9 @@ const { Option } = Select;
 
 // TODO1: handle submit buttons
 // TODO2: see how Upload of antd works
-const ShopOwnerInfo = () => {
+const ShopOwnerInfo = (props) => {
+    const { shopData } = props;
+
     const navigate = useNavigate();
 
     // forms
@@ -56,6 +58,8 @@ const ShopOwnerInfo = () => {
     const [createShopHour, setCreateShopHour] = useState([]);
     const [createShopNumber, setCreateShopNumber] = useState('');
     const [createShopImages, setCreateShopImages] = useState([])
+    const [createShopAva, setCreateShopAva] = useState()
+    const [createShopAvaUrl, setCreateShopAvaUrl] = useState('')
 
     // change user's info
     const [firstName, setFirstName] = useState();
@@ -182,7 +186,7 @@ const ShopOwnerInfo = () => {
 
         if (!file) return;
 
-        const storageRef = ref(storage, `bobaplace/${user_id}/${unique_id}`);
+        const storageRef = ref(storage, `bobaplace/${user_id}/feature_images/${unique_id}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on("state_changed",
@@ -209,13 +213,50 @@ const ShopOwnerInfo = () => {
         );
     }
 
+    const handleUploadShopAvatar = (file) => {
+        const user_id = data.id;
+
+        const unique_id = uuid();
+        console.log(unique_id);
+
+        if (!file) return;
+
+        const storageRef = ref(storage, `bobaplace/${user_id}/shop_ava/${unique_id}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on("state_changed",
+            (snapshot) => {
+                const progress =
+                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setProgresspercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
+
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log("ava:", downloadURL);
+                    setImgUrl(downloadURL);
+
+                    // save to state
+                    setCreateShopAvaUrl(downloadURL);
+                });
+            }
+        );
+    }
+
     const handleUploadImages = (e) => {
         e.preventDefault();
+        
+        // upload feature images
         const files = uploadedFiles;
 
         files.forEach(file => {
             handleUploadSingleImage(file);
         });
+
+        handleUploadShopAvatar(createShopAva);
     }
 
     const handleSubmitCreateShopForm = () => {
@@ -236,10 +277,11 @@ const ShopOwnerInfo = () => {
                 "telephone": createShopNumber,
                 "address": createShopAddress,
                 "hour": {
-                    "start": createShopHour[0],
-                    "end": createShopHour[1]
+                    "start": createShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
+                    "end": createShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true })
                 },
-                "images": [...createShopImages]
+                "images": [...createShopImages],
+                "ava_url": createShopAvaUrl
             }
         };
 
@@ -310,7 +352,7 @@ const ShopOwnerInfo = () => {
                     </Button>
 
                     {showChangeInfoOverlay &&
-                        <Form 
+                        <Form
                             style={{
                                 marginTop: 10
                             }}
@@ -373,26 +415,29 @@ const ShopOwnerInfo = () => {
                         </Form>
                     }
 
-                    <Button
-                        onMouseEnter={handleCreateShopMouseEnter}
-                        onMouseLeave={handleCreateShopMouseLeave}
-                        size='large'
-                        style={{
-                            borderRadius: 0,
-                            backgroundColor: isHoverCreateShop ? '#FDD0CF' : 'white',
-                            color: isHoverCreateShop ? 'white' : 'black',
-                            borderColor: isHoverCreateShop ? '#FDD0CF' : '#d7d7d7',
-                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                            // marginTop: 20
-                        }}
-                        onClick={toggleCreateShopOverlay}
-                        block
-                    >
-                        Create shop
-                    </Button>
+                    {
+                        !shopData &&
+                        <Button
+                            onMouseEnter={handleCreateShopMouseEnter}
+                            onMouseLeave={handleCreateShopMouseLeave}
+                            size='large'
+                            style={{
+                                borderRadius: 0,
+                                backgroundColor: isHoverCreateShop ? '#FDD0CF' : 'white',
+                                color: isHoverCreateShop ? 'white' : 'black',
+                                borderColor: isHoverCreateShop ? '#FDD0CF' : '#d7d7d7',
+                                boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+                                // marginTop: 20
+                            }}
+                            onClick={toggleCreateShopOverlay}
+                            block
+                        >
+                            Create shop
+                        </Button>
+                    }
 
                     {showCreateShopOverlay &&
-                        <Form 
+                        <Form
                             style={{
                                 marginTop: 10
                             }}
@@ -425,7 +470,7 @@ const ShopOwnerInfo = () => {
                             >
                                 <TimePicker.RangePicker
                                     value={createShopHour}
-                                    onChange={e => setCreateShopHour([e[0].$d.toTimeString(), e[1].$d.toTimeString()])}
+                                    onChange={e => setCreateShopHour([e[0].$d, e[1].$d])}
                                 />
                             </Form.Item>
                             <Form.Item
@@ -447,7 +492,7 @@ const ShopOwnerInfo = () => {
                                     marginBottom: 10
                                 }}
                             >
-                                Upload shop images:
+                                Upload shop feature images:
                             </div>
                             <input
                                 type="file"
@@ -471,16 +516,49 @@ const ShopOwnerInfo = () => {
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    marginBottom: 30
+                                    marginBottom: 10
                                 }}
                             >
-                                <b>Chosen Images</b>
+                                <b>Chosen Feature Images</b>
                                 {
                                     uploadedFiles.map(file =>
                                         <div>
                                             {file.name}
                                         </div>
                                     )
+                                }
+                            </div>
+
+                            <hr></hr>
+
+                            <div
+                                style={{
+                                    marginBottom: 10
+                                }}
+                            >
+                                Upload shop avatar:
+                            </div>
+                            <input
+                                type="file"
+                                onChange={(e) => { setCreateShopAva(e.target.files[0]) }}
+                                style={{
+                                    marginBottom: 10
+                                }}
+                                accept="image/*"
+                            />
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    marginBottom: 30
+                                }}
+                            >
+                                <b>Chosen Shop Avatar</b>
+                                {
+                                    createShopAva &&
+                                    <div>
+                                        {createShopAva.name}
+                                    </div>
                                 }
                             </div>
 
