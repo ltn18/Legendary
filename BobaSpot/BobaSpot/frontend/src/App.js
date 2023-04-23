@@ -7,10 +7,15 @@ import {
   useNavigate,
 } from 'react-router-dom';
 
-import AuthRoute from "./services/AuthRoute";
-import LandingRoute from "./services/LandingRoute";
+import './App.css'
 
 import axios from 'axios'
+
+import ShopProfile from './components/ShopProfile/ShopProfile';
+import Home from "./contents/landing/Home"
+
+import AuthRoute from "./services/AuthRoute";
+import LandingRoute from "./services/LandingRoute";
 
 import Landing from "./TmpLanding";
 
@@ -21,7 +26,6 @@ import ShopOwnerProfile from './contents/profile/user/shopowner/ShopOwnerProfile
 import Temp from "./temp";
 import Login from "../src/contents/auth/Login/Login"
 import Signup from "../src/contents/auth/Signup/Signup"
-// import ShopProfile from './components/ShopProfile/ShopProfile';
 
 // verify yourself, copilot
 
@@ -49,7 +53,12 @@ const App = () => {
 
   // use protected route
   return (
-    <Router>
+    <Router
+      style={{
+        width: '100%',
+        height: '100%'
+      }}
+    >
       {
         authenticated
           ? <NavBar />
@@ -60,7 +69,7 @@ const App = () => {
 
         {/* absolute path */}
         <Route path="/" element={
-          authenticated ? <Landing /> : <Login />
+          authenticated ? <Home /> : <Login />
         } />
 
         <Route path="*" element={
@@ -79,7 +88,7 @@ const App = () => {
         {/* in app */}
         <Route path="home" element={
           <AuthRoute authenticated={authenticated}>
-            <Landing />
+            <Home />
           </AuthRoute>
         } />
         <Route path="user" element={
@@ -90,7 +99,7 @@ const App = () => {
           </AuthRoute>
         } />
 
-        <Route path="bobaplace/:id" element={<Landing />} />
+        <Route path="bobaplace/:id" element={<ShopProfile />} />
 
       </Routes>
     </Router>

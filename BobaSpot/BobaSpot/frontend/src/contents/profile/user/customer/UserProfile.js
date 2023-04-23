@@ -12,14 +12,14 @@ const UserProfile = () => {
             }}
         >
             <div
-                style={{ width: '25%' }}
+                style={{ width: '30%' }}
                 data-testid="user-info"
             >
                 <UserInfo />
             </div>
             <div
                 style={{
-                    width: '75%',
+                    width: '70%',
                 }}
                 data-testid="user-comments"
             >

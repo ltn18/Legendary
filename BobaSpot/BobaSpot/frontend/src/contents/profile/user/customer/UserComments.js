@@ -195,7 +195,9 @@ const UserComments = () => {
                 .then(res => {
                     // process res.data
                     let resultReviews = res.data.reviews;
-                    console.log(resultReviews);
+
+                    console.log("before reviews:", resultReviews);
+
                     resultReviews = resultReviews.map(review => {
                         // console.log(review);
 
@@ -203,8 +205,9 @@ const UserComments = () => {
                             id: review.review_id,
                             reviewText: review.text,
                             rating: review.rating,
-                            firstName: data.first_name,
-                            lastName: data.last_name
+                            firstName: result.data.first_name,
+                            lastName: result.data.last_name,
+                            drinkOrdered: review.drink
                         }
                         return obj;
                     });
@@ -214,7 +217,9 @@ const UserComments = () => {
                     const showReviews = resultReviews.length > MAX_COMMENTS
                         ? [...resultReviews.slice(-MAX_COMMENTS)]
                         : [...resultReviews];
-                        
+
+                    console.log("reviews:", resultReviews);
+
                     setReviews(showReviews);
                 })
                 .catch(err => console.log(err))
@@ -228,7 +233,7 @@ const UserComments = () => {
         }
 
         fetchUser();
-    }, [data])
+    }, [])
 
     const handleShowMoreComment = (id) => {
         setShowOverlay(true);

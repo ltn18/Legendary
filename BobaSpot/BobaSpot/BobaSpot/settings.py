@@ -171,5 +171,7 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'authentication',
+    'Authorization',    
 ]
+
+CORS_ALLOW_CREDENTIALS = True

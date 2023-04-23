@@ -20,12 +20,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
 class BobaShopSerializer(serializers.ModelSerializer):
     class Meta:
         model = BobaShop
-        fields = ['id', 'username', 'hashpass', 'image_url', 'shop_name', 'telephone', 'address', 'opening_hour', 'closing_hour', 'rating', 'ad_image_url']
+        fields = ['id', 'username', 'hashpass', 'image_url', 'shop_name', 'longitude', 'latitude', 'telephone', 'address', 'opening_hour', 'closing_hour', 'rating', 'ad_image_url']
         
-class CustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = ['id', 'username', 'hashpass', 'image_url', 'first_name', 'last_name']
 class DrinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drink

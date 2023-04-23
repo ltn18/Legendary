@@ -42,7 +42,7 @@ const ReviewCard = (props) => {
 
     return (
         <div style={{
-            width: '50%',
+            width: '65%',
             height: '30%',
             top: '20%',
             backgroundColor: '#FFB6C1',
@@ -59,7 +59,7 @@ const ReviewCard = (props) => {
                 width: '20%',
                 marginRight: 10,
             }}>
-                <Image height={'60%'} src="https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c" />
+                <Image height={'80%'} src="https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c" />
             </div>
             <div style={{
                 width: '80%',
