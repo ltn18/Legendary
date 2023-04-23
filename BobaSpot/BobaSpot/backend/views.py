@@ -28,16 +28,14 @@ class LoginView(APIView):
         
         user_info['hashpass'] = str(base64.b64encode(user_info['password'].encode("utf-8")))
         user_info.pop('password')
+        user_info['is_shop_owner'] = isShopOwner
         
         user_serializer = CustomUserSerializer(data=user_info)
         
         if not isShopOwner:
             serializer = CustomerSerializer(data=user_info)
         else:
-            user_info['shop_name'] = 'Kung'
-            user_info['telephone'] = '216216'
-            user_info['address'] = '1641 E115 th, Cleveland, OH 44106'
-            serializer = BobaShopSerializer(data=user_info)
+            serializer = CustomUserSerializer(data=user_info)
         if serializer.is_valid() and user_serializer.is_valid():
             serializer.save()
             user_serializer = CustomUserSerializer(serializer.instance)
@@ -61,9 +59,7 @@ class LoginView(APIView):
             return self.__invalid_user_response()
         
         payload = {'id': str(user.id), 'username': user.username, 'hashpass': user.hashpass}
-        isShopOwner = False
-        if hasattr(user, 'bobashop'):
-            isShopOwner = True
+        isShopOwner = user.is_shop_owner
         body = {'token': jwt_encode_handler(payload), 'isShopOwner': isShopOwner}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
 
