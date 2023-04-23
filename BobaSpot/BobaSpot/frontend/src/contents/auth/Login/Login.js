@@ -1,7 +1,7 @@
 import { Button, Form, Input, Typography } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
-import { Link, useNavigate, redirect } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../login-signup.css";
 import axios from 'axios';
 
@@ -14,6 +14,7 @@ const initialFormState = {
   password: ''
 }
 
+
 function Login() {
   const minLevel = 0.1;
   const errorMessage = 'Password is too weak';
@@ -23,6 +24,17 @@ function Login() {
   const [passwordStrength, setPasswordStrength] = useState(null);
 
   const navigate = useNavigate();
+  // const routeChange = () =>{ 
+  //   let path = `/temp`; 
+  //   navigate(path);
+  // }
+
+  // const navigate = useNavigate(); 
+  // const routeChange = () =>{ 
+  //   let path = `/temp`; 
+  //   navigate(path);
+
+  // }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -67,9 +79,10 @@ function Login() {
       password: form.password
     })
       .then(function (response) {
-        // console.log(JSON.parse(response.data).token);
+        console.log(JSON.parse(response.data).token);
+        console.log(JSON.parse(response.data).isShopOwner);
         sessionStorage.setItem("token", JSON.parse(response.data).token);
-        localStorage.setItem("authenticated", true);
+        sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
         navigate("/home", { replace: true });
 
         // this is a bit hard code but it works
@@ -208,17 +221,17 @@ function Login() {
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button">{'Log In'}</Button>
+              <Button htmlType="submit" className="login-signup-button" >{'Log In'}</Button> 
               <Link to='/signup'>
                 Don't have an account? Signup!
               </Link>
-            </Form.Item>
+            </Form.Item >
 
-          </Form>
+          </Form >
 
-        </Col>
+        </Col >
 
-      </Row>
+      </Row >
     </>
   );
 }

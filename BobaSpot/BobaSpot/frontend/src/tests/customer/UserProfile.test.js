@@ -1,13 +1,13 @@
-import renderer from 'react-test-renderer';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
 import UserProfile from "../../contents/profile/user/customer/UserProfile";
 
-import axios from 'axios'
-
-it('shows a user info panel and a user comments panel', () => {
-    const component = renderer.create(
-        <UserProfile />
-    );
-
-    let tree = component.toJSON();
-    expect(tree).toMatchSnapshot();
-}) 
+describe('UserProfile', () => {
+    it('renders UserInfo and UserComments components', () => {
+      const { getByTestId } = render(<UserProfile />);
+      const userInfoElement = getByTestId('user-info');
+      const userCommentsElement = getByTestId('user-comments');
+      expect(userInfoElement).toBeInTheDocument();
+      expect(userCommentsElement).toBeInTheDocument();
+    });
+  });

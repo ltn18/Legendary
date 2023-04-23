@@ -11,12 +11,18 @@ const UserProfile = () => {
                 display: 'flex',
             }}
         >
-            <div style={{ width: '25%' }}>
+            <div
+                style={{ width: '25%' }}
+                data-testid="user-info"
+            >
                 <UserInfo />
             </div>
-            <div style={{
-                width: '75%',
-            }}>
+            <div
+                style={{
+                    width: '75%',
+                }}
+                data-testid="user-comments"
+            >
                 <UserComments />
             </div>
         </div>

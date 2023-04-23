@@ -89,7 +89,7 @@ const ReviewCard = (props) => {
                         marginBottom: 10,
                         maxWidth: '300ch',
                         fontSize: '20px'
-                    }}>
+                    }}                    >
                         {/* {dummyText} */}
                         {reviewText}
                     </div>

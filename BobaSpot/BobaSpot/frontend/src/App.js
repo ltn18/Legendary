@@ -29,17 +29,21 @@ const App = () => {
   const [authenticated, setAuthenticated] = useState(sessionStorage.getItem("token") !== null);
 
   // sesionStorage.getItem("isShopOwner")
-  const [isShopOwner, setIsShopOwner] = useState(true)
+  const [isShopOwner, setIsShopOwner] = useState();
 
   useEffect(() => {
     const user = sessionStorage.getItem("token");
+    const owner = sessionStorage.getItem("isShopOwner");
     console.log("user:", user);
+    console.log("owner:", owner);
+
     if (user) {
       setAuthenticated(user);
+      setIsShopOwner(owner);
       // set isShopOwner here
     }
 
-  }, [authenticated])
+  }, [authenticated, isShopOwner])
 
   // <Temp />
 
@@ -81,7 +85,7 @@ const App = () => {
         <Route path="user" element={
           <AuthRoute authenticated={authenticated}>
             {
-              isShopOwner ? <ShopOwnerProfile /> : <UserProfile />
+              isShopOwner === true ? <ShopOwnerProfile /> : <UserProfile />
             }
           </AuthRoute>
         } />

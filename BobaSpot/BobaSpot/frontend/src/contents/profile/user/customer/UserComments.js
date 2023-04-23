@@ -209,8 +209,13 @@ const UserComments = () => {
                         return obj;
                     });
 
-                    const MAX_COMMENTS = 5;
-                    setReviews([...resultReviews.slice(-MAX_COMMENTS)]);
+                    const MAX_COMMENTS = 6;
+
+                    const showReviews = resultReviews.length > MAX_COMMENTS
+                        ? [...resultReviews.slice(-MAX_COMMENTS)]
+                        : [...resultReviews];
+                        
+                    setReviews(showReviews);
                 })
                 .catch(err => console.log(err))
 

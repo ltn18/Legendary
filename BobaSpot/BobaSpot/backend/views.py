@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from backend.auth import JWTAuthentication
 from backend.models import CustomUser, BobaShop, Drink, Customer
 from django.db.models import Avg
-from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer
+from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer, CustomerSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -22,16 +22,24 @@ class LoginView(APIView):
     
     def put(self, request, format=None):
         user_info = request.data
+        isShopOwner = request.data['shopowner']
         if (user_info is None):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
         user_info['hashpass'] = str(base64.b64encode(user_info['password'].encode("utf-8")))
         user_info.pop('password')
+        user_info['is_shop_owner'] = isShopOwner
         
-        serializer = CustomUserSerializer(data=user_info)
-        if serializer.is_valid():
+        user_serializer = CustomUserSerializer(data=user_info)
+        
+        if not isShopOwner:
+            serializer = CustomerSerializer(data=user_info)
+        else:
+            serializer = CustomUserSerializer(data=user_info)
+        if serializer.is_valid() and user_serializer.is_valid():
             serializer.save()
-            body = {'token': serializer.data['token']}
+            user_serializer = CustomUserSerializer(serializer.instance)
+            body = {'token': user_serializer.data['token'], 'isShopOwner': isShopOwner}
             return Response(json.dumps(body), status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -51,7 +59,8 @@ class LoginView(APIView):
             return self.__invalid_user_response()
         
         payload = {'id': str(user.id), 'username': user.username, 'hashpass': user.hashpass}
-        body = {'token': jwt_encode_handler(payload)}
+        isShopOwner = user.is_shop_owner
+        body = {'token': jwt_encode_handler(payload), 'isShopOwner': isShopOwner}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
@@ -99,6 +108,8 @@ class ReviewView(APIView):
         for review in user.reviews_set.all():
             reviews.append(review)
         reviews_data = [ReviewsSerializer(review).data for review in reviews]
+        for review in reviews_data:
+            review['drink'] = Drink.objects.get(pk=review['drink']).drink_name
         reviews_json = {"reviews": reviews_data}
         return JsonResponse(reviews_json)
     
@@ -108,12 +119,10 @@ class ReviewView(APIView):
         drink = Drink.objects.get(drink_name=drink_name)
         request.data['user'] = user.pk
         request.data['drink'] = drink.pk
-        print(request.data['user'])
         review_serializer = ReviewsSerializer(data=request.data)
         if (review_serializer.is_valid()):
             review_serializer.save()
             return Response(status=status.HTTP_200_OK)
-        print(review_serializer.validated_data)
         return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 class BobaShopView(APIView):
