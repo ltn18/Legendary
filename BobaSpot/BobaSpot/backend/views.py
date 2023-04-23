@@ -36,7 +36,7 @@ class LoginView(APIView):
         else:
             user_info['shop_name'] = 'Kung'
             user_info['telephone'] = '216216'
-            user_info['address'] = '1641 E115 th, Cleveland'
+            user_info['address'] = '1641 E115 th, Cleveland, OH 44106'
             serializer = BobaShopSerializer(data=user_info)
         if serializer.is_valid() and user_serializer.is_valid():
             serializer.save()
@@ -61,7 +61,10 @@ class LoginView(APIView):
             return self.__invalid_user_response()
         
         payload = {'id': str(user.id), 'username': user.username, 'hashpass': user.hashpass}
-        body = {'token': jwt_encode_handler(payload)}
+        isShopOwner = False
+        if hasattr(user, 'bobashop'):
+            isShopOwner = True
+        body = {'token': jwt_encode_handler(payload), 'isShopOwner': isShopOwner}
         return Response(json.dumps(body), status=status.HTTP_200_OK)
 
 class UserProfileView(APIView):
