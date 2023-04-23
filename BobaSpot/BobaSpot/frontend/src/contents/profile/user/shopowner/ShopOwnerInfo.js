@@ -237,7 +237,6 @@ const ShopOwnerInfo = (props) => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     console.log("ava:", downloadURL);
-                    setImgUrl(downloadURL);
 
                     // save to state
                     setCreateShopAvaUrl(downloadURL);

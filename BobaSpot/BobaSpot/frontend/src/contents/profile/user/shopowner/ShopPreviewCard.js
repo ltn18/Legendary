@@ -33,7 +33,6 @@ const ShopPreviewCard = (props) => {
 
     const [isHoverDeleteShop, setIsHoverDeleteShop] = useState(false);
     const [isHoverChangeShopInfo, setIsHoverChangeShopInfo] = useState(false);
-    const [isHoverSubmitCreateShop, setIsHoverSubmitCreateShop] = useState(false);
     const [showChangeShopInfoOverlay, setShowChangeShopInfoOverlay] = useState(false);
 
     // change shop's info
@@ -41,6 +40,9 @@ const ShopPreviewCard = (props) => {
     const [changeShopAddress, setChangeShopAddress] = useState('');
     const [changeShopHour, setChangeShopHour] = useState([]);
     const [changeShopNumber, setChangeShopNumber] = useState('');
+    const [changeShopAvaFile, setChangeShopAvaFile] = useState(null);
+    const [changeShopAvaUrl, setChangeShopAvaUrl] = useState('');
+    const [isHoverSubmitChangeShopInfo, setIsHoverSubmitChangeShopInfo] = useState(false);
 
     // shop preview
     const [isHoverShopName, setIsHoverShopName] = useState(false);
@@ -53,8 +55,13 @@ const ShopPreviewCard = (props) => {
     const [newDrinkType, setNewDrinkType] = useState('')
     const [newDrinkPrice, setNewDrinkPrice] = useState();
     const [newDrinkImageFile, setNewDrinkImageFile] = useState(null);
+
+    const [isHoverSubmitCreateDrink, setIsHoverSubmitCreateDrink] = useState(false);
+
     // retrieve url from firebase
     const [newDrinkImageUrl, setNewDrinkImageUrl] = useState(null);
+
+    const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
 
     const handleShopNameMouseEnter = () => {
@@ -77,6 +84,8 @@ const ShopPreviewCard = (props) => {
         setIsHoverDeleteShop(false);
     };
 
+
+    // change shop info
     const handleChangeShopInfoMouseEnter = () => {
         setIsHoverChangeShopInfo(true);
     };
@@ -85,6 +94,15 @@ const ShopPreviewCard = (props) => {
         setIsHoverChangeShopInfo(false);
     };
 
+    const handleHoverSubmitChangeShopInfoEnter = () => {
+        setIsHoverSubmitChangeShopInfo(true);
+    }
+
+    const handleHoverSubmitChangeShopInfoLeave = () => {
+        setIsHoverSubmitChangeShopInfo(false);
+    }
+
+    // create drink
     const handleCreateDrinkMouseEnter = () => {
         setIsHoverCreateDrink(true);
     }
@@ -93,12 +111,12 @@ const ShopPreviewCard = (props) => {
         setIsHoverCreateDrink(false);
     }
 
-    const handleHoverSubmitCreateShopEnter = () => {
-        setIsHoverSubmitCreateShop(true);
+    const handleHoverSubmitCreateDrinkEnter = () => {
+        setIsHoverSubmitCreateDrink(true);
     }
 
-    const handleHoverSubmitCreateShopLeave = () => {
-        setIsHoverSubmitCreateShop(false);
+    const handleHoverSubmitCreateDrinkLeave = () => {
+        setIsHoverSubmitCreateDrink(false);
     }
 
     const handleShowChangeShopOverlay = () => {
@@ -111,11 +129,43 @@ const ShopPreviewCard = (props) => {
         setShowChangeShopInfoOverlay(false);
     }
 
+    const handleUploadShopAvatar = () => {
+        const unique_id = uuid();
+        console.log(unique_id);
+
+        const file = changeShopAvaFile;
+
+        if (!file) return;
+
+        const storageRef = ref(storage, `bobaplace/shop_avas/${unique_id}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on("state_changed",
+            (snapshot) => {
+                const progress =
+                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setProgresspercent(progress);
+            },
+            (error) => {
+                alert(error);
+            },
+
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log("ava:", downloadURL);
+                    setImgUrl(downloadURL);
+                    // save to state
+                    setChangeShopAvaUrl(downloadURL);
+                });
+            }
+        );
+    }
+
     const handleSubmitChangeShopInfo = () => {
-        console.log(changeShopName);
-        console.log(changeShopAddress);
-        console.log(changeShopHour);
-        console.log(changeShopNumber);
+        // console.log(changeShopName);
+        // console.log(changeShopAddress);
+        // console.log(changeShopHour);
+        // console.log(changeShopNumber);
 
         const data = {
             shop_name: changeShopName,
@@ -124,10 +174,11 @@ const ShopPreviewCard = (props) => {
             hour: {
                 start: changeShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
                 end: changeShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true })
-            }
+            },
+            ava_url: changeShopAvaUrl
         }
 
-        console.log(data);
+        // console.log(data);
 
         const options = {
             method: 'PUT',
@@ -143,19 +194,30 @@ const ShopPreviewCard = (props) => {
                     "start": changeShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
                     "end": changeShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true })
                 },
+                "ava_url": changeShopAvaUrl
                 // "images": [...createShopImages]
             }
         };
 
-        axios.request(options)
-            .then(res => {
-                console.log(res.data);
-                return res.data;
-            })
-            .catch(err => console.log(err))
 
+        const changeShopInfo = async () => {
+            const result = await axios.request(options)
+                .then(res => {
+                    console.log(res.data);
+                    return res.data;
+                })
+                .catch(err => console.log(err))
+            console.log("result change shop info:", result);
+        }
 
-        formChangeInfo.resetFields();
+        if (!changeShopAvaFile || progresspercent === 100) {
+            console.log(data);
+            changeShopInfo();
+            setChangeShopAvaFile(null);
+            setChangeShopAvaUrl(null);
+            setProgresspercent(0);
+            formChangeInfo.resetFields();
+        }
     }
 
     const prefixSelector = (
@@ -432,21 +494,72 @@ const ShopPreviewCard = (props) => {
                                             onChange={e => setChangeShopNumber(e.target.value)}
                                         />
                                     </Form.Item>
-                                    <Button
-                                        onMouseEnter={handleHoverSubmitCreateShopEnter}
-                                        onMouseLeave={handleHoverSubmitCreateShopLeave}
+                                    <div
                                         style={{
-                                            backgroundColor: isHoverSubmitCreateShop ? '#FDD0CF' : 'white',
-                                            color: isHoverSubmitCreateShop ? 'white' : 'black',
-                                            borderColor: isHoverSubmitCreateShop ? '#FDD0CF' : '#d7d7d7',
-                                            marginBottom: '20px'
+                                            marginBottom: 10
                                         }}
-                                        type="primary"
-                                        htmlType="submit"
-                                        onClick={handleSubmitChangeShopInfo}
                                     >
-                                        Submit
-                                    </Button>
+                                        Upload shop avatar:
+                                    </div>
+                                    <input
+                                        type="file"
+                                        onChange={(e) => { setChangeShopAvaFile(e.target.files[0]) }}
+                                        style={{
+                                            marginBottom: 10
+                                        }}
+                                        accept="image/*"
+                                    />
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            marginBottom: 30
+                                        }}
+                                    >
+                                        <b>Chosen Shop Avatar</b>
+                                        {
+                                            changeShopAvaFile &&
+                                            <div>
+                                                {changeShopAvaFile.name}
+                                            </div>
+                                        }
+                                    </div>
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column'
+                                    }}>
+                                        <Button
+                                            onClick={handleUploadShopAvatar}
+                                            style={{
+                                                marginBottom: 10
+                                            }}
+                                        >
+                                            Upload to Google Blob
+                                        </Button>
+
+                                        {
+                                            !imgUrl &&
+                                            <div>
+                                                <div style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
+                                            </div>
+                                        }
+
+                                        <Button
+                                            onMouseEnter={handleHoverSubmitChangeShopInfoEnter}
+                                            onMouseLeave={handleHoverSubmitChangeShopInfoLeave}
+                                            style={{
+                                                backgroundColor: isHoverSubmitChangeShopInfo ? '#FDD0CF' : 'white',
+                                                color: isHoverSubmitChangeShopInfo ? 'white' : 'black',
+                                                borderColor: isHoverSubmitChangeShopInfo ? '#FDD0CF' : '#d7d7d7',
+                                                marginBottom: '20px'
+                                            }}
+                                            type="primary"
+                                            htmlType="submit"
+                                            onClick={handleSubmitChangeShopInfo}
+                                        >
+                                            Submit
+                                        </Button>
+                                    </div>
                                 </Form>
                             }
 
@@ -548,12 +661,12 @@ const ShopPreviewCard = (props) => {
                                     }
 
                                     <Button
-                                        onMouseEnter={handleHoverSubmitCreateShopEnter}
-                                        onMouseLeave={handleHoverSubmitCreateShopLeave}
+                                        onMouseEnter={handleHoverSubmitCreateDrinkEnter}
+                                        onMouseLeave={handleHoverSubmitCreateDrinkLeave}
                                         style={{
-                                            backgroundColor: isHoverSubmitCreateShop ? '#FDD0CF' : 'white',
-                                            color: isHoverSubmitCreateShop ? 'white' : 'black',
-                                            borderColor: isHoverSubmitCreateShop ? '#FDD0CF' : '#d7d7d7',
+                                            backgroundColor: isHoverSubmitCreateDrink ? '#FDD0CF' : 'white',
+                                            color: isHoverSubmitCreateDrink ? 'white' : 'black',
+                                            borderColor: isHoverSubmitCreateDrink ? '#FDD0CF' : '#d7d7d7',
                                             marginBottom: '20px'
                                         }}
                                         type="primary"
