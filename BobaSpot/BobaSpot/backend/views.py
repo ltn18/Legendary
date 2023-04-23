@@ -112,6 +112,8 @@ class ReviewView(APIView):
         for review in user.reviews_set.all():
             reviews.append(review)
         reviews_data = [ReviewsSerializer(review).data for review in reviews]
+        for review in reviews_data:
+            review['drink'] = Drink.objects.get(pk=review['drink']).drink_name
         reviews_json = {"reviews": reviews_data}
         return JsonResponse(reviews_json)
     
@@ -121,12 +123,10 @@ class ReviewView(APIView):
         drink = Drink.objects.get(drink_name=drink_name)
         request.data['user'] = user.pk
         request.data['drink'] = drink.pk
-        print(request.data['user'])
         review_serializer = ReviewsSerializer(data=request.data)
         if (review_serializer.is_valid()):
             review_serializer.save()
             return Response(status=status.HTTP_200_OK)
-        print(review_serializer.validated_data)
         return Response(review_serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 
 class BobaShopView(APIView):
