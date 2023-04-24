@@ -1,29 +1,12 @@
 import React from 'react';
 
 // components
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import "./NavBar.css";
 
 const NavBar = () => {
-    const navigate = useNavigate();
-
-
-    // why cannot logout here?
-    const handleLogout = () => {
-        sessionStorage.setItem("token", null);
-        localStorage.setItem("authenticated", false);
-
-        console.log("OKOK");    
-
-        console.log("token: " + sessionStorage.getItem("token"));
-        console.log("authenticated: " + localStorage.getItem("authenticated"));
-
-        navigate('/login', { replace: true })
-        window.location.reload(true);
-    }
-
     return (
         <div style={{
             width: '100%',
@@ -38,7 +21,7 @@ const NavBar = () => {
             </div>
             <div className="links">
                 <Link to="/user"><UserOutlined /></Link>
-                <LogoutOutlined onClick={handleLogout} />
+                <Link to="/login"><LogoutOutlined /></Link>
             </div>
         </div >
     )

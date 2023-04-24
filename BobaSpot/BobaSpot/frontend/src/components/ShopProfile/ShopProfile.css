@@ -1,6 +1,9 @@
 html, body {
     height: 100vh;
-    margin-right: 1vw;
+
+    /* to remove margin-right */
+    /* margin-right: 1vw; */
+    
     padding: 0;
 }
 
