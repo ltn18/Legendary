@@ -280,6 +280,7 @@ const ShopOwnerInfo = (props) => {
             formCreateShop.resetFields();
             setProgresspercent(0);
             setUploadedFiles([]);
+            // window.location.reload(true);
         }
     }
 

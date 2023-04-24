@@ -210,12 +210,13 @@ const ShopPreviewCard = (props) => {
 
         if ((progresspercent === 100 || !changeShopAvaUrl)
         ) {
-            console.log(data);
+            // console.log(data);
             changeShopInfo();
             setChangeShopAvaFile(null);
             setChangeShopAvaUrl(null);
             setProgresspercent(0);
             formChangeInfo.resetFields();
+            // window.location.reload(true);
         }
     }
 
@@ -255,6 +256,7 @@ const ShopPreviewCard = (props) => {
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     console.log(downloadURL);
+                    setImgUrl(downloadURL);
                     // save to state
                     setNewDrinkImageUrl(downloadURL);
                 });
@@ -279,7 +281,7 @@ const ShopPreviewCard = (props) => {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
             data: {
-                "name": newDrinkName,
+                "drink_name": newDrinkName,
                 "description": newDrinkDescription,
                 "type": newDrinkType,
                 "price": newDrinkPrice,
@@ -310,7 +312,6 @@ const ShopPreviewCard = (props) => {
     }
 
     const formatPhoneNumber = (phoneNumberString) => {
-        console.log("tel:", phoneNumberString);
         var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
         var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
         if (match) {
@@ -593,7 +594,7 @@ const ShopPreviewCard = (props) => {
                                             onChange={e => setNewDrinkName(e.target.value)}
                                         />
                                     </Form.Item>
-                                    <Form.Item
+                                    {/* <Form.Item
                                         label="Description"
                                         name="description"
                                     >
@@ -602,7 +603,7 @@ const ShopPreviewCard = (props) => {
                                             value={newDrinkDescription}
                                             onChange={e => setNewDrinkDescription(e.target.value)}
                                         />
-                                    </Form.Item>
+                                    </Form.Item> */}
 
                                     <Form.Item
                                         label="Drink Type"

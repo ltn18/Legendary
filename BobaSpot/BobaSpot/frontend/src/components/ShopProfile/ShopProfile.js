@@ -92,7 +92,7 @@ function ShopProfile() {
     }
 
     const formatPhoneNumber = (phoneNumberString) => {
-        console.log("tel:", phoneNumberString);
+        // console.log("tel:", phoneNumberString);
         var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
         var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
         if (match) {
