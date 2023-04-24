@@ -72,7 +72,7 @@ const ShopOwnerProfile = () => {
         // console.log("api_key:", process.env.REACT_APP_FIREBASE_API_KEY);
 
         fetchShopOwner();
-    }, []);
+    }, [shopData]);
 
     return (
         <div

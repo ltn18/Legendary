@@ -227,7 +227,7 @@ const ShopOwnerInfo = (props) => {
 
     const handleUploadImages = (e) => {
         e.preventDefault();
-        
+
         // upload feature images
         const files = uploadedFiles;
 
@@ -272,9 +272,13 @@ const ShopOwnerInfo = (props) => {
             console.log("result: ", result);
         }
 
-        if (progresspercent == 100) {
+        if (progresspercent == 100
+            && createShopHour[0]
+            && createShopHour[1]
+        ) {
             createShop();
             formCreateShop.resetFields();
+            setProgresspercent(0);
             setUploadedFiles([]);
         }
     }
