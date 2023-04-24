@@ -167,16 +167,16 @@ const ShopPreviewCard = (props) => {
         // console.log(changeShopHour);
         // console.log(changeShopNumber);
 
-        const data = {
-            shop_name: changeShopName,
-            telephone: changeShopNumber,
-            address: changeShopAddress,
-            hour: {
-                start: changeShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
-                end: changeShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true })
-            },
-            ava_url: changeShopAvaUrl
-        }
+        // const data = {
+        //     shop_name: changeShopName,
+        //     telephone: changeShopNumber,
+        //     address: changeShopAddress,
+        //     hour: {
+        //         start: changeShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
+        //         end: changeShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true })
+        //     },
+        //     ava_url: changeShopAvaUrl
+        // }
 
         // console.log(data);
 
@@ -190,11 +190,9 @@ const ShopPreviewCard = (props) => {
                 "shop_name": changeShopName,
                 "telephone": changeShopNumber,
                 "address": changeShopAddress,
-                "hour": {
-                    "start": changeShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
-                    "end": changeShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true })
-                },
-                "ava_url": changeShopAvaUrl
+                "opening_hour": changeShopHour[0].toLocaleTimeString('it-IT'),
+                "closing_hour": changeShopHour[1].toLocaleTimeString('it-IT'),
+                "image_url": changeShopAvaUrl
                 // "images": [...createShopImages]
             }
         };
@@ -210,7 +208,9 @@ const ShopPreviewCard = (props) => {
             console.log("result change shop info:", result);
         }
 
-        if (!changeShopAvaFile || progresspercent === 100) {
+        if (changeShopHour[0] && changeShopHour[1]
+            && (progresspercent === 100 || !changeShopAvaUrl)
+        ) {
             console.log(data);
             changeShopInfo();
             setChangeShopAvaFile(null);

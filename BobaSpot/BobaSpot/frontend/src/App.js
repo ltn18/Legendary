@@ -96,8 +96,8 @@ const App = () => {
 
         <Route path="user" element={
           <AuthRoute authenticated={authenticated}>
-            {/* <PermissionRoute isShopOwner={isShopOwner} /> */}
-            <ShopOwnerProfile />
+            <PermissionRoute isShopOwner={isShopOwner} />
+            {/* <ShopOwnerProfile /> */}
             {/* <UserProfile /> */}
           </AuthRoute>
         } />
