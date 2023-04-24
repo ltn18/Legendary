@@ -46,7 +46,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./BobaSpot/BobaSpot/backend/
+        working-directory: /BobaSpot/BobaSpot/backend/
 
     steps:
       - name: Run tests
