@@ -245,6 +245,9 @@ const ShopOwnerInfo = (props) => {
         // console.log(createShopNumber);
         // console.log(createShopImages);
 
+        console.log("opening_hour", createShopHour[0].toLocaleTimeString('it-IT'))
+        console.log("closing_hour", createShopHour[1].toLocaleTimeString('it-IT'))
+
         const user_id = data.id;
 
         const options = {
@@ -257,8 +260,8 @@ const ShopOwnerInfo = (props) => {
                 "shop_name": createShopName,
                 "telephone": createShopNumber,
                 "address": createShopAddress,
-                "opening_hour": createShopHour[0],
-                "closing_hour": createShopHour[1],
+                "opening_hour": createShopHour[0].toLocaleTimeString('it-IT'),
+                "closing_hour": createShopHour[1].toLocaleTimeString('it-IT'),
                 "ad_image_url": [...createShopImages],
                 "image_url": createShopAvaUrl
             }
