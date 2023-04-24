@@ -3,7 +3,7 @@ name: Backend Pipeline
 on: [push]
 
 jobs:
-  build:
+  backend_test:
 
     runs-on: macos-latest
 
@@ -39,16 +39,5 @@ jobs:
           echo DB_PORT="5432" >> ../../../.env
           echo JWT_SECRET_KEY="thisisasecretkeyhihi" >> ../../../.env
           cat ../../../.env
-      - name: Run tests
-        run: pytest
-  
-  backend_test:
-    needs: build
-
-    runs-on: macos-latest
-
-    steps:
-      - name: check dependencies
-        run: python -m pip list
       - name: Run tests
         run: pytest
