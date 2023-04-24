@@ -34,7 +34,7 @@ const UserInfo = () => {
     const [data, setData] = useState({
         first_name: '',
         last_name: '',
-        image_url: ''
+        image_url: null
     });
 
     const options = {
@@ -62,7 +62,10 @@ const UserInfo = () => {
         }
 
         axios.request(options)
-            .then(res => setData(res.data))
+            .then(res => {
+                setData(res.data)
+                console.log("user:", res.data)
+            })
             .catch(err => console.log(err));
     }, [data])
 
@@ -173,7 +176,11 @@ const UserInfo = () => {
             }}
             >
                 <div style={{ color: 'white', width: '50%' }}>
-                    <Image src="https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c" />
+                    <Image src={
+                        data.image_url 
+                        ? data.image_url
+                        : "https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c"
+                    } />
                 </div>
                 <div style={{ color: 'white', width: '50%', paddingLeft: 30 }}>
                     <h1 style={{ fontSize: 30, color: 'black' }}>{data.first_name} {data.last_name}</h1>

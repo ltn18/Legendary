@@ -9,12 +9,15 @@ const ShopOwnerProfile = () => {
     const [shopData, setShopData] = useState(null);
 
     const [userData, setUserData] = useState({
+        id: '',
         first_name: '',
         last_name: '',
         image_url: ''
     });
 
     const [nullShopData, setNullShopData] = useState();
+
+    const nullImageUrl = "https://images.dsw.com/is/image/DSWShoes/P212430_blog-list_instores_icon_ux_new.png?impolicy=qlt-medium&imwidth=1011&imdensity=1";
 
     // fetch shop data
     useEffect(() => {
@@ -25,6 +28,8 @@ const ShopOwnerProfile = () => {
                 }
             })
 
+            console.log("userData:", resultUserData.data);
+
             const options = {
                 method: 'GET',
                 url: `http://localhost:8000/api/bobashop/${resultUserData.data.id}/`,
@@ -33,17 +38,25 @@ const ShopOwnerProfile = () => {
                 },
             }
 
-            const resultShopData = await axios.request(options);
+            const resultShopData = await axios.request(options)
+                .then(res => res)
+                .catch(err => console.log(err));
 
-            console.log("userData:", resultUserData.data);
-            console.log("result shop data:", resultShopData.data);
+            console.log("result shop data:", resultShopData);
 
-            setUserData(resultUserData.data);
+            setUserData({
+                id: resultUserData.data.id,
+                first_name: resultUserData.data.first_name,
+                last_name: resultUserData.data.last_name,
+                image_url: resultUserData.data.image_url
+            });
 
-            if (resultShopData.data) {
+            if (resultShopData) {
                 setShopData({
                     id: resultShopData.data.id,
-                    logo_url: resultShopData.data.image_url,
+                    logo_url: resultShopData.data.image_url
+                        ? resultShopData.data.image_url
+                        : nullImageUrl,
                     shop_name: resultShopData.data.shop_name,
                     address: resultShopData.data.address,
                     tel: resultShopData.data.telephone,

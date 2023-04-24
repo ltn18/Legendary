@@ -158,6 +158,8 @@ const ShopOwnerInfo = (props) => {
 
     const handleUploadSingleImage = (file) => {
         const user_id = data.id;
+        console.log("data:", data);
+        console.log("user_id", user_id);
 
         const unique_id = uuid();
         console.log(unique_id);
@@ -243,9 +245,11 @@ const ShopOwnerInfo = (props) => {
         // console.log(createShopNumber);
         // console.log(createShopImages);
 
+        const user_id = data.id;
+
         const options = {
             method: 'PUT',
-            url: 'http://localhost:8000/api/bobashop/',
+            url: `http://localhost:8000/api/bobashop/${user_id}/`,
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
@@ -253,12 +257,10 @@ const ShopOwnerInfo = (props) => {
                 "shop_name": createShopName,
                 "telephone": createShopNumber,
                 "address": createShopAddress,
-                "hour": {
-                    "start": createShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
-                    "end": createShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true })
-                },
-                "images": [...createShopImages],
-                "ava_url": createShopAvaUrl
+                "opening_hour": createShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
+                "closing_hour": createShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
+                "ad_image_url": [...createShopImages],
+                "image_url": createShopAvaUrl
             }
         };
 

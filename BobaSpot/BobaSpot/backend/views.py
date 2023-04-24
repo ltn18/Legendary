@@ -113,6 +113,7 @@ class BobaShopView(APIView):
         if shop is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         if boba_id == (str)(shop.id):
+            print("token ok")
             if not BobaShop.objects.filter(id=boba_id).exists():
                 bobashop = BobaShop(customuser_ptr = shop)
                 bobashop.username = shop.username
@@ -121,11 +122,12 @@ class BobaShopView(APIView):
             else:
                 bobashop = BobaShop.objects.get(id=boba_id)
             for key, value in request.data.items():
+                print(key, value)
                 if hasattr(bobashop, key):
                     setattr(bobashop, key, value)
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            bobashop.save(update_fields=request.data.keys())
+            bobashop.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
     

@@ -17,6 +17,7 @@ import Home from "./contents/landing/Home"
 
 import AuthRoute from "./services/AuthRoute";
 import LandingRoute from "./services/LandingRoute";
+import PermissionRoute from "./services/PermissionRoute";
 
 import Landing from "./TmpLanding";
 
@@ -92,12 +93,12 @@ const App = () => {
             <Home />
           </AuthRoute>
         } />
+
         <Route path="user" element={
           <AuthRoute authenticated={authenticated}>
-            {/* {
-              isShopOwner === true ? <ShopOwnerProfile /> : <UserProfile />
-            } */}
+            {/* <PermissionRoute isShopOwner={isShopOwner} /> */}
             <ShopOwnerProfile />
+            {/* <UserProfile /> */}
           </AuthRoute>
         } />
 
