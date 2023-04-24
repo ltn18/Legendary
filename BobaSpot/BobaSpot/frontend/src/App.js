@@ -1,5 +1,5 @@
 import React from "react";
-import { 
+import {
   BrowserRouter as Router,
   Routes,
   Route,
@@ -17,13 +17,13 @@ import ShopProfile from './components/ShopProfile/ShopProfile';
 
 const App = () => {
   return (
-    // <Temp/>
     <Router>
-          <Routes>
-              <Route exact path='/temp' element={<Temp />} />
-              <Route exact path="/login" element={<Login />} /> 
-              <Route exact path="/signup" element={<Signup />} /> 
-        </Routes>   
+      <Routes>
+        <Route exact path='/' element={<h1>HOME PAGE</h1>} />
+        <Route exact path='/temp' element={<Temp />} />
+        <Route exact path="/login" element={<Login />} />
+        <Route exact path="/signup" element={<Signup />} />
+      </Routes>
     </Router>
   );
 }
