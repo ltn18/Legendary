@@ -113,6 +113,7 @@ class BobaShopView(APIView):
         if shop is None:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         if boba_id == (str)(shop.id):
+            print("token ok")
             if not BobaShop.objects.filter(id=boba_id).exists():
                 bobashop = BobaShop(customuser_ptr = shop)
                 bobashop.username = shop.username
@@ -122,10 +123,11 @@ class BobaShopView(APIView):
                 bobashop = BobaShop.objects.get(id=boba_id)
             for key, value in request.data.items():
                 if hasattr(bobashop, key):
-                    setattr(bobashop, key, value)
+                    if value and len(value) > 0:
+                        setattr(bobashop, key, value)
                 else:
                     return Response(status=status.HTTP_400_BAD_REQUEST)
-            bobashop.save(update_fields=request.data.keys())
+            bobashop.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
@@ -252,3 +254,18 @@ class SearchView(APIView):
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(json.dumps([BobaShopSerializer(r).data for r in res]), status=status.HTTP_200_OK)
+    
+class DrinkView(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,) 
+    def put(self, request, format=None):
+        shop = request.user
+        data = request.data
+        if shop is None:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        shop_instance = BobaShop.objects.get(id=shop.id)
+        new_drink = Drink(boba_shop=shop_instance)
+        for key,value in data.items():
+            setattr(new_drink, key, value)
+        new_drink.save()
+        return Response(status=status.HTTP_200_OK)
