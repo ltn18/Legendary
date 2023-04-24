@@ -77,7 +77,7 @@ const ShopPreviewCard = (props) => {
     };
 
     const handleClickOnShopName = () => {
-        navigate(`/bobaplace/${shopData.id}`)
+        navigate(`/bobashop/${data.id}`)
     }
 
     const handleDeleteShopMouseLeave = () => {
