@@ -245,8 +245,8 @@ const ShopOwnerInfo = (props) => {
         // console.log(createShopNumber);
         // console.log(createShopImages);
 
-        console.log("opening_hour", createShopHour[0].toLocaleTimeString('it-IT'))
-        console.log("closing_hour", createShopHour[1].toLocaleTimeString('it-IT'))
+        // console.log("opening_hour", createShopHour[0].toLocaleTimeString('it-IT'))
+        // console.log("closing_hour", createShopHour[1].toLocaleTimeString('it-IT'))
 
         const user_id = data.id;
 
@@ -275,10 +275,7 @@ const ShopOwnerInfo = (props) => {
             console.log("result: ", result);
         }
 
-        if (progresspercent == 100
-            && createShopHour[0]
-            && createShopHour[1]
-        ) {
+        if (progresspercent == 100) {
             createShop();
             formCreateShop.resetFields();
             setProgresspercent(0);

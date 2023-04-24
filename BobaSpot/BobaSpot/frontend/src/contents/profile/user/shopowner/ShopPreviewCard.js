@@ -182,7 +182,7 @@ const ShopPreviewCard = (props) => {
 
         const options = {
             method: 'PUT',
-            url: `http://localhost:8000/api/bobashop/${data.id}`,
+            url: `http://localhost:8000/api/bobashop/${data.id}/`,
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
@@ -208,8 +208,7 @@ const ShopPreviewCard = (props) => {
             console.log("result change shop info:", result);
         }
 
-        if (changeShopHour[0] && changeShopHour[1]
-            && (progresspercent === 100 || !changeShopAvaUrl)
+        if ((progresspercent === 100 || !changeShopAvaUrl)
         ) {
             console.log(data);
             changeShopInfo();
