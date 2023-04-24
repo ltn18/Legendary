@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 // firebase
 import { storage, config } from "../../../services/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { v4 as uuid } from 'uuid';
+
 
 import "../login-signup.css";
 import { Link, useNavigate } from "react-router-dom";

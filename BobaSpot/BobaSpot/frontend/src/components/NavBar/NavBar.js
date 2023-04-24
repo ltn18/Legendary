@@ -1,12 +1,12 @@
 import React from 'react';
 
 // components
-import {Link, useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
+
 import "./NavBar.css";
 
 const NavBar = () => {
-    
     return (
         <div style={{
             width: '100%',
@@ -15,16 +15,15 @@ const NavBar = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
-        }}>
+            }}>
             <div className="links">
                 <Link to="/" style={{ color: 'black' }}>BobaSpot</Link>
             </div>
             <div className="links">
-                <Link to="/user"><UserOutlined /></Link>
-                <Link to="/login"><LogoutOutlined /></Link>
+                <Link to='/login'><LogoutOutlined /></Link>
+                <Link to='/user'><UserOutlined /></Link>
             </div>
-        </div >
+        </div>
     )
 }
-
 export default NavBar;

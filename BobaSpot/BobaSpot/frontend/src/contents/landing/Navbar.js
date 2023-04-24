@@ -1,23 +1,34 @@
 import React from 'react'
 import { Button,
-         Tooltip } from 'antd';
+    Tooltip
+} from 'antd';
+import {Link, useNavigate } from "react-router-dom";
 import { UserOutlined,
          LogoutOutlined } from '@ant-design/icons';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const navigateLogin = () =>{ 
+    let path = '/login'; 
+    navigate(path, {replace: true});
+  }
+    
+  const navigateUser = () => {
+    navigate('/user', {replace: true});
+  };
   return (
     <nav>
         <a href="">
         <Tooltip title="User Profile">
-            <Button type="text" className='nav-user_profile'>
-                <UserOutlined className='nav-button-icon'/>
+            <Button onclick={navigateUser} type="text" className='nav-user_profile'>
+                <UserOutlined onclick={navigateUser} className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>
         <a href="">
         <Tooltip title="Log-out">
-            <Button type="text" className='nav-logout'>
-                <LogoutOutlined className='nav-button-icon'/>
+            <Button onclick={navigateLogin} type="text" className='nav-logout'>
+                <LogoutOutlined onclick={navigateLogin} className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>
