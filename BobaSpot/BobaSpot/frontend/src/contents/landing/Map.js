@@ -36,8 +36,8 @@ function MapSearch() {
   const [selectedMarker, setSelectedMarker] = useState("");
   const [center, setCenter] = useState({ lat: 41.5, lng: -81.6 });
 
-  const jwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjZhMmRlMTU2LWQ2NzAtNDNlMC05NDM5LTVlNTVmYThlNzhmZSIsInVzZXJuYW1lIjoiRE0iLCJoYXNocGFzcyI6ImInTVRJek1USXonIn0.yCwUVcpi57SJ7eQt-ykPbAE_ZH0VHZCh0byVhWmAsJU\"}";
-  const url = "http://localhost:8000/api/search/";
+  const jwt = sessionStorage.getItem('token');
+  const url = "http://127.0.0.1:8000/api/search/";
 
   const [form] = Form.useForm();
   const [data, setData] = useState();

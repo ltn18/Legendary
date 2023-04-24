@@ -22,7 +22,7 @@ const { TextArea } = Input;
 
 const ShopPreviewCard = (props) => {
     const {
-        reviewText, shopData
+        reviewText, shopData, data
     } = props;
 
     const navigate = useNavigate();

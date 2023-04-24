@@ -6,50 +6,60 @@ import ShopPreview from './ShopPreview'
 
 const ShopOwnerProfile = () => {
     // user's shop data
-    const [shopData, setShopData] = useState({
-        id: "123",
-        logo_url: "https://images.dsw.com/is/image/DSWShoes/P212430_blog-list_instores_icon_ux_new.png?impolicy=qlt-medium&imwidth=1011&imdensity=1",
-        shop_name: "Kung Fu Tea",
-        address: "11312 Euclid Ave, Cleveland, OH, 44106",
-        tel: "2168627690",
-        hours: {
-            start: "2 AM",
-            end: "8 AM"
-        },
-        rating: "4.5"
-    })
+    const [shopData, setShopData] = useState(null);
+
+    const [userData, setUserData] = useState({
+        first_name: '',
+        last_name: '',
+        image_url: ''
+    });
 
     const [nullShopData, setNullShopData] = useState();
 
     // fetch shop data
     useEffect(() => {
-        const fetchShop = async () => {
+        const fetchShopOwner = async () => {
+            const resultUserData = await axios.get('http://localhost:8000/api/user/', {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+                }
+            })
+
             const options = {
                 method: 'GET',
-                url: 'http://localhost:8000/api/bobashop/',
+                url: `http://localhost:8000/api/bobashop/${resultUserData.data.id}/`,
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },
             }
 
-            const result = await axios.request(options);
-            console.log(result);
+            const resultShopData = await axios.request(options);
 
-            setShopData({
-                id: "123",
-                logo_url: "",
-                shop_name: "Kung Fu Tea",
-                address: "11312 Euclid Ave, Cleveland, OH, 44106",
-                tel: "2168627690",
-                hours: {
-                    start: "2 AM",
-                    end: "8 AM"
-                },
-                rating: "4.5"
-            });
+            console.log("userData:", resultUserData.data);
+            console.log("result shop data:", resultShopData.data);
+
+            setUserData(resultUserData.data);
+
+            if (resultShopData.data) {
+                setShopData({
+                    id: resultShopData.data.id,
+                    logo_url: resultShopData.data.image_url,
+                    shop_name: resultShopData.data.shop_name,
+                    address: resultShopData.data.address,
+                    tel: resultShopData.data.telephone,
+                    hours: {
+                        start: resultShopData.data.opening_hour,
+                        end: resultShopData.data.closing_hour
+                    },
+                    rating: resultShopData.data.rating
+                });
+            }
         }
 
-    }, [shopData]);
+        // console.log("api_key:", process.env.REACT_APP_FIREBASE_API_KEY);
+
+        fetchShopOwner();
+    }, []);
 
     return (
         <div
@@ -59,12 +69,12 @@ const ShopOwnerProfile = () => {
             }}
         >
             <div style={{ width: '25%' }}>
-                <ShopOwnerInfo shopData={nullShopData} />
+                <ShopOwnerInfo data={userData} shopData={shopData} />
             </div>
             <div style={{
                 width: '75%',
             }}>
-                <ShopPreview shopData={shopData} />
+                <ShopPreview userData={userData} shopData={shopData} />
             </div>
         </div>
     )

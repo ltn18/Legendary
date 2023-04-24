@@ -21,7 +21,7 @@ const { Option } = Select;
 // TODO1: handle submit buttons
 // TODO2: see how Upload of antd works
 const ShopOwnerInfo = (props) => {
-    const { shopData } = props;
+    const { shopData, data } = props;
 
     const navigate = useNavigate();
 
@@ -70,28 +70,6 @@ const ShopOwnerInfo = (props) => {
     // upload single image
     const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
-
-    const [data, setData] = useState({
-        first_name: '',
-        last_name: '',
-        image_url: ''
-    });
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            const result = await axios.get('http://localhost:8000/api/user/', {
-                headers: {
-                    Authorization: `Bearer ${sessionStorage.getItem('token')}`,
-                }
-            })
-
-            setData(result.data);
-        }
-
-        // console.log("api_key:", process.env.REACT_APP_FIREBASE_API_KEY);
-
-        fetchUser();
-    }, [data])
 
     const handleHoverSubmitChangeInfoEnter = () => {
         setIsHoverSubmitChangeInfo(true);

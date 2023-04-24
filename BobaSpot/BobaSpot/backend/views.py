@@ -2,9 +2,9 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from backend.auth import JWTAuthentication
-from backend.models import CustomUser, BobaShop, Drink, Customer
+from backend.models import CustomUser, BobaShop, Customer, Drink
 from django.db.models import Avg
-from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer
+from backend.serializers import CustomUserSerializer, BobaShopSerializer, DrinkSerializer, ReviewsSerializer, CustomerSerializer
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -130,6 +130,8 @@ class BobaShopView(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
     
     def get(self, request, boba_id, format=None):
+        login = request.user
+        print(login)
         try:
             shop = BobaShop.objects.get(id=boba_id)
         except Exception:
@@ -142,7 +144,7 @@ class BobaShopView(APIView):
         #     drink_serializer.pop('boba_shop')
         drinks_serializer.sort(key=lambda x: x['rating'], reverse=True)
         #retrieve top 5 drinks
-        top_drink = {'top_drink': drinks_serializer[:5]}
+        top_drink = {'top_drink': drinks_serializer}
         serialized_data['data'].update(top_drink)
         # retrieve all the reviews in the bobashop
         reviews = []
@@ -158,7 +160,9 @@ class BobaShopView(APIView):
             rv_serializer.pop('user')
             rv_serializer.pop('review_id')
         reviews_json = {"reviews": reviews_serializer}
+        user_login = {"user_picture": login.image_url, "is_shop_owner": login.is_shop_owner}
         serialized_data['data'].update(reviews_json)
+        serialized_data['data'].update(user_login)
         return Response(serialized_data['data'], status=status.HTTP_200_OK)   
 
 class ReviewView(APIView):
@@ -218,11 +222,8 @@ class SearchView(APIView):
         return lat, lng
 
     def calculate_distance(self,origin, lat, lon):
-        print(lat, lon)
         if not origin.longitude or not origin.latitude:
             return 100
-        elif not lat or not lon:
-            return Response("The input is not supported by GeoPy", status=status.HTTP_400_BAD_REQUEST)
         return (geodesic((origin.latitude, origin.longitude), (lat, lon)).miles) 
     
     def get(self, request, format=None):
@@ -244,6 +245,8 @@ class SearchView(APIView):
             elif constrain == 'address':
                 if len(value) > 0:
                     lat, lon = self.extract_lat_long_via_address(value)
+                    if not lat or not lon:
+                        return Response("The input is not supported",status=status.HTTP_400_BAD_REQUEST)
                     res = [x for x in res if self.calculate_distance(x, lat, lon) <= 15]
             elif constrain == 'shop_name' or constrain == 'drink_name':
                 continue

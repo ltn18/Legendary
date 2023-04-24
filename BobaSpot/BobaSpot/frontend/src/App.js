@@ -6,6 +6,7 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
+import Navbar from './contents/landing/Navbar';
 
 import './App.css'
 
@@ -93,13 +94,14 @@ const App = () => {
         } />
         <Route path="user" element={
           <AuthRoute authenticated={authenticated}>
-            {
+            {/* {
               isShopOwner === true ? <ShopOwnerProfile /> : <UserProfile />
-            }
+            } */}
+            <ShopOwnerProfile />
           </AuthRoute>
         } />
 
-        <Route path="bobaplace/:id" element={<ShopProfile />} />
+        <Route path="bobashop/:boba_id" element={<ShopProfile />} />
 
       </Routes>
     </Router>
