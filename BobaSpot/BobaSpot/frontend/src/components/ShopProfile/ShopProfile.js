@@ -91,6 +91,16 @@ function ShopProfile() {
         return reviewForm.text !== "" && reviewForm.rating !== 0 && reviewForm.drink_name !== "";
     }
 
+    const formatPhoneNumber = (phoneNumberString) => {
+        console.log("tel:", phoneNumberString);
+        var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+        var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+        }
+        return phoneNumberString;
+    }
+
     return (
         <>
             {/* whole page with two columns */}
@@ -116,7 +126,7 @@ function ShopProfile() {
                             </Typography.Title>
                             <b>Address:</b>{data?.address}<br />
                             <b>Hours:</b> {data?.opening_hour} - {data?.closing_hour} <br />
-                            <b>Tel:</b> {data?.telephone} <br />
+                            <b>Tel:</b> {formatPhoneNumber(data?.telephone)} <br />
                         </Col>
                     </Row>
                     {/* shop images */}
