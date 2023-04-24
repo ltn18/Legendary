@@ -257,8 +257,8 @@ const ShopOwnerInfo = (props) => {
                 "shop_name": createShopName,
                 "telephone": createShopNumber,
                 "address": createShopAddress,
-                "opening_hour": createShopHour[0].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
-                "closing_hour": createShopHour[1].toLocaleString('en-US', { hour: 'numeric', hour12: true }),
+                "opening_hour": createShopHour[0],
+                "closing_hour": createShopHour[1],
                 "ad_image_url": [...createShopImages],
                 "image_url": createShopAvaUrl
             }
