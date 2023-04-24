@@ -9,26 +9,29 @@ import { UserOutlined,
 const Navbar = () => {
   const navigate = useNavigate();
   const navigateLogin = () =>{ 
-    let path = '/login'; 
-    navigate(path, {replace: true});
+      let path = '/login'; 
+      console.log("I'm here!!!!!!!!!");
+      navigate(path, { replace: true });
+      window.location.reload(true);
   }
     
   const navigateUser = () => {
-    navigate('/user', {replace: true});
+      navigate('/user', { replace: true });
+      window.location.reload(true);
   };
   return (
     <nav>
-        <a href="">
+        <a>
         <Tooltip title="User Profile">
             <Button onclick={navigateUser} type="text" className='nav-user_profile'>
                 <UserOutlined onclick={navigateUser} className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>
-        <a href="">
+        <a onclick={navigateLogin} href="">
         <Tooltip title="Log-out">
-            <Button onclick={navigateLogin} type="text" className='nav-logout'>
-                <LogoutOutlined onclick={navigateLogin} className='nav-button-icon'/>
+            <Button onclick="navigateLogin()" type="text" className='nav-logout'>
+                <LogoutOutlined onclick="navigateLogin()" className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>
