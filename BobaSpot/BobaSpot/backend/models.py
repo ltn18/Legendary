@@ -60,7 +60,10 @@ class Drink(models.Model):
     
     @property
     def rating(self):
-        return self.reviews_set.aggregate(average_rating=Avg('rating'))['average_rating']
+        if len(self.reviews_set.all()) > 0:
+            return self.reviews_set.aggregate(average_rating=Avg('rating'))['average_rating']
+        else:
+            return 0
     
     class Meta:
         unique_together = ('boba_shop', 'drink_name')

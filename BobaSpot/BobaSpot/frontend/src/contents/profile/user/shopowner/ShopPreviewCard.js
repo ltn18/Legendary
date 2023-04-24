@@ -199,6 +199,7 @@ const ShopPreviewCard = (props) => {
 
 
         const changeShopInfo = async () => {
+            console.log(options)
             const result = await axios.request(options)
                 .then(res => {
                     console.log(res.data);
@@ -291,6 +292,7 @@ const ShopPreviewCard = (props) => {
         };
 
         const createDrink = async () => {
+            console.log(options)
             const result = await axios.request(options)
                 .then(res => res.data)
                 .catch(err => console.log(err));
@@ -302,6 +304,7 @@ const ShopPreviewCard = (props) => {
         if (!newDrinkImageFile || progresspercent === 100) {
             // submit
             createDrink();
+
             setNewDrinkImageFile(null);
             setNewDrinkImageUrl(null);
             setProgresspercent(0);
