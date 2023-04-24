@@ -26,8 +26,6 @@ const Map = () => {
     }
   );
 
-  console.log("isLoaded:", isLoaded)
-
   if (!isLoaded) return <div>Loading...</div>
   return <MapSearch />
 }
@@ -97,128 +95,111 @@ function MapSearch() {
   const logoKFT = 'https://play-lh.googleusercontent.com/SUl4XjMnZ7AoG394N20DpStiI4e1jynSSVDsh6V6h4PzFBPn8UhZ2Sa9ZybBz5rWwEQ';
   console.log(data)
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%'
-      }}
-    >
-      <div
-        style={{
-          width: '25%',
-          padding: 20
-        }}
-      >
-        <Form
-          name='filter-search'
-          form={form}
-          className='search-form'
-          onFinish={onFinish}
-        >
-          <Form.Item
-            name="address"
-            label="Address"
+    <div>
+      <Row>
+        <Col span={4} offset={2}>
+          <Form
+            name='filter-search'
+            form={form}
+            className='search-form'
+            onFinish={onFinish}
           >
-            <Input allowClear />
-          </Form.Item>
-
-          <Form.Item
-            name="drink_name"
-            label="Drink name"
-          >
-            <Input allowClear />
-          </Form.Item>
-
-          <Form.Item
-            name="shop_name"
-            label="Shop name"
-          >
-            <Input
-              allowClear
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="min_rating"
-            label="Minimum rating"
-          >
-            <Rate allowHalf />
-          </Form.Item>
-
-          <Form.Item
-            name="min_price"
-            label="Minimum price"
-          >
-            <InputNumber prefix="$" />
-          </Form.Item>
-
-          <Form.Item
-            name="max_price"
-            label="Maximum price"
-          >
-            <InputNumber prefix="$" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-
-            <Button type='text' htmlType="button" onClick={onReset}>
-              Reset
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
-
-      <div
-        style={{
-          width: '75%'
-        }}
-      >
-        <GoogleMap
-          zoom={14}
-          center={center}
-          mapContainerClassName="map-container"
-        >
-          {data?.map((shop) => (
-            // console.log((shop))
-            <Marker
-              key={shop.shop_name}
-              position={{ lat: shop.latitude, lng: shop.longitude }}
-              onClick={() => {
-                setSelectedMarker(shop);
-                setCenter({ lat: shop.latitude, lng: shop.longitude })
-              }}
-            />
-          ))}
-          {selectedMarker && (
-            <InfoWindow
-              position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }}
-              onCloseClick={() => setSelectedMarker('')}
+            <Form.Item
+              name="address"
+              label="Address"
             >
-              <div>
-                <Row>
-                  <Col>
-                    <img src={selectedMarker.image_url} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }} />
-                  </Col>
-                  <Col>
-                    <Link to={"/bobashop/" + selectedMarker.id} >
-                      <h1>{selectedMarker.shop_name}</h1>
-                    </Link>
-                    <p>{selectedMarker.address}</p>
-                    <p>Hours: 12:00pm - 21:30pm</p>
-                    <p>{selectedMarker.rating}<StarOutlined /></p>
-                  </Col>
-                </Row>
-              </div>
-            </InfoWindow>
-            // console.log(selectedMarker.id)
-          )}
-        </GoogleMap>
-      </div>
+              <Input allowClear />
+            </Form.Item>
+
+            <Form.Item
+              name="drink_name"
+              label="Drink name"
+            >
+              <Input allowClear />
+            </Form.Item>
+
+            <Form.Item
+              name="shop_name"
+              label="Shop name"
+            >
+              <Input allowClear />
+            </Form.Item>
+
+            <Form.Item
+              name="min_rating"
+              label="Minimum rating"
+            >
+              <Rate allowHalf />
+            </Form.Item>
+
+            <Form.Item
+              name="min_price"
+              label="Minimum price"
+            >
+              <InputNumber prefix="$" />
+            </Form.Item>
+
+            <Form.Item
+              name="max_price"
+              label="Maximum price"
+            >
+              <InputNumber prefix="$" />
+            </Form.Item>
+
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+
+              <Button type='text' htmlType="button" onClick={onReset}>
+                Reset
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+        <Col span={15} offset={1}>
+          <GoogleMap
+            zoom={14}
+            center={center}
+            mapContainerClassName="map-container"
+          >
+            {data?.map((shop) => (
+              // console.log((shop))
+              <Marker
+                key={shop.shop_name}
+                position={{ lat: shop.latitude, lng: shop.longitude }}
+                onClick={() => {
+                  setSelectedMarker(shop);
+                  setCenter({ lat: shop.latitude, lng: shop.longitude })
+                }}
+              />
+            ))}
+            {selectedMarker && (
+              <InfoWindow
+                position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }}
+                onCloseClick={() => setSelectedMarker('')}
+              >
+                <div>
+                  <Row>
+                    <Col>
+                      <img src={selectedMarker.image_url} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }} />
+                    </Col>
+                    <Col>
+                      <Link to={"/bobashop/" + selectedMarker.id} >
+                        <h1>{selectedMarker.shop_name}</h1>
+                      </Link>
+                      <p>{selectedMarker.address}</p>
+                      <p>Hours: {selectedMarker.opening_hour} - {selectedMarker.closing_hour}</p>
+                      <p>{selectedMarker.rating}<StarOutlined /></p>
+                    </Col>
+                  </Row>
+                </div>
+              </InfoWindow>
+              // console.log(selectedMarker.id)
+            )}
+          </GoogleMap>
+        </Col>
+      </Row>
     </div>
   )
 }
