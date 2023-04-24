@@ -97,12 +97,13 @@ function MapSearch() {
   return (
     <div>
       <Row>
-        <Col span={4} offset={2}>
+        <Col span={6} offset={1}>
           <Form
             name='filter-search'
             form={form}
             className='search-form'
             onFinish={onFinish}
+            style={{padding: 30, justifyContent : 'space-between'}}
           >
             <Form.Item
               name="address"
@@ -157,7 +158,7 @@ function MapSearch() {
             </Form.Item>
           </Form>
         </Col>
-        <Col span={15} offset={1}>
+        <Col span={16} offset={1}>
           <GoogleMap
             zoom={14}
             center={center}
@@ -195,7 +196,6 @@ function MapSearch() {
                   </Row>
                 </div>
               </InfoWindow>
-              // console.log(selectedMarker.id)
             )}
           </GoogleMap>
         </Col>
