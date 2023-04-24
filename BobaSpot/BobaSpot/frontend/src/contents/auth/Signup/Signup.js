@@ -310,7 +310,9 @@ const toggleAuth = () => {
                                 flexDirection: 'column'
                             }}>
                                 <Button
+                                    onMouseEnter={handleHoverSubmitImageEnter}
                                     onClick={handleUploadSingleImage}
+                                    onMouseLeave={handleHoverSubmitImageLeave}
                                     style={{
                                         marginBottom: 10
                                     }}
@@ -325,7 +327,7 @@ const toggleAuth = () => {
                                     </div>
                                 }
 
-                                <Button
+                                {/* <Button
                                     onMouseEnter={handleHoverSubmitImageEnter}
                                     onMouseLeave={handleHoverSubmitImageLeave}
                                     style={{
@@ -337,7 +339,7 @@ const toggleAuth = () => {
                                     htmlType="submit"
                                 >
                                     Submit
-                                </Button>
+                                </Button> */}
             </div>
 
             {/* <img style={{ width: '100%', height: '180%' }} src={imgUrl} /> */}

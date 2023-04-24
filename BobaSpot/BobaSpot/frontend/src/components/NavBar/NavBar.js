@@ -1,12 +1,12 @@
 import React from 'react';
 
 // components
-import { Link } from 'react-router-dom'
-
+import {Link, useNavigate } from "react-router-dom";
 import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import "./NavBar.css";
 
 const NavBar = () => {
+    
     return (
         <div style={{
             width: '100%',
