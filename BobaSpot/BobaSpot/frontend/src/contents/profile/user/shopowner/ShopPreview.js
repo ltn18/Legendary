@@ -14,6 +14,7 @@ const ShopPreview = (props) => {
                 flexDirection: 'column',
                 alignItems: 'center',
             }}
+            data-testid="shoppreview-card"
         >
             <ShopPreviewCard shopData={shopData} data={userData}/>
         </div>

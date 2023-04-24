@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import UserProfile from "../../contents/profile/user/customer/UserProfile";
 
-describe('UserProfile', () => {
+describe('UserProfile component', () => {
     it('renders UserInfo and UserComments components', () => {
       const { getByTestId } = render(<UserProfile />);
       const userInfoElement = getByTestId('user-info');

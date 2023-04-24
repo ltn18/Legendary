@@ -1,17 +1,15 @@
-.Full-page {
+.Full-page{
   height: 100vh;
-  align-items: stretch;
+  align-items:stretch;
   display: flex;
 }
-
-.Column {
+.Column{
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-
-.logo-text {
+.logo-text{
   font-weight: 200;
   font-size: 6rem !important;
   text-align: center;
@@ -20,19 +18,19 @@
   font-family: 'Just Another Hand', cursive;
 }
 
-.form-field {
+.form-field{
   /*display: flex;
-    width: fit-content;*/
+  width: fit-content;*/
   align-items: center;
 }
 
-.auth-toggle {
+.auth-toggle{
   cursor: pointer;
   text-align: center;
   vertical-align: middle;
 }
 
-.login-signup-button {
+.login-signup-button{
   width: 100%;
   background-color: #FFEEEF;
   color: black;
@@ -44,10 +42,9 @@
   color: inherit;
 
 }
-
-.login-form {
+.login-form{
   display: flexbox;
-  align-items: center;
+  align-items:center;
   height: 200px;
   width: 50%;
 }

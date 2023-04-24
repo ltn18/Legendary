@@ -169,7 +169,7 @@ function Login() {
             {/* username */}
             <Form.Item
               name="username"
-              className='form-field'
+              // className='form-field'
               validateStatus={String.validateStatus}
               help={String.errorMsg}
               rules={isLogin ? null : [

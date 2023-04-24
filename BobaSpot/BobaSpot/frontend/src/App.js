@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import Navbar from './contents/landing/Navbar';
 
-import './App.css'
+// import './App.css'
 
 import axios from 'axios'
 

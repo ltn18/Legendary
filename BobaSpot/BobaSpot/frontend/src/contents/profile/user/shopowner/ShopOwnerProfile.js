@@ -81,12 +81,16 @@ const ShopOwnerProfile = () => {
                 display: 'flex',
             }}
         >
-            <div style={{ width: '25%' }}>
+            <div style={{ width: '25%' }}
+                data-testid="shopowner-info"
+            >
                 <ShopOwnerInfo data={userData} shopData={shopData} />
             </div>
             <div style={{
                 width: '75%',
-            }}>
+            }}
+                data-testid="shopowner-preview"
+            >
                 <ShopPreview userData={userData} shopData={shopData} />
             </div>
         </div>
