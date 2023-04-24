@@ -260,8 +260,8 @@ const ShopOwnerInfo = (props) => {
                 "shop_name": createShopName,
                 "telephone": createShopNumber,
                 "address": createShopAddress,
-                "opening_hour": createShopHour[0].toLocaleTimeString('it-IT'),
-                "closing_hour": createShopHour[1].toLocaleTimeString('it-IT'),
+                "opening_hour": createShopHour[0] ? createShopHour[0].toLocaleTimeString('it-IT') : "",
+                "closing_hour": createShopHour[1] ? createShopHour[1].toLocaleTimeString('it-IT') : "",
                 "ad_image_url": [...createShopImages],
                 "image_url": createShopAvaUrl
             }

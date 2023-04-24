@@ -190,8 +190,8 @@ const ShopPreviewCard = (props) => {
                 "shop_name": changeShopName,
                 "telephone": changeShopNumber,
                 "address": changeShopAddress,
-                "opening_hour": changeShopHour[0].toLocaleTimeString('it-IT'),
-                "closing_hour": changeShopHour[1].toLocaleTimeString('it-IT'),
+                "opening_hour": changeShopHour[0] ? changeShopHour[0].toLocaleTimeString('it-IT') : "",
+                "closing_hour": changeShopHour[1] ? changeShopHour[1].toLocaleTimeString('it-IT') : "",
                 "image_url": changeShopAvaUrl
                 // "images": [...createShopImages]
             }
