@@ -96,6 +96,7 @@ function Login() {
   const toggleAuth = () => { 
     setIsLogin(!isLogin);
   }
+  console.log(sessionStorage.getItem("token"));
   return (
     <>
       <Row className='Full-page'>

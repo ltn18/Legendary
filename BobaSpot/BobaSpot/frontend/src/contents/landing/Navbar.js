@@ -8,11 +8,13 @@ import { UserOutlined,
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const navigateLogin = () =>{ 
+    const navigateLogin = () => {
+      sessionStorage.removeItem("token");
+        sessionStorage.removeItem("isShopOwner");
       let path = '/login'; 
-      console.log("I'm here!!!!!!!!!");
       navigate(path, { replace: true });
       window.location.reload(true);
+      
   }
     
   const navigateUser = () => {
@@ -23,15 +25,15 @@ const Navbar = () => {
     <nav>
         <a>
         <Tooltip title="User Profile">
-            <Button onclick={navigateUser} type="text" className='nav-user_profile'>
-                <UserOutlined onclick={navigateUser} className='nav-button-icon'/>
+            <Button onClick={(navigateUser)} type="text" className='nav-user_profile'>
+                <UserOutlined onClick={navigateUser} className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>
-        <a onclick={navigateLogin} href="">
+        <a>
         <Tooltip title="Log-out">
-            <Button onclick="navigateLogin()" type="text" className='nav-logout'>
-                <LogoutOutlined onclick="navigateLogin()" className='nav-button-icon'/>
+                  <Button onClick={(navigateLogin)} type="text" className='nav-logout'>
+                      <LogoutOutlined onClick={navigateLogin} className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>
