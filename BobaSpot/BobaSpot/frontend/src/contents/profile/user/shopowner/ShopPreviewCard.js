@@ -206,6 +206,7 @@ const ShopPreviewCard = (props) => {
                 })
                 .catch(err => console.log(err))
             console.log("result change shop info:", result);
+            navigate('/user', { replace: true })
         }
 
         if ((progresspercent === 100 || !changeShopAvaUrl)
@@ -285,7 +286,7 @@ const ShopPreviewCard = (props) => {
                 "description": newDrinkDescription,
                 "type": newDrinkType,
                 "price": newDrinkPrice,
-                "imageUrl": newDrinkImageUrl
+                "image_url": newDrinkImageUrl
             }
         };
 
@@ -301,13 +302,14 @@ const ShopPreviewCard = (props) => {
         if (!newDrinkImageFile || progresspercent === 100) {
             // submit
             createDrink();
-            console.log(data);
-
-            // reset the fields
-            formCreateDrink.resetFields();
             setNewDrinkImageFile(null);
             setNewDrinkImageUrl(null);
             setProgresspercent(0);
+
+            // reset the fields
+            formCreateDrink.resetFields();
+
+            navigate('/user', { replace: true })
         }
     }
 
