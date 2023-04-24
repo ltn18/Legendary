@@ -28,5 +28,11 @@ jobs:
 
       - name: check dependencies
         run: python -m pip list
+      - name: 'Create env file'
+        run: |
+          touch .env
+          echo API_ENDPOINT="https://xxx.execute-api.us-west-2.amazonaws.com" >> .env
+          echo API_KEY=${{ secrets.API_KEY }} >> .env
+          cat .env
       - name: Run tests
         run: pytest
