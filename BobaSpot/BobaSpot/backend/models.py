@@ -25,8 +25,8 @@ class BobaShop(CustomUser):
     closing_hour = models.TimeField(blank=True, null=True)
     ad_image_url = ArrayField(models.CharField(max_length = 500), blank=True, null=True)
     # drinks = models.ForeignKey(Drink, on_delete=models.CASCADE)
-    longitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0)
-    latitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0)
+    longitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0, blank=True, null=True)
     
     @property
     def rating(self):
