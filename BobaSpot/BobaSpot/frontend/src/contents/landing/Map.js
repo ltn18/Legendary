@@ -187,7 +187,6 @@ function MapSearch() {
                             <h1>{selectedMarker.shop_name}</h1>
                             </Link>
                           <p>{selectedMarker.address}</p>
-                          <p>Hours: 12:00pm - 21:30pm</p>
                           <p>{selectedMarker.rating}<StarOutlined /></p>
                         </Col>
                       </Row>
