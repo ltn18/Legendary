@@ -2,7 +2,7 @@ import { Button, Form, Input,Typography,Checkbox } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
 // firebase
-import { storage } from "../../../../services/firebase";
+import { storage, config } from "../../../services/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuid } from 'uuid';
 
@@ -36,8 +36,13 @@ function Signup() {
   // upload single image
   const [imgUrl, setImgUrl] = useState(null);
   const [progresspercent, setProgresspercent] = useState(0);
-  const [createUserImages, setCreateUserImages] = useState([])
-  const [isHoverSubmitImage, setIsHoverSubmitImage] = useState(false)
+  const [createUserImages, setCreateUserImages] = useState([]);
+  const [isHoverSubmitImage, setIsHoverSubmitImage] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+
+  // handle file upload
+  const [uploadedFile, setUploadedFile] = useState();
+  const [uploadedFileUrl, setUploadedFileUrl] = useState(null);
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -76,14 +81,15 @@ function Signup() {
   };
 
 
-  const handleUploadSingleImage = (file) => {
-        const user_id = form_signup.id;
-        const unique_id = uuid();
-        console.log(unique_id);
-
+  const handleUploadSingleImage = () => {
+      const user_id = form_signup.id;
+    
+    const file = uploadedFile;
+    console.log("uploadedFile:", uploadedFile);
+        
         if (!file) return;
 
-        const storageRef = ref(storage, `bobaplace/${user_id}/feature_images/${unique_id}`);
+        const storageRef = ref(storage, `user_profile_image/${user_id}`);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on("state_changed",
@@ -98,17 +104,17 @@ function Signup() {
 
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log(downloadURL);
+                    console.log('downloadUrl', downloadURL);
                     setImgUrl(downloadURL);
-
-                    // save to state
-                    let tmpUserImages = createUserImages;
-                    tmpUserImages.push(downloadURL);
-                    setCreateUserImages(tmpShopImages);
+                    // let tmpUserImages = createUserImages;
+                    // tmpUserImages.push(downloadURL);
+                    // setCreateUserImages(tmpUserImages);
+                    setUploadedFileUrl(downloadURL);
                 });
             }
         );
   }
+  
 
   const handleHoverSubmitImageEnter = () => {
         setIsHoverSubmitImage(true);
@@ -119,14 +125,15 @@ function Signup() {
   }
 
 const onFinish = () => {
-      console.log('Received values of form:', form_signup);
+  console.log('Received values of form:', form_signup);
+  console.log(uploadedFileUrl);
       axios.put('http://localhost:8000/api/login/', {
         username: form_signup.username,
         password: form_signup.password,
         first_name: form_signup.firstname,
         last_name: form_signup.lastname,
         shopowner: form_signup.shopowner,
-        image_url: [...createUserImages]
+        image_url: uploadedFileUrl
       })
         .then(function (response) {
         console.log(JSON.parse(response.data).token);
@@ -156,13 +163,14 @@ const toggleAuth = () => {
 
   return (
     <>
+      console.log(config);
       <Row className='Full-page'>
         {/* left column */}
-        <Col className='Column' span={12} style={{}}>
-          <img style={{ width: '100%', height: '100%' }} src={"https://cdn.dribbble.com/userupload/3841872/file/original-0a6f56e82ee816c6b6ab202747a58307.png?compress=1&resize=1024x768"} />
+        <Col className='Column' span={13} style={{}}>
+          <img style={{ width: '100%', height: '180%' }} src={"https://cdn.dribbble.com/userupload/3841872/file/original-0a6f56e82ee816c6b6ab202747a58307.png?compress=1&resize=1024x768"} />
         </Col>
         {/* right column */}
-        <Col className='Column' span={12}>
+        <Col className='Column' span={11}>
           <Form
             name="login-signup"
             className="login-form"
@@ -183,7 +191,7 @@ const toggleAuth = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please inpur your First name!',
+                      message: 'Please input your First name!',
                     },
                   ]}
                 >
@@ -202,7 +210,7 @@ const toggleAuth = () => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please inpur your Last name!',
+                      message: 'Please input your Last name!',
                     },
                   ]}
                 >
@@ -264,19 +272,40 @@ const toggleAuth = () => {
                 style={{borderRadius: '0px'}}
               />
             </Form.Item>
-            <Form.Item>
-              <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
-            </Form.Item>
-            <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" >{'Sign Up'}</Button>            
-              <Link to='/login'>
-                    Already had an account? Log in
-                </Link>
-            </Form.Item>
 
-<<<<<<< HEAD
+            <div
+                                style={{
+                                    marginBottom: 10
+                                }}
+                            >
+                                Upload shop feature images:
+                            </div>
+                            <input
+                                type="file"
+                                onChange={(e) => {setUploadedFile(e.target.files[0])}}
+                                style={{
+                                    marginBottom: 10
+                                }}
+                                accept="image/*"
+                            />
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    marginBottom: 10
+                                }}
+                            >
+                                <b>Chosen Feature Images</b>
+                                {
+                                    uploadedFiles.map(file =>
+                                        <div>
+                                            {file.name}
+                                        </div>
+                                    )
+                                }
+            </div>
 
-            <div style={{
+             <div style={{
                                 display: 'flex',
                                 flexDirection: 'column'
                             }}>
@@ -286,7 +315,7 @@ const toggleAuth = () => {
                                         marginBottom: 10
                                     }}
                                 >
-                                    Upload to Google Blob
+                                    Upload Profile Image to Google Blob
                                 </Button>
 
                                 {
@@ -311,8 +340,19 @@ const toggleAuth = () => {
                                 </Button>
             </div>
 
-=======
->>>>>>> main
+            {/* <img style={{ width: '100%', height: '180%' }} src={imgUrl} /> */}
+
+            <Form.Item>
+              <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit" className="login-signup-button" >{'Sign Up'}</Button>            
+              <Link to='/login'>
+                    Already had an account? Log in
+                </Link>
+            </Form.Item>
+
+
             
             
           </Form>

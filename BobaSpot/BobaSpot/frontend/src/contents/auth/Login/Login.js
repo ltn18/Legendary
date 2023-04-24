@@ -25,17 +25,7 @@ function Login() {
   const [passwordStrength, setPasswordStrength] = useState(null);
   
   const navigate = useNavigate(); 
-  // const routeChange = () =>{ 
-  //   let path = `/temp`; 
-  //   navigate(path);
-  // }
 
-  // const navigate = useNavigate(); 
-  // const routeChange = () =>{ 
-  //   let path = `/temp`; 
-  //   navigate(path);
-
-  // }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {

@@ -1,5 +1,5 @@
 .Full-page{
-  height: 100vh;
+  height: 100%;
   align-items:stretch;
   display: flex;
 }
@@ -43,8 +43,8 @@
 }
 
 .login-form{
-  align-items:center;
-  height: 200px;
+  align-items:start;
+  height: 100vh !important;
   width: 50%;
 }
 
