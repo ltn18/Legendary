@@ -17,8 +17,7 @@ RUN set -ex && \
 RUN pip list
 COPY . /code
 
-RUN python manage.py collectstatic --noinput
-# RUN python mange.py runserver
+# RUN python manage.py collectstatic --noinput
 
 EXPOSE 8000
 
