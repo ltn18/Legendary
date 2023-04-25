@@ -74,7 +74,7 @@ function Login() {
 
   const onFinish = () => {
     console.log('Received values of form:', form);
-    axios.post('http://localhost:8000/api/login/', {
+    axios.post(process.env.REACT_APP_AXIOS_BASE_URL + '/api/login/', {
       username: form.username,
       password: form.password
     })

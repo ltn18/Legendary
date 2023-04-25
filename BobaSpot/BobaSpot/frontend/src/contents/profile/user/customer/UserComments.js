@@ -176,7 +176,7 @@ const UserComments = () => {
     useEffect(() => {
 
         const fetchUser = async () => {
-            const result = await axios.get('http://localhost:8000/api/user/', {
+            const result = await axios.get(process.env.REACT_APP_AXIOS_BASE_URL + '/api/user/', {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('token')}`,
                 }
@@ -185,7 +185,7 @@ const UserComments = () => {
 
             const optionsGetReview = {
                 method: 'GET',
-                url: 'http://localhost:8000/api/reviews/',
+                url: process.env.REACT_APP_AXIOS_BASE_URL + '/api/reviews/',
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },
