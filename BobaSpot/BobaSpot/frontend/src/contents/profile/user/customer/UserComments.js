@@ -10,7 +10,7 @@ const UserComments = () => {
     const [data, setData] = useState({
         first_name: '',
         last_name: '',
-        image_url: ''
+        image_url: null
     });
 
     const [reviews, setReviews] = useState([]);
@@ -263,6 +263,7 @@ const UserComments = () => {
         >
             <div style={{
                 width: '100%',
+                height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -290,6 +291,7 @@ const UserComments = () => {
                                         lastName={comment.lastName}
                                         rating={comment.rating}
                                         drinkOrdered={comment.drinkOrdered}
+                                        user_image_url={data.image_url}
                                         handleCloseOverlay={() => toggleShowOverlay(null)}
                                     />
                                 )
