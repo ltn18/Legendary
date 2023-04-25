@@ -29,7 +29,7 @@ function ShopProfile() {
 
     const getOptions = {
         method: 'GET',
-        url: `http://127.0.0.1:8000/api/bobashop/${boba_id}/`,
+        url: process.env.REACT_APP_AXIOS_BASE_URL + `/api/bobashop/${boba_id}/`,
         headers: {
             Authorization: `Bearer ${jwt}`,
         }
@@ -71,7 +71,7 @@ function ShopProfile() {
 
     const putOptions = {
         method: 'PUT',
-        url: "http://127.0.0.1:8000/api/reviews/",
+        url: process.env.REACT_APP_AXIOS_BASE_URL + "/api/reviews/",
         headers: {
             Authorization: `Bearer ${jwt}`,
         },
