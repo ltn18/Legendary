@@ -46,6 +46,7 @@ const ShopOwnerProfile = () => {
 
             setUserData({
                 id: resultUserData.data.id,
+                username: resultUserData.data.username,
                 first_name: resultUserData.data.first_name,
                 last_name: resultUserData.data.last_name,
                 image_url: resultUserData.data.image_url

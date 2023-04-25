@@ -6,3 +6,5 @@ target/
 bin/
 lib/
 /node_modules
+static/
+.netlify/

@@ -100,6 +100,13 @@ function Login() {
      * backend will send back token if the user is valid
      */
   };
+  const inputStyle = {
+    width: '250%',
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ccc',
+    borderRadius: 0,
+  };
 
 
   const toggleAuth = () => {
@@ -189,10 +196,10 @@ function Login() {
             >
 
               <Input
-
+                style={inputStyle}
                 placeholder="Username"
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
-                style={{ borderRadius: '0px' }}
+                // style={{ borderRadius: '0px' }}
               />
             </Form.Item>
             {/* password */}
@@ -217,11 +224,11 @@ function Login() {
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 onLevelChange={setLevel}
-                style={{ borderRadius: '0px' }}
+                style = {{ ...inputStyle , width: '100%' }}
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" >{'Log In'}</Button> 
+              <Button htmlType="submit" className="login-signup-button" ><b>{'Log In'}</b></Button> 
               <Link to='/signup'>
                 Don't have an account? Signup!
               </Link>

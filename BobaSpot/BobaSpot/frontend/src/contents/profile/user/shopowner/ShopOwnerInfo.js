@@ -122,7 +122,8 @@ const ShopOwnerInfo = (props) => {
     };
 
     const handleLogout = () => {
-        navigate('/login');
+        console.log("shop owner info user data:", data);
+        // navigate('/login');
     }
 
     const handleSubmitChangeUserInfo = async () => {
@@ -147,13 +148,16 @@ const ShopOwnerInfo = (props) => {
         }
 
         // handle password = confirm password
-        if (password === confirmPassword) {
-            updateInfo();
-            formChangeInfo.resetFields();
+        if (password) {
+            if (password === confirmPassword) {
+                updateInfo();
+                formChangeInfo.resetFields();
+            }
+            else {
+                alert("Password does not match with confirm password!")
+            }
         }
-        else {
-            alert("Password does not match with confirm password!")
-        }
+        else updateInfo()
     }
 
     const handleUploadSingleImage = (file) => {
