@@ -1,6 +1,9 @@
 name: Frontend Pipeline
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   frontend_test:

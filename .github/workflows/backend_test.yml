@@ -1,6 +1,9 @@
 name: Backend Pipeline
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - main
 
 jobs:
   backend_test:
