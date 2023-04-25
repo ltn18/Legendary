@@ -39,9 +39,19 @@ const App = () => {
   // sesionStorage.getItem("isShopOwner")
   const [isShopOwner, setIsShopOwner] = useState();
 
+  const handleConvertToken = (tk) => {
+    console.log(tk);
+    console.log("true str:", tk === 'true');
+    console.log("true bool:", tk === true);
+    console.log("false str:", tk === 'false');
+    console.log("false bool:", tk === false);
+    return tk === 'true';
+  }
+
   useEffect(() => {
     const user = sessionStorage.getItem("token");
-    const owner = sessionStorage.getItem("isShopOwner") === 'true' ? true : false;
+    const owner = handleConvertToken(sessionStorage.getItem("isShopOwner"));
+
     console.log("user:", user);
     console.log("owner:", owner);
 
