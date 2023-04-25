@@ -3,21 +3,16 @@ name: Frontend Pipeline
 on: [push]
 
 jobs:
-  build:
+  frontend_test:
     runs-on: macos-latest
-
     defaults:
       run:
         working-directory: ./BobaSpot/BobaSpot/frontend/
-
     steps:
-
       - uses: actions/checkout@v3
-
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-
       - name: Install dependencies
         run: npm install
         
