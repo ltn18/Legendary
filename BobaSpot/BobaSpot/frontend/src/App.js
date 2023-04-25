@@ -94,13 +94,16 @@ const App = () => {
           </AuthRoute>
         } />
 
-        <Route path="user" element={
-          <AuthRoute authenticated={authenticated}>
-            <PermissionRoute isShopOwner={isShopOwner} />
-            {/* <ShopOwnerProfile /> */}
-            {/* <UserProfile /> */}
-          </AuthRoute>
-        } />
+        <Route path="user"
+          // element={
+          //   <AuthRoute authenticated={authenticated}>
+          //     {/* <PermissionRoute isShopOwner={isShopOwner} /> */}
+          //     {/* <ShopOwnerProfile /> */}
+          //     <UserProfile />
+          //   </AuthRoute>
+          // } 
+          Component={isShopOwner ? ShopOwnerProfile : UserProfile}
+        />
 
         <Route path="bobashop/:boba_id" element={<ShopProfile />} />
 
