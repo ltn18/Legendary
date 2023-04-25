@@ -631,6 +631,7 @@ const ShopPreviewCard = (props) => {
                                             style={{ width: '100%' }}
                                             type="number"
                                             value={newDrinkPrice}
+                                            min={1}
                                             onChange={e => setNewDrinkPrice(e.target.value)}
                                         />
                                     </Form.Item>
