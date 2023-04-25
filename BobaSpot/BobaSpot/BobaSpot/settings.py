@@ -171,6 +171,7 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'Authorization',    
 ]
 
 STATICFILES_DIRS = [
@@ -178,3 +179,6 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'BobaSpot/static')
+
+
+CORS_ALLOW_CREDENTIALS = True

@@ -10,7 +10,8 @@ class CustomUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length = 50, unique = True)
     hashpass = models.CharField(max_length = 500)
-    image_url = models.CharField(max_length = 100, blank = True, null = True)
+    image_url = models.CharField(max_length = 500, blank = True, null = True)
+    is_shop_owner = models.BooleanField(default=False)
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['hashpass']
     def __str__(self):
@@ -22,8 +23,10 @@ class BobaShop(CustomUser):
     address = models.CharField(max_length = 500)
     opening_hour = models.TimeField(blank=True, null=True)
     closing_hour = models.TimeField(blank=True, null=True)
-    ad_image_url = ArrayField(models.CharField(max_length = 100), blank=True, null=True)
+    ad_image_url = ArrayField(models.CharField(max_length = 500), blank=True, null=True)
     # drinks = models.ForeignKey(Drink, on_delete=models.CASCADE)
+    longitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0, blank=True, null=True)
+    latitude = models.DecimalField(max_digits=19, decimal_places=14, default = 0, blank=True, null=True)
     
     @property
     def rating(self):
@@ -31,13 +34,14 @@ class BobaShop(CustomUser):
         tot_rate = 0
         for drink in self.drink_set.all():
             for review in drink.reviews_set.all():
-                tot_rate += review.rating
-                count += 1
+                if review.rating is not None:
+                    tot_rate += review.rating
+                    count += 1
         return 0 if count == 0 else round(tot_rate/count, 1)
     
     @property
     def average_price(self):
-        return round(self.drink_set.aggregate(average_price=Avg('price'))['average_price'],2)
+        return round(self.drink_set.aggregate(average_price=Avg('price'))['average_price'],2) if len(self.drink_set.all()) > 0 else 0
     
     def __str__(self):
         return "{}".format(self.shop_name)
@@ -52,11 +56,14 @@ class Drink(models.Model):
     description = models.CharField(max_length = 500)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=6.00)
     type = models.CharField(max_length = 50)
-    image_url = models.CharField(max_length = 100, blank = True, null = True)
+    image_url = models.CharField(max_length = 500, blank = True, null = True)
     
     @property
     def rating(self):
-        return self.reviews_set.aggregate(average_rating=Avg('rating'))['average_rating']
+        if len(self.reviews_set.all()) > 0:
+            return self.reviews_set.aggregate(average_rating=Avg('rating'))['average_rating']
+        else:
+            return 0
     
     class Meta:
         unique_together = ('boba_shop', 'drink_name')

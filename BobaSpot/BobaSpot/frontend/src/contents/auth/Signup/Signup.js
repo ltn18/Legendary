@@ -73,8 +73,11 @@ const onFinish = () => {
         last_name: form_signup.lastname,
         shopowner: form_signup.shopowner
       })
-      .then(function (response) {
-        console.log(response);
+        .then(function (response) {
+        console.log(JSON.parse(response.data).token);
+        console.log(JSON.parse(response.data).isShopOwner);
+        sessionStorage.setItem("token", JSON.parse(response.data).token);
+        sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
         let path = `/temp`; 
         navigate(path);
       })
@@ -95,6 +98,14 @@ const onFinish = () => {
 const toggleAuth = () => { 
   setIsLogin(!isLogin);
 }
+
+const inputStyle = {
+  width: '100%',
+  padding: '10px',
+  fontSize: '16px',
+  border: '1px solid #ccc',
+  borderRadius: 0,
+};
 
   return (
     <>
@@ -119,7 +130,7 @@ const toggleAuth = () => {
               {/* firstname */}
                 <Form.Item
                   name="firstname"
-                  className='form-field'
+                  // className='form-field'
                   validateStatus={String.validateStatus}
                   help={String.errorMsg}
                   rules={[
@@ -130,6 +141,7 @@ const toggleAuth = () => {
                   ]}
                 >
                   <Input
+                    style={inputStyle}
                     placeholder="First name"
                     onChange={(e) => setForm({ ...form_signup, firstname: e.target.value })}
                   />
@@ -138,7 +150,7 @@ const toggleAuth = () => {
                 {/* lastname */}
                 <Form.Item
                   name="lastname"
-                  className='form-field'
+                  // className='form-field'
                   validateStatus={String.validateStatus}
                   help={String.errorMsg}
                   rules={[
@@ -149,6 +161,7 @@ const toggleAuth = () => {
                   ]}
                 >
                   <Input
+                    style={inputStyle}
                     placeholder="Last name"
                     onChange={(e) => setForm({ ...form_signup, lastname: e.target.value })}
                   />
@@ -159,7 +172,7 @@ const toggleAuth = () => {
             {/* username */}
             { <Form.Item
               name="username"
-              className='form-field'
+              // className='form-field'
               validateStatus={String.validateStatus}
               help={String.errorMsg}
               rules={isLogin ? null : [
@@ -180,7 +193,7 @@ const toggleAuth = () => {
               <Input
                 placeholder="Username"
                 onChange={(e) => setForm({ ...form_signup, username: e.target.value})}
-                style={{borderRadius: '0px'}}
+                style={inputStyle}
               />
             </Form.Item> }
             {/* password */}
@@ -203,14 +216,14 @@ const toggleAuth = () => {
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form_signup, password: e.target.value })}
                 onLevelChange={ setLevel}
-                style={{borderRadius: '0px'}}
+                style={inputStyle}
               />
             </Form.Item>
             <Form.Item>
               <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" >{'Sign Up'}</Button>            
+              <Button htmlType="submit" className="login-signup-button" ><b>{'Sign Up'}</b></Button>            
               <Link to='/login'>
                     Already had an account? Log in
                 </Link>

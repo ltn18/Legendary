@@ -5,6 +5,6 @@ __pycache__/
 target/
 bin/
 lib/
+/node_modules
 static/
-# Local Netlify folder
-.netlify
+.netlify/

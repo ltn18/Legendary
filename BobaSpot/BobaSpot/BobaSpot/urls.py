@@ -22,14 +22,11 @@ import BobaSpot.settings as settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/login/', views.LoginView.as_view(), name=('login-view')),
-    path('api/test/', views.TestView.as_view(), name=('test-view')),
-    path('api/bobashop/<str:boba_id>/', views.BobaShopView.as_view(), name=('bobashop-view')),
+    path('api/login/', views.LoginView.as_view()),
+    path('api/test/', views.TestView.as_view()),
+    path('api/bobashop/<str:boba_id>/', views.BobaShopView.as_view()),
     path('api/user/', views.UserProfileView.as_view()),
     path('api/reviews/', views.ReviewView.as_view()),
-
-    re_path(r'^(?P<path>.*)$', serve, {
-        'document_root': os.path.join(settings.BASE_DIR, 'frontend/build'),
-        'path': 'index.html'
-    }),
+    path('api/search/', views.SearchView.as_view()),
+    path('api/drinks/', views.DrinkView.as_view())
 ]

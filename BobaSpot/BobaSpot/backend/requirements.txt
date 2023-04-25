@@ -24,3 +24,5 @@ sqlparse==0.4.3
 urllib3==1.26.15
 whitenoise==6.4.0
 handler
+geopy==2.3.0
+requests
