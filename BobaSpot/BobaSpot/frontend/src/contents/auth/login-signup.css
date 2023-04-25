@@ -21,8 +21,8 @@
 }
 
 .form-field {
-  /*display: flex;
-    width: fit-content;*/
+  display: flex !important;
+  width: fit-content !important;
   align-items: center;
 }
 
