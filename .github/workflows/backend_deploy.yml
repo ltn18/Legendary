@@ -1,8 +1,8 @@
 name: Backend Fly Deploy
-on: [push]
-  # push:
-  #   branches:
-  #     - main
+on:
+  push:
+    branches:
+      - CICD
   # pull_request:
   #   branches:
   #     - main
@@ -13,6 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy --remote-only
+      - run: flyctl deploy --remote-only --config fly.toml -a bobaspot
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

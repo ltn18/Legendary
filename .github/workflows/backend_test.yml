@@ -1,6 +1,6 @@
 name: Backend Pipeline
 
-on: [push]
+# on: [push]
 
 jobs:
   backend_test:
@@ -9,9 +9,9 @@ jobs:
       run:
         working-directory: ./BobaSpot/BobaSpot/backend/
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           cache: 'pip'
           python-version: 3.9
