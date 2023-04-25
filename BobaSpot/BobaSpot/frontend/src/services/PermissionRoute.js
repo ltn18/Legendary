@@ -1,11 +1,9 @@
-import UserProfile from '../contents/profile/user/customer/UserProfile';
-import ShopOwnerProfile from '../contents/profile/user/shopowner/ShopOwnerProfile'; 
+import { Navigate } from "react-router-dom";
 
 const PermissionRoute = (props) => {
     const {isShopOwner} = props;
     
-    if (!isShopOwner) return <UserProfile />;
-    else return <ShopOwnerProfile />;
+    return <Navigate to={isShopOwner === true? "/shopowner" : "/customer"} />
 }
 
 export default PermissionRoute;

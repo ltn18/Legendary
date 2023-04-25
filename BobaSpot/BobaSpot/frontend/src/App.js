@@ -18,6 +18,7 @@ import Home from "./contents/landing/Home"
 import AuthRoute from "./services/AuthRoute";
 import LandingRoute from "./services/LandingRoute";
 import PermissionRoute from "./services/PermissionRoute";
+import IsOwnerRoute from "./services/IsOwnerRoute";
 
 import Landing from "./TmpLanding";
 
@@ -94,6 +95,27 @@ const App = () => {
           </AuthRoute>
         } />
 
+        <Route path="customer" element={
+          <AuthRoute authenticated={authenticated}>
+            {
+              !(isShopOwner === true)
+              ? <UserProfile />
+              : <Navigate to="/shopowner"/>
+            }
+          </AuthRoute>
+        } />
+
+        <Route path="shopowner" element={
+          <AuthRoute authenticated={authenticated}>
+            {
+              (isShopOwner === true)
+              ? <ShopOwnerProfile />
+              : <Navigate to="/customer"/>
+            }
+          </AuthRoute>
+        } />
+
+        {/* work around */}
         <Route path="user" element={
           <AuthRoute authenticated={authenticated}>
             <PermissionRoute isShopOwner={isShopOwner} />

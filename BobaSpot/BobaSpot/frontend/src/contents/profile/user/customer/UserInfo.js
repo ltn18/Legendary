@@ -145,12 +145,13 @@ const UserInfo = () => {
         }
 
         // handle password = confirm password
-        if (password === confirmPassword) {
-            updateInfo();
+        if (password) {
+            if (password === confirmPassword) updateInfo();
+            else {
+                alert("Password does not match with confirm password!")
+            }
         }
-        else {
-            alert("Password does not match with confirm password!")
-        }
+        else updateInfo();
     }
 
     const prefixSelector = (
