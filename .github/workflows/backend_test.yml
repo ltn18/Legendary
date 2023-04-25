@@ -1,6 +1,6 @@
 name: Backend Pipeline
 
-# on: [push]
+on: [push]
 
 jobs:
   backend_test:
