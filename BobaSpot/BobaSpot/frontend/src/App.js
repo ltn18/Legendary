@@ -18,6 +18,8 @@ import Home from "./contents/landing/Home"
 import AuthRoute from "./services/AuthRoute";
 import LandingRoute from "./services/LandingRoute";
 import PermissionRoute from "./services/PermissionRoute";
+import IsCustomerRoute from "./services/IsCustomerRoute";
+import IsShopOwnerRoute from "./services/IsShopOwnerRoute"
 
 import Landing from "./TmpLanding";
 
@@ -37,9 +39,19 @@ const App = () => {
   // sesionStorage.getItem("isShopOwner")
   const [isShopOwner, setIsShopOwner] = useState();
 
+  const handleConvertToken = (tk) => {
+    console.log(tk);
+    console.log("true str:", tk === 'true');
+    console.log("true bool:", tk === true);
+    console.log("false str:", tk === 'false');
+    console.log("false bool:", tk === false);
+    return tk === 'true';
+  }
+
   useEffect(() => {
     const user = sessionStorage.getItem("token");
-    const owner = sessionStorage.getItem("isShopOwner");
+    const owner = handleConvertToken(sessionStorage.getItem("isShopOwner"));
+
     console.log("user:", user);
     console.log("owner:", owner);
 
@@ -94,12 +106,20 @@ const App = () => {
           </AuthRoute>
         } />
 
+        <Route path="customer" element={
+          <IsCustomerRoute authenticated={authenticated} isCustomer={!isShopOwner}>
+            <UserProfile />
+          </IsCustomerRoute>
+        } />
+
+        <Route path="shopowner" element={
+          <IsShopOwnerRoute authenticated={authenticated} isShopOwner={isShopOwner}>
+            <ShopOwnerProfile />
+          </IsShopOwnerRoute>
+        } />
+
         <Route path="user" element={
-          <AuthRoute authenticated={authenticated}>
-            <PermissionRoute isShopOwner={isShopOwner} />
-            {/* <ShopOwnerProfile /> */}
-            {/* <UserProfile /> */}
-          </AuthRoute>
+          <PermissionRoute authenticated={authenticated} isShopOwner={isShopOwner} />
         } />
 
         <Route path="bobashop/:boba_id" element={<ShopProfile />} />
