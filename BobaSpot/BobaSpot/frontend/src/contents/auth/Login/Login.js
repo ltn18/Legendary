@@ -75,7 +75,9 @@ function Login() {
 
   const onFinish = () => {
     console.log('Received values of form:', form);
-    axios.post('http://localhost:8000/api/login/', {
+    const localUrl = 'http://localhost:8000/api/login/';
+    const flyUrl = 'https://bobaspot.fly.dev/api/login/'
+    axios.post(flyUrl, {
     username: form.username,
     password: form.password
     })

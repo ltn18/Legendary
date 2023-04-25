@@ -14,8 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 import backend.views as views
+from django.views.static import serve
+import os
+import BobaSpot.settings as settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +27,9 @@ urlpatterns = [
     path('api/bobashop/<str:boba_id>/', views.BobaShopView.as_view(), name=('bobashop-view')),
     path('api/user/', views.UserProfileView.as_view()),
     path('api/reviews/', views.ReviewView.as_view()),
+
+    re_path(r'^(?P<path>.*)$', serve, {
+        'document_root': os.path.join(settings.BASE_DIR, 'frontend/build'),
+        'path': 'index.html'
+    }),
 ]

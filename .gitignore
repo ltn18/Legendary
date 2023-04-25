@@ -6,4 +6,5 @@ target/
 bin/
 lib/
 static/
-.netlify/
+# Local Netlify folder
+.netlify

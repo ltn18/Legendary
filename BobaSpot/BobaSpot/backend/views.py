@@ -15,6 +15,9 @@ import base64
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 
+def index(request):
+    return render(request, 'index.html')
+
 class LoginView(APIView):
     
     def __invalid_user_response(self):
