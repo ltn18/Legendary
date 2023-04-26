@@ -36,7 +36,7 @@ jobs:
     #     echo REACT_APP_AXIOS_BASE_URL="https://bobaspot.fly.dev" >> .env
     #     cat .env
     - name: Install dependencies
-      run: npm ci --force
+      run: npm install
     - name: Frontend Build
       run: npm run build
       env:
