@@ -30,7 +30,11 @@ jobs:
           echo DB_PORT="5432" >> ../../.env
           echo JWT_SECRET_KEY="thisisasecretkeyhihi" >> ../../.env
           cat ../../.env
-      - name: Deploy to Fly
-        run: ls && flyctl deploy --remote-only --config fly.toml -a bobaspot
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: debug
+        run: ls -la && pwd
+
+          
+      # - name: Deploy to Fly
+      #   run: flyctl deploy --remote-only
+      #   env:
+      #     FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
