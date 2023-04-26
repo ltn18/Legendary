@@ -24,6 +24,11 @@ const NavBar = () => {
         window.location.reload(true);
     };
 
+    const navigateHome = () => {
+        navigate('/', { replace: true });
+        window.location.reload(true);
+    }
+
     return (
         <div style={{
             width: '100%',
@@ -47,7 +52,7 @@ const NavBar = () => {
                     </Button>
                 </Tooltip>
             </a>
-            <a href="">
+            <a href="/">
                 <h1 className='nav-home_title'>
                     BobaSpot
                 </h1>

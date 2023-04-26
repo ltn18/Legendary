@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 // firebase
 import { storage, config } from "../../../services/firebase";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-
+import { v4 as uuidv4 } from 'uuid';
 
 import "../login-signup.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -82,7 +82,7 @@ function Signup() {
 
 
   const handleUploadSingleImage = () => {
-    const user_id = form_signup.id;
+    const user_id = uuidv4();
 
     const file = uploadedFile;
     console.log("uploadedFile:", uploadedFile);
@@ -170,14 +170,15 @@ function Signup() {
 
   return (
     <>
-      console.log(config);
       <Row className='Full-page'>
         {/* left column */}
         <Col className='Column' span={13} style={{}}>
-          <img style={{ width: '100%', height: '180%' }} src={"https://cdn.dribbble.com/userupload/3841872/file/original-0a6f56e82ee816c6b6ab202747a58307.png?compress=1&resize=1024x768"} />
+          <img style={{ width: '100%', height: '100%' }} src={"https://cdn.dribbble.com/userupload/3841872/file/original-0a6f56e82ee816c6b6ab202747a58307.png?compress=1&resize=1024x768"} />
         </Col>
         {/* right column */}
-        <Col className='Column' span={11}>
+        <Col className='Column' span={11} style={{
+          height: "70%"
+        }}>
           <Form
             name="login-signup"
             className="login-form"
