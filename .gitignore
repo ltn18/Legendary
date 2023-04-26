@@ -6,3 +6,6 @@ target/
 bin/
 lib/
 yarn.lock
+/node_modules
+static/
+.netlify/

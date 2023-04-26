@@ -29,7 +29,7 @@ function ShopProfile() {
 
     const getOptions = {
         method: 'GET',
-        url: `http://127.0.0.1:8000/api/bobashop/${boba_id}/`,
+        url: process.env.REACT_APP_AXIOS_BASE_URL + `/api/bobashop/${boba_id}/`,
         headers: {
             Authorization: `Bearer ${jwt}`,
         }
@@ -71,7 +71,7 @@ function ShopProfile() {
 
     const putOptions = {
         method: 'PUT',
-        url: "http://127.0.0.1:8000/api/reviews/",
+        url: process.env.REACT_APP_AXIOS_BASE_URL + "/api/reviews/",
         headers: {
             Authorization: `Bearer ${jwt}`,
         },
@@ -89,6 +89,16 @@ function ShopProfile() {
 
     const isValidForm = () => {
         return reviewForm.text !== "" && reviewForm.rating !== 0 && reviewForm.drink_name !== "";
+    }
+
+    const formatPhoneNumber = (phoneNumberString) => {
+        // console.log("tel:", phoneNumberString);
+        var cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+        var match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+        }
+        return phoneNumberString;
     }
 
     return (
@@ -116,7 +126,7 @@ function ShopProfile() {
                             </Typography.Title>
                             <b>Address:</b>{data?.address}<br />
                             <b>Hours:</b> {data?.opening_hour} - {data?.closing_hour} <br />
-                            <b>Tel:</b> {data?.telephone} <br />
+                            <b>Tel:</b> {formatPhoneNumber(data?.telephone)} <br />
                         </Col>
                     </Row>
                     {/* shop images */}

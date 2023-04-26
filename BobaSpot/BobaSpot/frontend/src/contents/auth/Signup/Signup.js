@@ -1,4 +1,4 @@
-import { Button, Form, Input,Typography,Checkbox } from 'antd';
+import { Button, Form, Input, Typography, Checkbox } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
 // firebase
@@ -21,16 +21,16 @@ const initialFormState = {
   shopowner: false
 }
 
-function Signup() { 
+function Signup() {
   const minLevel = 0.1;
   const errorMessage = 'Password is too weak';
-  const [level,setLevel]=useState(0)
+  const [level, setLevel] = useState(0)
   const [isLogin, setIsLogin] = useState(true);
   const [form_signup, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
-  const navigate = useNavigate(); 
-  const routeChange = () =>{ 
-    let path = `/temp`; 
+  const navigate = useNavigate();
+  const routeChange = () => {
+    let path = `/temp`;
     navigate(path);
   }
   // upload single image
@@ -82,65 +82,64 @@ function Signup() {
 
 
   const handleUploadSingleImage = () => {
-      const user_id = form_signup.id;
-    
+    const user_id = form_signup.id;
+
     const file = uploadedFile;
     console.log("uploadedFile:", uploadedFile);
-        
-        if (!file) return;
 
-        const storageRef = ref(storage, `user_profile_image/${user_id}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
+    if (!file) return;
 
-        uploadTask.on("state_changed",
-            (snapshot) => {
-                const progress =
-                    Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                setProgresspercent(progress);
-            },
-            (error) => {
-                alert(error);
-            },
+    const storageRef = ref(storage, `user_profile_image/${user_id}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('downloadUrl', downloadURL);
-                    setImgUrl(downloadURL);
-                    // let tmpUserImages = createUserImages;
-                    // tmpUserImages.push(downloadURL);
-                    // setCreateUserImages(tmpUserImages);
-                    setUploadedFileUrl(downloadURL);
-                });
-            }
-        );
+    uploadTask.on("state_changed",
+      (snapshot) => {
+        const progress =
+          Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        setProgresspercent(progress);
+      },
+      (error) => {
+        alert(error);
+      },
+
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log('downloadUrl', downloadURL);
+          setImgUrl(downloadURL);
+          // let tmpUserImages = createUserImages;
+          // tmpUserImages.push(downloadURL);
+          // setCreateUserImages(tmpUserImages);
+          setUploadedFileUrl(downloadURL);
+        });
+      }
+    );
   }
-  
+
 
   const handleHoverSubmitImageEnter = () => {
-        setIsHoverSubmitImage(true);
+    setIsHoverSubmitImage(true);
   }
 
   const handleHoverSubmitImageLeave = () => {
-        setIsHoverSubmitImage(false);
+    setIsHoverSubmitImage(false);
   }
 
-const onFinish = () => {
-  console.log('Received values of form:', form_signup);
-  console.log(uploadedFileUrl);
-      axios.put('http://localhost:8000/api/login/', {
-        username: form_signup.username,
-        password: form_signup.password,
-        first_name: form_signup.firstname,
-        last_name: form_signup.lastname,
-        shopowner: form_signup.shopowner,
-        image_url: uploadedFileUrl
-      })
-        .then(function (response) {
+  const onFinish = () => {
+    console.log('Received values of form:', form_signup);
+    axios.put(process.env.REACT_APP_AXIOS_BASE_URL + '/api/login/', {
+      username: form_signup.username,
+      password: form_signup.password,
+      first_name: form_signup.firstname,
+      last_name: form_signup.lastname,
+      shopowner: form_signup.shopowner,
+      image_url: uploadedFileUrl
+    })
+      .then(function (response) {
         console.log(JSON.parse(response.data).token);
         console.log(JSON.parse(response.data).isShopOwner);
         sessionStorage.setItem("token", JSON.parse(response.data).token);
         sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
-        let path = `/temp`; 
+        let path = `/temp`;
         navigate(path);
       })
       .catch(function (error) {
@@ -155,11 +154,19 @@ const onFinish = () => {
      * submit the data to backend
      * backend will send back token if the user is valid
      */
-};
+  };
 
-const toggleAuth = () => { 
-  setIsLogin(!isLogin);
-}
+  const toggleAuth = () => {
+    setIsLogin(!isLogin);
+  }
+
+  const inputStyle = {
+    width: '100%',
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ccc',
+    borderRadius: 0,
+  };
 
   return (
     <>
@@ -182,10 +189,10 @@ const toggleAuth = () => {
             {/* firstname and lastname */}
             {
               <>
-              {/* firstname */}
+                {/* firstname */}
                 <Form.Item
                   name="firstname"
-                  className='form-field'
+                  // className='form-field'
                   validateStatus={String.validateStatus}
                   help={String.errorMsg}
                   rules={[
@@ -196,15 +203,16 @@ const toggleAuth = () => {
                   ]}
                 >
                   <Input
+                    style={inputStyle}
                     placeholder="First name"
                     onChange={(e) => setForm({ ...form_signup, firstname: e.target.value })}
                   />
-                  
+
                 </Form.Item>
                 {/* lastname */}
                 <Form.Item
                   name="lastname"
-                  className='form-field'
+                  // className='form-field'
                   validateStatus={String.validateStatus}
                   help={String.errorMsg}
                   rules={[
@@ -215,17 +223,18 @@ const toggleAuth = () => {
                   ]}
                 >
                   <Input
+                    style={inputStyle}
                     placeholder="Last name"
                     onChange={(e) => setForm({ ...form_signup, lastname: e.target.value })}
                   />
-                  
+
                 </Form.Item>
               </>
             }
             {/* username */}
-            { <Form.Item
+            {<Form.Item
               name="username"
-              className='form-field'
+              // className='form-field'
               validateStatus={String.validateStatus}
               help={String.errorMsg}
               rules={isLogin ? null : [
@@ -234,21 +243,21 @@ const toggleAuth = () => {
                   message: 'Please input your Username!',
                 },
                 {
-                  min: 6, 
+                  min: 6,
                   message: 'Username must be minimum 6 characters',
                 },
                 {
-                  max:20, 
-                  message:'Username name must be less than 20 characters'
+                  max: 20,
+                  message: 'Username name must be less than 20 characters'
                 }
               ]}
             >
               <Input
                 placeholder="Username"
-                onChange={(e) => setForm({ ...form_signup, username: e.target.value})}
-                style={{borderRadius: '0px'}}
+                onChange={(e) => setForm({ ...form_signup, username: e.target.value })}
+                style={inputStyle}
               />
-            </Form.Item> }
+            </Form.Item>}
             {/* password */}
             <Form.Item
               name="password"
@@ -268,66 +277,66 @@ const toggleAuth = () => {
                 type="password"
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form_signup, password: e.target.value })}
-                onLevelChange={ setLevel}
-                style={{borderRadius: '0px'}}
+                onLevelChange={setLevel}
+                style={inputStyle}
               />
             </Form.Item>
 
             <div
-                                style={{
-                                    marginBottom: 10
-                                }}
-                            >
-                                Upload shop feature images:
-                            </div>
-                            <input
-                                type="file"
-                                onChange={(e) => {setUploadedFile(e.target.files[0])}}
-                                style={{
-                                    marginBottom: 10
-                                }}
-                                accept="image/*"
-                            />
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    marginBottom: 10
-                                }}
-                            >
-                                <b>Chosen Feature Images</b>
-                                {
-                                    uploadedFiles.map(file =>
-                                        <div>
-                                            {file.name}
-                                        </div>
-                                    )
-                                }
+              style={{
+                marginBottom: 10
+              }}
+            >
+              Upload shop feature images:
+            </div>
+            <input
+              type="file"
+              onChange={(e) => { setUploadedFile(e.target.files[0]) }}
+              style={{
+                marginBottom: 10
+              }}
+              accept="image/*"
+            />
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginBottom: 10
+              }}
+            >
+              <b>Chosen Feature Images</b>
+              {
+                uploadedFiles.map(file =>
+                  <div>
+                    {file.name}
+                  </div>
+                )
+              }
             </div>
 
-             <div style={{
-                                display: 'flex',
-                                flexDirection: 'column'
-                            }}>
-                                <Button
-                                    onMouseEnter={handleHoverSubmitImageEnter}
-                                    onClick={handleUploadSingleImage}
-                                    onMouseLeave={handleHoverSubmitImageLeave}
-                                    style={{
-                                        marginBottom: 10
-                                    }}
-                                >
-                                    Upload Profile Image to Google Blob
-                                </Button>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column'
+            }}>
+              <Button
+                onMouseEnter={handleHoverSubmitImageEnter}
+                onClick={handleUploadSingleImage}
+                onMouseLeave={handleHoverSubmitImageLeave}
+                style={{
+                  marginBottom: 10
+                }}
+              >
+                Upload Profile Image to Google Blob
+              </Button>
 
-                                {
-                                    !imgUrl &&
-                                    <div>
-                                        <div style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
-                                    </div>
-                                }
+              {
+                !imgUrl &&
+                <div>
+                  <div style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
+                </div>
+              }
 
-                                {/* <Button
+              {/* <Button
                                     onMouseEnter={handleHoverSubmitImageEnter}
                                     onMouseLeave={handleHoverSubmitImageLeave}
                                     style={{
@@ -348,17 +357,17 @@ const toggleAuth = () => {
               <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" >{'Sign Up'}</Button>            
+              <Button htmlType="submit" className="login-signup-button" ><b>{'Sign Up'}</b></Button>
               <Link to='/login'>
-                    Already had an account? Log in
-                </Link>
+                Already had an account? Log in
+              </Link>
             </Form.Item>
 
 
-            
-            
+
+
           </Form>
-          
+
         </Col>
 
       </Row>

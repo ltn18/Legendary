@@ -26,16 +26,16 @@ const Map = () => {
     }
   );
 
-  if(!isLoaded) return <div>Loading...</div>
+  if (!isLoaded) return <div>Loading...</div>
   return <MapSearch />
 }
 
 function MapSearch() {
   const [selectedMarker, setSelectedMarker] = useState("");
-  const [center, setCenter] = useState({lat: 41.5, lng:-81.6});
+  const [center, setCenter] = useState({ lat: 41.5, lng: -81.6 });
 
   const jwt = sessionStorage.getItem('token');
-  const url = "http://127.0.0.1:8000/api/search/";
+  const url = process.env.REACT_APP_AXIOS_BASE_URL + "/api/search/";
 
   const [form] = Form.useForm();
   const [data, setData] = useState();
@@ -51,46 +51,46 @@ function MapSearch() {
   };
 
   const fetchData = async (values) => {
-    const result = await axios.get(url, 
+    const result = await axios.get(url,
       {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
         params: values
       })
-        .then((res) => res.data)
-        .catch((error) => console.log(error.response));
-        console.log(values)
-        console.log(result);
+      .then((res) => res.data)
+      .catch((error) => console.log(error.response));
+    console.log(values)
+    console.log(result);
 
     // result.opening_hour = result.opening_hour.slice(0, 5);
     // result.closing_hour = result.closing_hour.slice(0, 5);
-      
-    if(typeof(result) !== 'undefined'){
+
+    if (typeof (result) !== 'undefined') {
       const jsonResult = JSON.parse(result)
-      console.log(typeof(result))
+      console.log(typeof (result))
       lat(jsonResult)
       setData(jsonResult);
     }
 
-    else{
+    else {
       setData([]);
     }
   }
 
   const geocoder = new google.maps.Geocoder();
 
-  const lat = (result) =>{
-    for (let i = 0; i<result.length; i++){
-      geocoder.geocode({'address': result[i].address}).then((response) => {
-        if(response.results[0]){
+  const lat = (result) => {
+    for (let i = 0; i < result.length; i++) {
+      geocoder.geocode({ 'address': result[i].address }).then((response) => {
+        if (response.results[0]) {
           result[i].latitude = response.results[0].geometry.location.lat()
           result[i].longitude = response.results[0].geometry.location.lng()
-          setCenter({lat: result[i].latitude, lng: result[i].longitude})
+          setCenter({ lat: result[i].latitude, lng: result[i].longitude })
         }
       })
     };
-  } 
+  }
 
   const logoKFT = 'https://play-lh.googleusercontent.com/SUl4XjMnZ7AoG394N20DpStiI4e1jynSSVDsh6V6h4PzFBPn8UhZ2Sa9ZybBz5rWwEQ';
   console.log(data)
@@ -98,38 +98,38 @@ function MapSearch() {
     <div>
       <Row>
         <Col span={4} offset={2}>
-          <Form 
+          <Form
             name='filter-search'
             form={form}
             className='search-form'
             onFinish={onFinish}
-            >
+          >
             <Form.Item
-            name="address"
-            label="Address"
+              name="address"
+              label="Address"
             >
               <Input allowClear />
             </Form.Item>
 
             <Form.Item
-            name="drink_name"
-            label="Drink name"
+              name="drink_name"
+              label="Drink name"
             >
               <Input allowClear />
             </Form.Item>
-            
+
             <Form.Item
-            name="shop_name"
-            label="Shop name"
+              name="shop_name"
+              label="Shop name"
             >
               <Input allowClear />
             </Form.Item>
-            
+
             <Form.Item
               name="min_rating"
               label="Minimum rating"
             >
-              <Rate allowHalf/>
+              <Rate allowHalf />
             </Form.Item>
 
             <Form.Item
@@ -167,34 +167,36 @@ function MapSearch() {
               // console.log((shop))
               <Marker
                 key={shop.shop_name}
-                position={{lat: shop.latitude, lng: shop.longitude}}
-                onClick={() => {setSelectedMarker(shop); 
-                                setCenter({lat: shop.latitude, lng:shop.longitude})}}
+                position={{ lat: shop.latitude, lng: shop.longitude }}
+                onClick={() => {
+                  setSelectedMarker(shop);
+                  setCenter({ lat: shop.latitude, lng: shop.longitude })
+                }}
               />
             ))}
             {selectedMarker && (
-                  <InfoWindow
-                    position={{lat: selectedMarker.latitude, lng: selectedMarker.longitude}}
-                    onCloseClick={() => setSelectedMarker('')}
-                  >
-                    <div>
-                      <Row>
-                        <Col>
-                          <img src={selectedMarker.image_url} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }}/>
-                        </Col>
-                        <Col>
-                          <Link to={"/bobashop/" + selectedMarker.id} >
-                            <h1>{selectedMarker.shop_name}</h1>
-                            </Link>
-                          <p>{selectedMarker.address}</p>
-                          <p>Hours: 12:00pm - 21:30pm</p>
-                          <p>{selectedMarker.rating}<StarOutlined /></p>
-                        </Col>
-                      </Row>
-                    </div>
-                  </InfoWindow>
-                  // console.log(selectedMarker.id)
-                )}
+              <InfoWindow
+                position={{ lat: selectedMarker.latitude, lng: selectedMarker.longitude }}
+                onCloseClick={() => setSelectedMarker('')}
+              >
+                <div>
+                  <Row>
+                    <Col>
+                      <img src={selectedMarker.image_url} sizes='100px' alt='shop-logo' style={{ width: 80, height: 80 }} />
+                    </Col>
+                    <Col>
+                      <Link to={"/bobashop/" + selectedMarker.id} >
+                        <h1>{selectedMarker.shop_name}</h1>
+                      </Link>
+                      <p>{selectedMarker.address}</p>
+                      <p>Hours: {selectedMarker.opening_hour} - {selectedMarker.closing_hour}</p>
+                      <p>{selectedMarker.rating}<StarOutlined /></p>
+                    </Col>
+                  </Row>
+                </div>
+              </InfoWindow>
+              // console.log(selectedMarker.id)
+            )}
           </GoogleMap>
         </Col>
       </Row>

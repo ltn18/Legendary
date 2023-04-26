@@ -1,10 +1,9 @@
-import { Button, Form, Input,Typography } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
 import { Col, Row } from 'antd';
 import React, { useState } from 'react';
-import {Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../login-signup.css";
 import axios from 'axios';
-
 
 const { Title } = Typography;
 
@@ -16,15 +15,19 @@ const initialFormState = {
 }
 
 
-function Login() { 
+function Login() {
   const minLevel = 0.1;
   const errorMessage = 'Password is too weak';
-  const [level,setLevel]=useState(0)
+  const [level, setLevel] = useState(0)
   const [isLogin, setIsLogin] = useState(true);
   const [form, setForm] = useState(initialFormState);
   const [passwordStrength, setPasswordStrength] = useState(null);
-  
-  const navigate = useNavigate(); 
+
+  const navigate = useNavigate();
+  // const routeChange = () =>{ 
+  //   let path = `/temp`; 
+  //   navigate(path);
+  // }
 
 
   const checkPasswordStrength = (rule, value, callback) => {
@@ -65,23 +68,23 @@ function Login() {
 
   const onFinish = () => {
     console.log('Received values of form:', form);
-    axios.post('http://localhost:8000/api/login/', {
-    username: form.username,
-    password: form.password
+    axios.post(process.env.REACT_APP_AXIOS_BASE_URL + '/api/login/', {
+      username: form.username,
+      password: form.password
     })
-    .then(function (response) {
-      console.log(JSON.parse(response.data).token);
-      console.log(JSON.parse(response.data).isShopOwner);
-      sessionStorage.setItem("token", JSON.parse(response.data).token);
-      sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
-      let path = `/temp`; 
-      navigate(path);
-    })
-    
-    .catch(function (error) {
-      console.log(error);
-    });
-    
+      .then(function (response) {
+        console.log(JSON.parse(response.data).token);
+        console.log(JSON.parse(response.data).isShopOwner);
+        sessionStorage.setItem("token", JSON.parse(response.data).token);
+        sessionStorage.setItem("isShopOwner", JSON.parse(response.data).isShopOwner);
+        navigate("/home", { replace: true });
+
+        // this is a bit hard code but it works
+        window.location.reload(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     /**
      * MANUAL VALIDATOR
      * Signup -> check fields (length, strength)
@@ -91,9 +94,16 @@ function Login() {
      * backend will send back token if the user is valid
      */
   };
-  
+  const inputStyle = {
+    width: '100%',
+    padding: '10px',
+    fontSize: '16px',
+    border: '1px solid #ccc',
+    borderRadius: 0,
+  };
 
-  const toggleAuth = () => { 
+
+  const toggleAuth = () => {
     setIsLogin(!isLogin);
   }
   console.log(sessionStorage.getItem("token"));
@@ -117,7 +127,7 @@ function Login() {
             {/* firstname and lastname */}
             {!isLogin &&
               <>
-              {/* firstname */}
+                {/* firstname */}
                 <Form.Item
                   name="firstname"
                   className='form-field'
@@ -134,7 +144,7 @@ function Login() {
                     placeholder="First name"
                     onChange={(e) => setForm({ ...form, firstname: e.target.value })}
                   />
-                  
+
                 </Form.Item>
                 {/* lastname */}
                 <Form.Item
@@ -150,18 +160,17 @@ function Login() {
                   ]}
                 >
                   <Input
-                    
+
                     placeholder="Last name"
                     onChange={(e) => setForm({ ...form, lastname: e.target.value })}
                   />
-                  
+
                 </Form.Item>
               </>
             }
             {/* username */}
             <Form.Item
               name="username"
-              className='form-field'
               validateStatus={String.validateStatus}
               help={String.errorMsg}
               rules={isLogin ? null : [
@@ -170,26 +179,25 @@ function Login() {
                   message: 'Please input your Username!',
                 },
                 {
-                  min: 6, 
+                  min: 6,
                   message: 'Username must be minimum 6 characters',
                 },
                 {
-                  max:20, 
-                  message:'Username name must be less than 20 characters'
+                  max: 20,
+                  message: 'Username name must be less than 20 characters'
                 }
               ]}
             >
-            
+
               <Input
-                
+                style={inputStyle}
                 placeholder="Username"
-                onChange={(e) => setForm({ ...form, username: e.target.value})}
-                style={{borderRadius: '0px'}}
+                onChange={(e) => setForm({ ...form, username: e.target.value })}
               />
             </Form.Item>
             {/* password */}
             <Form.Item
-              
+
               name="password"
               rules={isLogin ? null : [
                 {
@@ -204,26 +212,26 @@ function Login() {
               extra={passwordStrength && `Password Strength: ${passwordStrength}`}
             >
               <Input
-                
+
                 type="password"
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                onLevelChange={ setLevel}
-                style={{borderRadius: '0px'}}
+                onLevelChange={setLevel}
+                style={{ ...inputStyle, width: '100%' }}
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" >{'Log In'}</Button> 
+              <Button htmlType="submit" className="login-signup-button" ><b>{'Log In'}</b></Button>
               <Link to='/signup'>
-                         Don't have an account? Signup!
+                Don't have an account? Signup!
               </Link>
-            </Form.Item>
+            </Form.Item >
 
-          </Form>
-          
-        </Col>
+          </Form >
 
-      </Row>
+        </Col >
+
+      </Row >
     </>
   );
 }
