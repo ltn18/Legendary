@@ -9,10 +9,10 @@ const ShopOwnerProfile = () => {
     const [shopData, setShopData] = useState(null);
 
     const [userData, setUserData] = useState({
-        id: '',
-        first_name: '',
-        last_name: '',
-        image_url: ''
+        id: null,
+        first_name: null,
+        last_name: null,
+        image_url: null
     });
 
     const [nullShopData, setNullShopData] = useState();
