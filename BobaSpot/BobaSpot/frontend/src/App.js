@@ -6,7 +6,7 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
-import Navbar from './contents/landing/Navbar';
+import NavBar from './components/NavBar/NavBar';
 
 import './App.css'
 
@@ -23,7 +23,6 @@ import IsShopOwnerRoute from "./services/IsShopOwnerRoute"
 
 import Landing from "./TmpLanding";
 
-import NavBar from './components/layout/NavBar';
 import UserProfile from './contents/profile/user/customer/UserProfile';
 import ShopOwnerProfile from './contents/profile/user/shopowner/ShopOwnerProfile';
 
