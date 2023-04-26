@@ -74,7 +74,7 @@ function Login() {
 
   const onFinish = () => {
     console.log('Received values of form:', form);
-    axios.post('http://localhost:8000/api/login/', {
+    axios.post(process.env.REACT_APP_AXIOS_BASE_URL + '/api/login/', {
       username: form.username,
       password: form.password
     })
@@ -101,7 +101,7 @@ function Login() {
      */
   };
   const inputStyle = {
-    width: '250%',
+    width: '100%',
     padding: '10px',
     fontSize: '16px',
     border: '1px solid #ccc',
@@ -176,7 +176,6 @@ function Login() {
             {/* username */}
             <Form.Item
               name="username"
-              className='form-field'
               validateStatus={String.validateStatus}
               help={String.errorMsg}
               rules={isLogin ? null : [
@@ -199,7 +198,6 @@ function Login() {
                 style={inputStyle}
                 placeholder="Username"
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
-                // style={{ borderRadius: '0px' }}
               />
             </Form.Item>
             {/* password */}

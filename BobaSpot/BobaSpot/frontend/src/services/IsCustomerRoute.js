@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom"
 
-const IsCustomer = (props) => {
+const IsCustomerRoute = (props) => {
     const { authenticated, isCustomer, children } = props;
 
     if (!authenticated) {
@@ -15,4 +15,4 @@ const IsCustomer = (props) => {
     }
 }
 
-export default IsCustomer;
+export default IsCustomerRoute;

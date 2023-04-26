@@ -35,7 +35,7 @@ function MapSearch() {
   const [center, setCenter] = useState({ lat: 41.5, lng: -81.6 });
 
   const jwt = sessionStorage.getItem('token');
-  const url = "http://127.0.0.1:8000/api/search/";
+  const url = process.env.REACT_APP_AXIOS_BASE_URL + "/api/search/";
 
   const [form] = Form.useForm();
   const [data, setData] = useState();

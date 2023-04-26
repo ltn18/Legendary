@@ -66,7 +66,7 @@ function Signup() {
 
 const onFinish = () => {
       console.log('Received values of form:', form_signup);
-      axios.put('http://localhost:8000/api/login/', {
+      axios.put(process.env.REACT_APP_AXIOS_BASE_URL + '/api/login/', {
         username: form_signup.username,
         password: form_signup.password,
         first_name: form_signup.firstname,

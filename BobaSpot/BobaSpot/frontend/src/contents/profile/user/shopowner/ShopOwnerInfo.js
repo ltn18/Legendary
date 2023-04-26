@@ -129,7 +129,7 @@ const ShopOwnerInfo = (props) => {
     const handleSubmitChangeUserInfo = async () => {
         const options = {
             method: 'PUT',
-            url: 'http://localhost:8000/api/user/',
+            url: process.env.REACT_APP_AXIOS_BASE_URL + '/api/user/',
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
@@ -256,7 +256,7 @@ const ShopOwnerInfo = (props) => {
 
         const options = {
             method: 'PUT',
-            url: `http://localhost:8000/api/bobashop/${user_id}/`,
+            url: process.env.REACT_APP_AXIOS_BASE_URL + `/api/bobashop/${user_id}/`,
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
