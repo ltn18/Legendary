@@ -29,12 +29,6 @@ function Login() {
   //   navigate(path);
   // }
 
-  // const navigate = useNavigate(); 
-  // const routeChange = () =>{ 
-  //   let path = `/temp`; 
-  //   navigate(path);
-
-  // }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -74,7 +68,7 @@ function Login() {
 
   const onFinish = () => {
     console.log('Received values of form:', form);
-    axios.post('http://localhost:8000/api/login/', {
+    axios.post(process.env.REACT_APP_AXIOS_BASE_URL + '/api/login/', {
       username: form.username,
       password: form.password
     })
@@ -101,7 +95,7 @@ function Login() {
      */
   };
   const inputStyle = {
-    width: '250%',
+    width: '100%',
     padding: '10px',
     fontSize: '16px',
     border: '1px solid #ccc',
@@ -112,6 +106,7 @@ function Login() {
   const toggleAuth = () => {
     setIsLogin(!isLogin);
   }
+  console.log(sessionStorage.getItem("token"));
   return (
     <>
       <Row className='Full-page'>
@@ -176,7 +171,6 @@ function Login() {
             {/* username */}
             <Form.Item
               name="username"
-              className='form-field'
               validateStatus={String.validateStatus}
               help={String.errorMsg}
               rules={isLogin ? null : [
@@ -199,7 +193,6 @@ function Login() {
                 style={inputStyle}
                 placeholder="Username"
                 onChange={(e) => setForm({ ...form, username: e.target.value })}
-                // style={{ borderRadius: '0px' }}
               />
             </Form.Item>
             {/* password */}
@@ -224,11 +217,11 @@ function Login() {
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 onLevelChange={setLevel}
-                style = {{ ...inputStyle , width: '100%' }}
+                style={{ ...inputStyle, width: '100%' }}
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" ><b>{'Log In'}</b></Button> 
+              <Button htmlType="submit" className="login-signup-button" ><b>{'Log In'}</b></Button>
               <Link to='/signup'>
                 Don't have an account? Signup!
               </Link>

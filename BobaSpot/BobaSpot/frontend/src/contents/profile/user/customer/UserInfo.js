@@ -39,7 +39,7 @@ const UserInfo = () => {
 
     const options = {
         method: 'GET',
-        url: 'http://localhost:8000/api/user/',
+        url: process.env.REACT_APP_AXIOS_BASE_URL + '/api/user/',
         headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
@@ -55,7 +55,7 @@ const UserInfo = () => {
         // fetchUser();
         const options = {
             method: 'GET',
-            url: 'http://localhost:8000/api/user/',
+            url: process.env.REACT_APP_AXIOS_BASE_URL + '/api/user/',
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
@@ -126,7 +126,7 @@ const UserInfo = () => {
     const handleSubmitChangeUserInfo = () => {
         const options = {
             method: 'PUT',
-            url: 'http://localhost:8000/api/user/',
+            url: process.env.REACT_APP_AXIOS_BASE_URL + '/api/user/',
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },

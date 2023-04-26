@@ -19,7 +19,8 @@ const ReviewCard = (props) => {
         date,
         rating,
         drinkOrdered,
-        id
+        id,
+        user_image_url
     } = props;
 
     const [isHoverLogout, setIsHoverLogout] = useState(false);
@@ -59,7 +60,13 @@ const ReviewCard = (props) => {
                 width: '20%',
                 marginRight: 10,
             }}>
-                <Image height={'80%'} src="https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c" />
+                <Image height={'80%'}
+                    src={
+                        user_image_url
+                            ? user_image_url
+                            : "https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c"
+                    }
+                />
             </div>
             <div style={{
                 width: '80%',

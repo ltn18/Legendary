@@ -22,7 +22,7 @@ const ShopOwnerProfile = () => {
     // fetch shop data
     useEffect(() => {
         const fetchShopOwner = async () => {
-            const resultUserData = await axios.get('http://localhost:8000/api/user/', {
+            const resultUserData = await axios.get(process.env.REACT_APP_AXIOS_BASE_URL + '/api/user/', {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('token')}`,
                 }
@@ -32,7 +32,7 @@ const ShopOwnerProfile = () => {
 
             const options = {
                 method: 'GET',
-                url: `http://localhost:8000/api/bobashop/${resultUserData.data.id}/`,
+                url: process.env.REACT_APP_AXIOS_BASE_URL + `/api/bobashop/${resultUserData.data.id}/`,
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },

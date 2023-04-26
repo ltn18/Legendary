@@ -6,7 +6,7 @@ import {
   Navigate,
   useNavigate,
 } from 'react-router-dom';
-import Navbar from './contents/landing/Navbar';
+import NavBar from './components/NavBar/NavBar';
 
 import './App.css'
 
@@ -23,7 +23,6 @@ import IsShopOwnerRoute from "./services/IsShopOwnerRoute"
 
 import Landing from "./TmpLanding";
 
-import NavBar from './components/layout/NavBar';
 import UserProfile from './contents/profile/user/customer/UserProfile';
 import ShopOwnerProfile from './contents/profile/user/shopowner/ShopOwnerProfile';
 
@@ -39,9 +38,19 @@ const App = () => {
   // sesionStorage.getItem("isShopOwner")
   const [isShopOwner, setIsShopOwner] = useState();
 
+  const handleConvertToken = (tk) => {
+    console.log(tk);
+    console.log("true str:", tk === 'true');
+    console.log("true bool:", tk === true);
+    console.log("false str:", tk === 'false');
+    console.log("false bool:", tk === false);
+    return tk === 'true';
+  }
+
   useEffect(() => {
     const user = sessionStorage.getItem("token");
-    const owner = sessionStorage.getItem("isShopOwner") === 'true' ? true : false;
+    const owner = handleConvertToken(sessionStorage.getItem("isShopOwner"));
+
     console.log("user:", user);
     console.log("owner:", owner);
 
