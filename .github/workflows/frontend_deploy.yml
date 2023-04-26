@@ -31,14 +31,19 @@ jobs:
       run: npm run build
       env:
         CI: false
-    - name: check directory
-      run: pwd
+    # - name: check directory
+    #   run: pwd
     # deploy the application to netlify
     - name: Deploy production to Netlify
-      uses: South-Paw/action-netlify-deploy@v1.2.0
+      uses: nwtgck/actions-netlify@v2.0
       with:
+        publish-dir: './BobaSpot/BobaSpot/frontend/build'
+        production-branch: main
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
-        build-dir: './BobaSpot/BobaSpot/frontend/build'
-        comment-on-commit: true
+        deploy-message: "Deploy from GitHub Actions"
+        enable-pull-request-comment: false
+        enable-commit-comment: true
+        overwrites-pull-request-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
