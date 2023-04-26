@@ -182,7 +182,7 @@ const ShopPreviewCard = (props) => {
 
         const options = {
             method: 'PUT',
-            url: `http://localhost:8000/api/bobashop/${data.id}/`,
+            url: process.env.REACT_APP_AXIOS_BASE_URL + `/api/bobashop/${data.id}/`,
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
@@ -278,7 +278,7 @@ const ShopPreviewCard = (props) => {
 
         const options = {
             method: 'PUT',
-            url: 'http://localhost:8000/api/drinks/',
+            url: process.env.REACT_APP_AXIOS_BASE_URL + '/api/drinks/',
             headers: {
                 Authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },

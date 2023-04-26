@@ -9,10 +9,10 @@ const ShopOwnerProfile = () => {
     const [shopData, setShopData] = useState(null);
 
     const [userData, setUserData] = useState({
-        id: '',
-        first_name: '',
-        last_name: '',
-        image_url: ''
+        id: null,
+        first_name: null,
+        last_name: null,
+        image_url: null
     });
 
     const [nullShopData, setNullShopData] = useState();
@@ -22,7 +22,7 @@ const ShopOwnerProfile = () => {
     // fetch shop data
     useEffect(() => {
         const fetchShopOwner = async () => {
-            const resultUserData = await axios.get('http://localhost:8000/api/user/', {
+            const resultUserData = await axios.get(process.env.REACT_APP_AXIOS_BASE_URL + '/api/user/', {
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem('token')}`,
                 }
@@ -32,7 +32,7 @@ const ShopOwnerProfile = () => {
 
             const options = {
                 method: 'GET',
-                url: `http://localhost:8000/api/bobashop/${resultUserData.data.id}/`,
+                url: process.env.REACT_APP_AXIOS_BASE_URL + `/api/bobashop/${resultUserData.data.id}/`,
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
                 },
