@@ -1,28 +1,28 @@
-import React from 'react';
-
-// components
-import { Link, useNavigate } from 'react-router-dom'
-
-import { UserOutlined, LogoutOutlined } from '@ant-design/icons';
-import "./NavBar.css";
+import React from 'react'
+import {
+    Button,
+    Tooltip
+} from 'antd';
+import { Link, useNavigate } from "react-router-dom";
+import {
+    UserOutlined,
+    LogoutOutlined
+} from '@ant-design/icons';
 
 const NavBar = () => {
     const navigate = useNavigate();
-
-
-    // why cannot logout here?
-    const handleLogout = () => {
-        sessionStorage.setItem("token", null);
-        localStorage.setItem("authenticated", false);
-
-        console.log("OKOK");    
-
-        console.log("token: " + sessionStorage.getItem("token"));
-        console.log("authenticated: " + localStorage.getItem("authenticated"));
-
-        navigate('/login', { replace: true })
+    const navigateLogin = () => {
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("isShopOwner");
+        let path = '/login';
+        navigate(path, { replace: true });
         window.location.reload(true);
     }
+
+    const navigateUser = () => {
+        navigate('/user', { replace: true });
+        window.location.reload(true);
+    };
 
     return (
         <div style={{
@@ -33,15 +33,26 @@ const NavBar = () => {
             justifyContent: 'space-between',
             alignItems: 'center'
         }}>
-            <div className="links">
-                <Link to="/" style={{ color: 'black' }}>BobaSpot</Link>
-            </div>
-            <div className="links">
-                <Link to="/user"><UserOutlined /></Link>
-                <LogoutOutlined onClick={handleLogout} />
-            </div>
-        </div >
+            <a>
+                <Tooltip title="User Profile">
+                    <Button onClick={(navigateUser)} type="text" className='nav-user_profile'>
+                        <UserOutlined onClick={navigateUser} className='nav-button-icon' />
+                    </Button>
+                </Tooltip>
+            </a>
+            <a>
+                <Tooltip title="Log-out">
+                    <Button onClick={(navigateLogin)} type="text" className='nav-logout'>
+                        <LogoutOutlined onClick={navigateLogin} className='nav-button-icon' />
+                    </Button>
+                </Tooltip>
+            </a>
+            <a href="">
+                <h1 className='nav-home_title'>
+                    BobaSpot
+                </h1>
+            </a>
+        </div>
     )
 }
-
 export default NavBar;

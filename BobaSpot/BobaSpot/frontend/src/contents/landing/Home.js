@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from "../../components/NavBar/NavBar"
 import About from "./About"
 import Map from "./Map"
 import BannerBgr from "./Assets/landing_banner.png";

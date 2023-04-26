@@ -1,23 +1,39 @@
 import React from 'react'
 import { Button,
-         Tooltip } from 'antd';
+    Tooltip
+} from 'antd';
+import {Link, useNavigate } from "react-router-dom";
 import { UserOutlined,
          LogoutOutlined } from '@ant-design/icons';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+    const navigateLogin = () => {
+      sessionStorage.removeItem("token");
+        sessionStorage.removeItem("isShopOwner");
+      let path = '/login'; 
+      navigate(path, { replace: true });
+      window.location.reload(true);
+      
+  }
+    
+  const navigateUser = () => {
+      navigate('/user', { replace: true });
+      window.location.reload(true);
+  };
   return (
     <nav>
-        <a href="">
+        <a>
         <Tooltip title="User Profile">
-            <Button type="text" className='nav-user_profile'>
-                <UserOutlined className='nav-button-icon'/>
+            <Button onClick={(navigateUser)} type="text" className='nav-user_profile'>
+                <UserOutlined onClick={navigateUser} className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>
-        <a href="">
+        <a>
         <Tooltip title="Log-out">
-            <Button type="text" className='nav-logout'>
-                <LogoutOutlined className='nav-button-icon'/>
+                  <Button onClick={(navigateLogin)} type="text" className='nav-logout'>
+                      <LogoutOutlined onClick={navigateLogin} className='nav-button-icon'/>
             </Button>
         </Tooltip>
         </a>

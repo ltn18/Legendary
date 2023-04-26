@@ -23,6 +23,7 @@
     "nodemon": "^2.0.22",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-google-maps": "^9.4.5",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
@@ -36,6 +37,14 @@
     "client": "npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!@codemirror)/\""
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   },
   "eslintConfig": {
     "extends": [

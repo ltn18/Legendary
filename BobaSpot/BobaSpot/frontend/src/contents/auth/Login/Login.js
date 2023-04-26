@@ -29,12 +29,6 @@ function Login() {
   //   navigate(path);
   // }
 
-  // const navigate = useNavigate(); 
-  // const routeChange = () =>{ 
-  //   let path = `/temp`; 
-  //   navigate(path);
-
-  // }
 
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
@@ -112,6 +106,7 @@ function Login() {
   const toggleAuth = () => {
     setIsLogin(!isLogin);
   }
+  console.log(sessionStorage.getItem("token"));
   return (
     <>
       <Row className='Full-page'>
@@ -222,11 +217,11 @@ function Login() {
                 placeholder="Password"
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 onLevelChange={setLevel}
-                style = {{ ...inputStyle , width: '100%' }}
+                style={{ ...inputStyle, width: '100%' }}
               />
             </Form.Item>
             <Form.Item>
-              <Button htmlType="submit" className="login-signup-button" ><b>{'Log In'}</b></Button> 
+              <Button htmlType="submit" className="login-signup-button" ><b>{'Log In'}</b></Button>
               <Link to='/signup'>
                 Don't have an account? Signup!
               </Link>
