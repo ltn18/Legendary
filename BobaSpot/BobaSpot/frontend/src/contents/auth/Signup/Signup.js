@@ -170,7 +170,6 @@ function Signup() {
 
   return (
     <>
-      console.log(config);
       <Row className='Full-page'>
         {/* left column */}
         <Col className='Column' span={13} style={{}}>
