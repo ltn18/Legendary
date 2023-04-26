@@ -170,15 +170,17 @@ function Signup() {
 
   return (
     <>
+      console.log(config);
       <Row className='Full-page'>
         {/* left column */}
         <Col className='Column' span={13} style={{}}>
           <img style={{ width: '100%', height: '100%' }} src={"https://cdn.dribbble.com/userupload/3841872/file/original-0a6f56e82ee816c6b6ab202747a58307.png?compress=1&resize=1024x768"} />
-        </Col>
+        </Col >
         {/* right column */}
-        <Col className='Column' span={11} style={{
+        < Col className='Column' span={11} style={{
           height: "70%"
-        }}>
+        }
+        }>
           <Form
             name="login-signup"
             className="login-form"
@@ -369,9 +371,9 @@ function Signup() {
 
           </Form>
 
-        </Col>
+        </Col >
 
-      </Row>
+      </Row >
     </>
   );
 }
