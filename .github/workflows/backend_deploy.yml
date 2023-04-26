@@ -11,7 +11,7 @@ on:
 
 jobs:
   deploy:
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     name: Deploy backend
     runs-on: ubuntu-latest
     defaults:
@@ -23,12 +23,12 @@ jobs:
       - name: Create env file
         run: |
           touch ../../.env
-          echo DB_NAME=postgres >> ../../.env
-          echo DB_USER=postgres >> ../../.env
-          echo DB_PASSWORD=R{<;D8.LBU8Yh0RZ >> ../../.env
-          echo DB_HOST_IP=34.67.4.9 >> ../../.env
-          echo DB_PORT=5432 >> ../../.env
-          echo JWT_SECRET_KEY=thisisasecretkeyhihi >> ../../.env
+          echo DB_NAME="postgres" >> ../../.env
+          echo DB_USER="postgres" >> ../../.env
+          echo DB_PASSWORD="R{<;D8.LBU8Yh0RZ" >> ../../.env
+          echo DB_HOST_IP="34.67.4.9" >> ../../.env
+          echo DB_PORT="5432" >> ../../.env
+          echo JWT_SECRET_KEY="thisisasecretkeyhihi" >> ../../.env
           cat ../../.env
       - name: debug
         run: ls -la && pwd
