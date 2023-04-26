@@ -21,7 +21,7 @@ jobs:
           node-version: '16'
       - name: Create env
         run: |
-          touch /.env
+          touch ./.env
           echo REACT_APP_FIREBASE_API_KEY="AIzaSyC-jhDwqXjV-8ggXBw5UeZz4QqhHLdYwsM" >> /.env
           echo REACT_APP_FIREBASE_AUTH_DOMAIN="bobaspot-82023.firebaseapp.com" >> /.env
           echo REACT_APP_FIREBASE_PROJECT_ID="bobaspot-82023" >> /.env
