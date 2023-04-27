@@ -1,12 +1,9 @@
 name: Backend Pipeline
 
-# on:
-#   pull_request:
-#     branches:
-#       - main
-
 on:
-  push
+  pull_request:
+    branches:
+      - main
 
 jobs:
   backend_test:
@@ -16,7 +13,6 @@ jobs:
         working-directory: ./BobaSpot/BobaSpot/backend/
     steps:
       - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
@@ -39,10 +35,6 @@ jobs:
           echo DB_PORT="5432" >> ../../../.env
           echo JWT_SECRET_KEY="thisisasecretkeyhihi" >> ../../../.env
           cat ../../../.env
-      # - name: Run tests
-      #   run: pytest
-      - name: Deploy to Fly
-        run: cd .. && flyctl deploy --remote-only
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Run tests
+        run: pytest
       
