@@ -587,7 +587,7 @@ const ShopOwnerInfo = (props) => {
                                         borderColor: isHoverSubmitCreateShop ? '#FDD0CF' : '#d7d7d7',
                                     }}
                                     type="primary"
-                                    // htmlType="submit"
+                                    htmlType="submit"
                                     onClick={handleSubmitCreateShopForm}
                                 >
                                     Submit
@@ -595,24 +595,6 @@ const ShopOwnerInfo = (props) => {
                             </div>
                         </Form>
                     }
-
-                    {/* <Button
-                        onMouseEnter={handleLogoutMouseEnter}
-                        onMouseLeave={handleLogoutMouseLeave}
-                        size='large'
-                        style={{
-                            borderRadius: 0,
-                            backgroundColor: isHoverLogout ? '#ff0e0e' : 'white',
-                            color: isHoverLogout ? 'white' : '#ff0e0e',
-                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                            // marginTop: 60
-                        }}
-                        onClick={handleLogout}
-                        block
-                        danger
-                    >
-                        Logout
-                    </Button> */}
                 </Space>
             </div>
         </div>
