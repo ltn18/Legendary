@@ -330,8 +330,8 @@ const ShopPreviewCard = (props) => {
             {
                 shopData &&
                 <div style={{
-                    width: '90%',
-                    height: '75%',
+                    width: '100%',
+                    height: '100%',
                     top: '30%',
                     backgroundColor: 'white',
                     color: 'black',

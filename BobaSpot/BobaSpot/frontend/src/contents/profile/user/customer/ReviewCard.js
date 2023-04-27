@@ -44,7 +44,7 @@ const ReviewCard = (props) => {
     return (
         <div style={{
             width: '65%',
-            height: '30%',
+            height: '100%',
             top: '20%',
             backgroundColor: '#FFB6C1',
             color: 'black',

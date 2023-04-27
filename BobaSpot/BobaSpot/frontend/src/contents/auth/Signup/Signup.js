@@ -44,6 +44,8 @@ function Signup() {
   const [uploadedFile, setUploadedFile] = useState();
   const [uploadedFileUrl, setUploadedFileUrl] = useState(null);
 
+  const [showUploadAvaOverlay, setShowUploadAvaOverlay] = useState(false);
+
   const checkPasswordStrength = (rule, value, callback) => {
     if (value && value.length >= 8) {
       let strength = 0;
@@ -177,7 +179,7 @@ function Signup() {
         </Col >
         {/* right column */}
         < Col className='Column' span={11} style={{
-          height: "70%"
+          height: "60%",
         }
         }>
           <Form
@@ -284,80 +286,81 @@ function Signup() {
               />
             </Form.Item>
 
-            <div
-              style={{
-                marginBottom: 10
-              }}
-            >
-              Upload shop feature images:
-            </div>
-            <input
-              type="file"
-              onChange={(e) => { setUploadedFile(e.target.files[0]) }}
-              style={{
-                marginBottom: 10
-              }}
-              accept="image/*"
-            />
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginBottom: 10
-              }}
-            >
-              <b>Chosen Feature Images</b>
-              {
-                uploadedFiles.map(file =>
-                  <div>
-                    {file.name}
-                  </div>
-                )
-              }
-            </div>
-
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column'
-            }}>
-              <Button
-                onMouseEnter={handleHoverSubmitImageEnter}
-                onClick={handleUploadSingleImage}
-                onMouseLeave={handleHoverSubmitImageLeave}
-                style={{
-                  marginBottom: 10
-                }}
-              >
-                Upload Profile Image to Google Blob
-              </Button>
-
-              {
-                !imgUrl &&
-                <div>
-                  <div style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
-                </div>
-              }
-
-              {/* <Button
-                                    onMouseEnter={handleHoverSubmitImageEnter}
-                                    onMouseLeave={handleHoverSubmitImageLeave}
-                                    style={{
-                                        backgroundColor: isHoverSubmitImage ? '#FDD0CF' : 'white',
-                                        color: isHoverSubmitImage ? 'white' : 'black',
-                                        borderColor: isHoverSubmitImage ? '#FDD0CF' : '#d7d7d7',
-                                    }}
-                                    type="primary"
-                                    htmlType="submit"
-                                >
-                                    Submit
-                                </Button> */}
-            </div>
-
-            {/* <img style={{ width: '100%', height: '180%' }} src={imgUrl} /> */}
-
             <Form.Item>
               <Checkbox onChange={(e) => setForm({ ...form_signup, shopowner: true })}>I am a shop owner</Checkbox>
             </Form.Item>
+
+            <Button
+              onClick={() => setShowUploadAvaOverlay(!showUploadAvaOverlay)}
+              style={{
+                marginBottom: "20px"
+              }}
+            >
+              Upload Avatar
+            </Button>
+
+            {
+              showUploadAvaOverlay &&
+              <>
+                <div
+                  style={{
+                    marginBottom: 10
+                  }}
+                >
+                  Upload user profile image:
+                </div>
+                <input
+                  type="file"
+                  onChange={(e) => { setUploadedFile(e.target.files[0]) }}
+                  style={{
+                    marginBottom: 10
+                  }}
+                  accept="image/*"
+                />
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginBottom: 10
+                  }}
+                >
+                  <b>Chosen Avatar</b>
+                  {
+                    uploadedFile &&
+                    <div>
+                      {uploadedFile.name}
+                    </div>
+                  }
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column'
+                }}>
+                  <Button
+                    onMouseEnter={handleHoverSubmitImageEnter}
+                    onClick={handleUploadSingleImage}
+                    onMouseLeave={handleHoverSubmitImageLeave}
+                    style={{
+                      marginBottom: 10
+                    }}
+                  >
+                    Upload Avatar to Google Blob
+                  </Button>
+
+                  {
+                    !imgUrl &&
+                    <div>
+                      <div style={{ width: `${progresspercent}%` }}>{progresspercent}%</div>
+                    </div>
+                  }
+
+                </div>
+              </>
+            }
+
+            {/* <img style={{ width: '100%', height: '180%' }} src={imgUrl} /> */}
+
             <Form.Item>
               <Button htmlType="submit" className="login-signup-button" ><b>{'Sign Up'}</b></Button>
               <Link to='/login'>

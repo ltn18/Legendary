@@ -587,7 +587,7 @@ const ShopOwnerInfo = (props) => {
                                         borderColor: isHoverSubmitCreateShop ? '#FDD0CF' : '#d7d7d7',
                                     }}
                                     type="primary"
-                                    htmlType="submit"
+                                    // htmlType="submit"
                                     onClick={handleSubmitCreateShopForm}
                                 >
                                     Submit
@@ -596,7 +596,7 @@ const ShopOwnerInfo = (props) => {
                         </Form>
                     }
 
-                    <Button
+                    {/* <Button
                         onMouseEnter={handleLogoutMouseEnter}
                         onMouseLeave={handleLogoutMouseLeave}
                         size='large'
@@ -612,7 +612,7 @@ const ShopOwnerInfo = (props) => {
                         danger
                     >
                         Logout
-                    </Button>
+                    </Button> */}
                 </Space>
             </div>
         </div>

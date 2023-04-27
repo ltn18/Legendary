@@ -29,6 +29,14 @@ const ShopOwnerProfile = () => {
             })
 
             console.log("userData:", resultUserData.data);
+            
+            setUserData({
+                id: resultUserData.data.id,
+                username: resultUserData.data.username,
+                first_name: resultUserData.data.first_name,
+                last_name: resultUserData.data.last_name,
+                image_url: resultUserData.data.image_url
+            });
 
             const options = {
                 method: 'GET',
@@ -43,14 +51,6 @@ const ShopOwnerProfile = () => {
                 .catch(err => console.log(err));
 
             console.log("result shop data:", resultShopData);
-
-            setUserData({
-                id: resultUserData.data.id,
-                username: resultUserData.data.username,
-                first_name: resultUserData.data.first_name,
-                last_name: resultUserData.data.last_name,
-                image_url: resultUserData.data.image_url
-            });
 
             if (resultShopData) {
                 setShopData({
