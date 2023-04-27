@@ -1,0 +1,38 @@
+name: Frontend Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  frontend_test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./BobaSpot/BobaSpot/frontend/
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Create env
+        run: |
+          touch .env
+          echo REACT_APP_FIREBASE_API_KEY="AIzaSyC-jhDwqXjV-8ggXBw5UeZz4QqhHLdYwsM" >> .env
+          echo REACT_APP_FIREBASE_AUTH_DOMAIN="bobaspot-82023.firebaseapp.com" >> .env
+          echo REACT_APP_FIREBASE_PROJECT_ID="bobaspot-82023" >> .env
+          echo REACT_APP_FIREBASE_STORAGE_BUCKET="bobaspot-82023.appspot.com" >> .env
+          echo REACT_APP_FIREBASE_MESSAGING_SENDER_ID="80464799393" >> .env
+          echo REACT_APP_FIREBASE_APP_ID="1:80464799393:web:5184d06972290ee77e32e0" >> .env
+          echo REACT_APP_FIREBASE_MEASUREMENT_ID="G-4E74T7KCKT" >> .env
+          echo REACT_APP_AXIOS_BASE_URL="https://bobaspot.fly.dev" >> .env
+          cat .env
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: build
+        run: npm run build
+        env:
+          CI: false
+      - name: test
+        run: npm run test

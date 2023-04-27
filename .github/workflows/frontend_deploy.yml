@@ -1,0 +1,54 @@
+name: "ci-cd pipeline"
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./BobaSpot/BobaSpot/frontend/
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js 16
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Create env file
+      run: |
+        touch .env
+        echo REACT_APP_FIREBASE_API_KEY="AIzaSyC-jhDwqXjV-8ggXBw5UeZz4QqhHLdYwsM" >> .env
+        echo REACT_APP_FIREBASE_AUTH_DOMAIN="bobaspot-82023.firebaseapp.com" >> .env
+        echo REACT_APP_FIREBASE_PROJECT_ID="bobaspot-82023" >> .env
+        echo REACT_APP_FIREBASE_STORAGE_BUCKET="bobaspot-82023.appspot.com" >> .env
+        echo REACT_APP_FIREBASE_MESSAGING_SENDER_ID="80464799393" >> .env
+        echo REACT_APP_FIREBASE_APP_ID="1:80464799393:web:5184d06972290ee77e32e0" >> .env
+        echo REACT_APP_FIREBASE_MEASUREMENT_ID="G-4E74T7KCKT" >> .env
+        echo REACT_APP_AXIOS_BASE_URL="https://bobaspot.fly.dev" >> .env
+        cat .env
+    - name: Install dependencies
+      run: npm install --legacy-peer-deps
+    - name: Frontend Build
+      run: npm run build
+      env:
+        CI: false
+    # deploy the application to netlify
+    - name: Deploy production to Netlify
+      uses: nwtgck/actions-netlify@v2.0
+      with:
+        publish-dir: './BobaSpot/BobaSpot/frontend/build'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions"
+        enable-pull-request-comment: false
+        enable-commit-comment: true
+        overwrites-pull-request-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}

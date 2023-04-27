@@ -1,0 +1,40 @@
+name: Backend Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend_test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./BobaSpot/BobaSpot/backend/
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          cache: 'pip'
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest-django
+      - name: check dependencies
+        run: python -m pip list
+      - name: 'Create env file'
+        run: |
+          touch ../../../.env
+          echo DB_NAME="postgres" >> ../../../.env
+          echo DB_USER="postgres" >> ../../../.env
+          echo DB_PASSWORD="R{<;D8.LBU8Yh0RZ" >> ../../../.env
+          echo DB_HOST_IP="34.67.4.9" >> ../../../.env
+          echo DB_PORT="5432" >> ../../../.env
+          echo JWT_SECRET_KEY="thisisasecretkeyhihi" >> ../../../.env
+          cat ../../../.env
+      - name: Run tests
+        run: pytest
+      
