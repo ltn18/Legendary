@@ -90,9 +90,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST_IP'),
-        'PORT': os.getenv('DB_PORT'),
+        # 'PASSWORD': os.getenv('DB_PASSWORD'),
+        # 'HOST': os.getenv('DB_HOST_IP'),
+        # 'PORT': os.getenv('DB_PORT'),
+        'PASSWORD': "R{<;D8.LBU8Yh0RZ",
+        'HOST': "34.67.4.9",
+        'PORT': 5432,
     }
 }
 AUTH_USER_MODEL = 'backend.CustomUser'
