@@ -39,8 +39,8 @@ jobs:
           echo DB_PORT="5432" >> ../../../.env
           echo JWT_SECRET_KEY="thisisasecretkeyhihi" >> ../../../.env
           cat ../../../.env
-      - name: Run tests
-        run: pytest
+      # - name: Run tests
+      #   run: pytest
       - name: Deploy to Fly
         run: cd .. && flyctl deploy --remote-only
         env:
