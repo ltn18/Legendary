@@ -180,9 +180,9 @@ const UserInfo = () => {
             >
                 <div style={{ color: 'white', width: '50%' }}>
                     <Image src={
-                        data.image_url 
-                        ? data.image_url
-                        : "https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c"
+                        data.image_url
+                            ? data.image_url
+                            : "https://i.ytimg.com/an/zlwQERpksnw/14720571135996419329_mq.jpg?v=6286689c"
                     } />
                 </div>
                 <div style={{ color: 'white', width: '50%', paddingLeft: 30 }}>
@@ -213,7 +213,7 @@ const UserInfo = () => {
 
                     {showChangeInfoOverlay &&
                         <Form style={{
-                            marginTop: 10
+                            marginTop: 10,
                         }}>
                             <Form.Item
                                 label="First name"
@@ -271,24 +271,6 @@ const UserInfo = () => {
                             </Button>
                         </Form>
                     }
-
-                    <Button
-                        onMouseEnter={handleLogoutMouseEnter}
-                        onMouseLeave={handleLogoutMouseLeave}
-                        size='large'
-                        style={{
-                            borderRadius: 0,
-                            backgroundColor: isHoverLogout ? '#ff0e0e' : 'white',
-                            color: isHoverLogout ? 'white' : '#ff0e0e',
-                            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
-                            // marginTop: 30
-                        }}
-                        onClick={handleLogout}
-                        block
-                        danger
-                    >
-                        Logout
-                    </Button>
                 </Space>
             </div>
         </div>

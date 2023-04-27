@@ -28,7 +28,7 @@ const SingleComment = (props) => {
     return (
         <div style={{
             width: '95%',
-            height: '10%',
+            height: '15%',
             backgroundColor: 'white',
             color: 'black',
             padding: 10,
